@@ -56,10 +56,14 @@ export function AnalysisProgress({ stage }: { stage: AnalysisStage }) {
       role="status"
     >
       <div className="pv-progress-status">
-        <span className="pv-progress-live-icon" aria-hidden="true">
+        <span
+          className="pv-progress-live-icon"
+          key={`${stage}-icon`}
+          aria-hidden="true"
+        >
           <ActiveIcon size={23} />
         </span>
-        <div>
+        <div className="pv-progress-copy" key={`${stage}-copy`}>
           <p className="pv-kicker">Raisonnement en cours</p>
           <h2>{STEPS[activeStep].label}</h2>
         </div>

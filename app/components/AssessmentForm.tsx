@@ -9,6 +9,10 @@ import type { AssessmentRequest } from "./assessment-types";
 
 type AssessmentFormProps = {
   error: string | null;
+  errorAction?: {
+    href: string;
+    label: string;
+  } | null;
   initialValue?: AssessmentRequest | null;
   isSubmitting: boolean;
   onSubmit: (payload: AssessmentRequest) => void;
@@ -18,11 +22,12 @@ const MIN_DESCRIPTION_LENGTH = 50;
 
 function isNonNegativeNumber(value: string) {
   const normalized = value.trim().replace(",", ".");
+  if (!normalized) return false;
   const parsed = Number(normalized);
   return Number.isFinite(parsed) && parsed >= 0;
 }
 
-const assessmentFormSchema = z.object({
+export const assessmentFormSchema = z.object({
   organizationName: z.string().trim().min(2, "Renseignez le nom de l’organisation.").max(160),
   systemName: z.string().trim().min(2, "Renseignez le nom du système évalué.").max(160),
   description: z
@@ -52,8 +57,22 @@ const assessmentFormSchema = z.object({
 
 type AssessmentFormValues = z.infer<typeof assessmentFormSchema>;
 
+function describedBy(...ids: Array<string | false | null | undefined>) {
+  const value = ids.filter((id): id is string => Boolean(id)).join(" ");
+  return value || undefined;
+}
+
+function FieldError({ id, message }: { id: string; message?: string }) {
+  return message ? (
+    <p className="pv-field-error" id={id}>
+      {message}
+    </p>
+  ) : null;
+}
+
 export function AssessmentForm({
   error,
+  errorAction,
   initialValue,
   isSubmitting,
   onSubmit,
@@ -64,6 +83,14 @@ export function AssessmentForm({
   const employeesId = useId();
   const revenueId = useId();
   const balanceId = useId();
+  const companyHintId = useId();
+  const organizationErrorId = `${organizationNameId}-error`;
+  const systemErrorId = `${systemNameId}-error`;
+  const descriptionHintId = `${descriptionId}-hint`;
+  const descriptionErrorId = `${descriptionId}-error`;
+  const employeesErrorId = `${employeesId}-error`;
+  const revenueErrorId = `${revenueId}-error`;
+  const balanceErrorId = `${balanceId}-error`;
   const {
     register,
     handleSubmit,
@@ -101,11 +128,6 @@ export function AssessmentForm({
     });
   }
 
-  const validationError = Object.values(errors)
-    .map((fieldError) => fieldError?.message)
-    .find((message): message is string => typeof message === "string");
-  const visibleError = validationError ?? error;
-
   return (
     <form className="pv-assessment-form" onSubmit={handleSubmit(submit)} noValidate>
       <div className="pv-form-heading">
@@ -128,10 +150,17 @@ export function AssessmentForm({
             minLength={2}
             maxLength={160}
             {...register("organizationName")}
+            aria-describedby={
+              errors.organizationName ? organizationErrorId : undefined
+            }
             aria-invalid={Boolean(errors.organizationName)}
             placeholder="Ex. Atelier Horizon"
             required
             disabled={isSubmitting}
+          />
+          <FieldError
+            id={organizationErrorId}
+            message={errors.organizationName?.message}
           />
         </div>
         <div className="pv-field-group">
@@ -142,10 +171,15 @@ export function AssessmentForm({
             minLength={2}
             maxLength={160}
             {...register("systemName")}
+            aria-describedby={errors.systemName ? systemErrorId : undefined}
             aria-invalid={Boolean(errors.systemName)}
             placeholder="Ex. Assistant service client"
             required
             disabled={isSubmitting}
+          />
+          <FieldError
+            id={systemErrorId}
+            message={errors.systemName?.message}
           />
         </div>
       </div>
@@ -162,15 +196,22 @@ export function AssessmentForm({
           rows={7}
           minLength={MIN_DESCRIPTION_LENGTH}
           maxLength={5000}
-          aria-describedby={`${descriptionId}-hint`}
+          aria-describedby={describedBy(
+            descriptionHintId,
+            errors.description && descriptionErrorId,
+          )}
           aria-invalid={Boolean(errors.description)}
           required
           disabled={isSubmitting}
         />
-        <p className="pv-field-hint" id={`${descriptionId}-hint`}>
+        <p className="pv-field-hint" id={descriptionHintId}>
           Écrivez comme vous l’expliqueriez à un collègue. Aucun questionnaire
           réglementaire à préparer.
         </p>
+        <FieldError
+          id={descriptionErrorId}
+          message={errors.description?.message}
+        />
         <details className="pv-guidance">
           <summary>Votre description est encore vague ? Quatre points à préciser</summary>
           <ul>
@@ -197,10 +238,18 @@ export function AssessmentForm({
               min="0"
               step="1"
               {...register("employees")}
+              aria-describedby={describedBy(
+                companyHintId,
+                errors.employees && employeesErrorId,
+              )}
               aria-invalid={Boolean(errors.employees)}
               placeholder="120"
               required
               disabled={isSubmitting}
+            />
+            <FieldError
+              id={employeesErrorId}
+              message={errors.employees?.message}
             />
           </div>
           <div className="pv-field-group">
@@ -211,6 +260,10 @@ export function AssessmentForm({
                 type="text"
                 inputMode="decimal"
                 {...register("annualRevenue")}
+                aria-describedby={describedBy(
+                  companyHintId,
+                  errors.annualRevenue && revenueErrorId,
+                )}
                 aria-invalid={Boolean(errors.annualRevenue)}
                 placeholder="24"
                 required
@@ -218,6 +271,10 @@ export function AssessmentForm({
               />
               <span>M€</span>
             </div>
+            <FieldError
+              id={revenueErrorId}
+              message={errors.annualRevenue?.message}
+            />
           </div>
           <div className="pv-field-group">
             <label htmlFor={balanceId}>Total du bilan</label>
@@ -227,6 +284,10 @@ export function AssessmentForm({
                 type="text"
                 inputMode="decimal"
                 {...register("balanceSheetTotal")}
+                aria-describedby={describedBy(
+                  companyHintId,
+                  errors.balanceSheetTotal && balanceErrorId,
+                )}
                 aria-invalid={Boolean(errors.balanceSheetTotal)}
                 placeholder="18"
                 required
@@ -234,18 +295,26 @@ export function AssessmentForm({
               />
               <span>M€</span>
             </div>
+            <FieldError
+              id={balanceErrorId}
+              message={errors.balanceSheetTotal?.message}
+            />
           </div>
         </div>
-        <p className="pv-field-hint">
-          Ces données servent uniquement à déterminer le régime PME ou SMC
-          applicable.
+        <p className="pv-field-hint" id={companyHintId}>
+          Ces chiffres servent à préqualifier le régime PME ou SMC applicable.
         </p>
       </fieldset>
 
-      {visibleError ? (
+      {error ? (
         <div className="pv-form-error" role="alert">
           <CircleAlert size={18} aria-hidden="true" />
-          <span>{visibleError}</span>
+          <div>
+            <span>{error}</span>
+            {errorAction ? (
+              <a href={errorAction.href}>{errorAction.label}</a>
+            ) : null}
+          </div>
         </div>
       ) : null}
 
@@ -255,8 +324,11 @@ export function AssessmentForm({
       </button>
 
       <p className="pv-confidentiality-note">
-        Ne transmettez aucune donnée personnelle ni secret métier. La requête
-        est envoyée à l’API OpenAI pour produire l’évaluation.
+        Pour produire l’évaluation, Preuvance envoie à l’API OpenAI le nom de
+        l’organisation, le nom du système, la description, puis les faits et la
+        préqualification qui en sont dérivés. Si vous êtes connecté,
+        l’évaluation est enregistrée dans votre espace. Ne saisissez ni donnée
+        personnelle ni secret métier. <a href="#confidentialite">En savoir plus</a>.
       </p>
     </form>
   );

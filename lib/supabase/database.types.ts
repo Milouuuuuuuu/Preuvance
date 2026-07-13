@@ -14,6 +14,23 @@ type ReasoningStatus = "pending" | "running" | "completed" | "failed";
 export type Database = {
   public: {
     Tables: {
+      assessment_rate_limits: {
+        Row: {
+          user_id: string;
+          window_started_at: string;
+          request_count: number;
+        };
+        Insert: {
+          user_id: string;
+          window_started_at?: string;
+          request_count?: number;
+        };
+        Update: {
+          window_started_at?: string;
+          request_count?: number;
+        };
+        Relationships: [];
+      };
       organizations: {
         Row: {
           id: string;
@@ -180,6 +197,16 @@ export type Database = {
     };
     Views: { [_ in never]: never };
     Functions: {
+      consume_assessment_quota: {
+        Args: Record<string, never>;
+        Returns: Array<{
+          allowed: boolean;
+          remaining: number;
+          retry_after_seconds: number;
+          request_limit: number;
+          window_seconds: number;
+        }>;
+      };
       is_organization_member: {
         Args: { target_organization_id: string };
         Returns: boolean;

@@ -11,19 +11,33 @@ type SignInFormProps = {
   nextPath: string;
 };
 
+type AuthFeedback = {
+  action?: {
+    href: string;
+    label: string;
+  };
+  kind: "error" | "success";
+  text: string;
+};
+
 export function SignInForm({ enabled, errorCode, nextPath }: SignInFormProps) {
   const [email, setEmail] = useState("");
   const [organizationName, setOrganizationName] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "sent">("idle");
-  const [message, setMessage] = useState(() => authErrorMessage(errorCode));
+  const [feedback, setFeedback] = useState<AuthFeedback | null>(() =>
+    authErrorFeedback(errorCode, nextPath),
+  );
+  const visibleFeedback = !enabled
+    ? configurationFeedback(nextPath)
+    : feedback;
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setMessage("");
+    setFeedback(null);
 
     const supabase = createBrowserSupabaseClient();
     if (!supabase) {
-      setMessage("L’authentification n’est pas configurée sur cet environnement.");
+      setFeedback(configurationFeedback(nextPath));
       return;
     }
 
@@ -44,18 +58,24 @@ export function SignInForm({ enabled, errorCode, nextPath }: SignInFormProps) {
 
     if (error) {
       setStatus("idle");
-      setMessage("Le lien n’a pas pu être envoyé. Vérifiez l’adresse et réessayez.");
+      setFeedback({
+        kind: "error",
+        text: "Le lien n’a pas pu être envoyé. Vérifiez l’adresse et réessayez.",
+      });
       return;
     }
 
     setStatus("sent");
-    setMessage("Lien envoyé. Consultez votre boîte de réception pour continuer.");
+    setFeedback({
+      kind: "success",
+      text: "Lien envoyé. Consultez votre boîte de réception pour continuer.",
+    });
   }
 
   return (
     <form onSubmit={submit} style={formStyle}>
       <label style={labelStyle} htmlFor="organization-name">
-        Organisation <span style={{ color: "#778194", fontWeight: 400 }}>(première connexion)</span>
+        Organisation <span style={{ color: "#475467", fontWeight: 400 }}>(première connexion)</span>
       </label>
       <input
         id="organization-name"
@@ -97,29 +117,54 @@ export function SignInForm({ enabled, errorCode, nextPath }: SignInFormProps) {
         {status === "submitting" ? "Envoi…" : status === "sent" ? "Lien envoyé" : "Recevoir mon lien"}
       </button>
 
-      {!enabled ? (
-        <p role="status" style={noticeStyle}>
-          Authentification indisponible : les variables Supabase ne sont pas configurées.
-        </p>
-      ) : null}
-      {message ? (
-        <p role="status" aria-live="polite" style={noticeStyle}>
-          {message}
-        </p>
+      {visibleFeedback ? (
+        <div
+          role={visibleFeedback.kind === "error" ? "alert" : "status"}
+          aria-live="polite"
+          style={noticeStyle}
+        >
+          <p style={{ margin: 0 }}>{visibleFeedback.text}</p>
+          {visibleFeedback.action ? (
+            <a href={visibleFeedback.action.href} style={noticeLinkStyle}>
+              {visibleFeedback.action.label}
+            </a>
+          ) : null}
+        </div>
       ) : null}
     </form>
   );
 }
 
-function authErrorMessage(code?: string) {
-  if (!code) return "";
+function authErrorFeedback(
+  code: string | undefined,
+  nextPath: string,
+): AuthFeedback | null {
+  if (!code) return null;
   if (code === "configuration") {
-    return "L’authentification n’est pas configurée sur cet environnement.";
+    return configurationFeedback(nextPath);
   }
   if (code === "missing_code") {
-    return "Le lien de connexion est incomplet ou a expiré.";
+    return {
+      kind: "error",
+      text: "Le lien de connexion est incomplet ou a expiré. Demandez un nouveau lien ci-dessus.",
+    };
   }
-  return "La connexion a échoué. Demandez un nouveau lien.";
+  return {
+    kind: "error",
+    text: "La connexion a échoué. Demandez un nouveau lien ci-dessus.",
+  };
+}
+
+function configurationFeedback(nextPath: string): AuthFeedback {
+  return {
+    kind: "error",
+    text: "Authentification indisponible : les variables Supabase ne sont pas configurées sur cet environnement.",
+    action: {
+      href: nextPath,
+      label:
+        nextPath === "/" ? "Revenir à Preuvance" : "Revenir à l’évaluation",
+    },
+  };
 }
 
 const formStyle: CSSProperties = {
@@ -163,7 +208,16 @@ const buttonStyle: CSSProperties = {
 
 const noticeStyle: CSSProperties = {
   margin: "14px 0 0",
-  color: "#566173",
+  color: "#344054",
   fontSize: 13,
   lineHeight: 1.5,
+};
+
+const noticeLinkStyle: CSSProperties = {
+  display: "inline-block",
+  marginTop: 8,
+  color: "#173BB6",
+  fontWeight: 750,
+  textDecoration: "underline",
+  textUnderlineOffset: 3,
 };

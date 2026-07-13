@@ -11,6 +11,10 @@ import {
   AssessmentPersistenceError,
   persistCompletedAssessment,
 } from "@/lib/supabase/persist-assessment";
+import {
+  AssessmentQuotaUnavailableError,
+  consumeAssessmentQuota,
+} from "@/lib/supabase/assessment-quota";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -105,6 +109,36 @@ export async function POST(request: Request): Promise<Response> {
         "AUTHENTICATION_REQUIRED",
         "Une session est requise pour enregistrer l’évaluation.",
         { retryable: false },
+      );
+    }
+
+    try {
+      const quota = await consumeAssessmentQuota(supabase);
+      if (!quota.allowed) {
+        return problem(
+          429,
+          "ASSESSMENT_RATE_LIMIT_EXCEEDED",
+          "Trop d’évaluations ont été lancées récemment. Réessayez après le délai indiqué.",
+          {
+            retryable: true,
+            retryAfterSeconds: quota.retryAfterSeconds,
+            limit: quota.limit,
+            windowSeconds: quota.windowSeconds,
+          },
+          { "Retry-After": String(quota.retryAfterSeconds) },
+        );
+      }
+    } catch (error) {
+      const message =
+        error instanceof AssessmentQuotaUnavailableError
+          ? error.message
+          : "Erreur de quota inconnue.";
+      console.error("[PREUVANCE] assessment.quota_unavailable", message);
+      return problem(
+        503,
+        "ASSESSMENT_RATE_LIMIT_UNAVAILABLE",
+        "Le quota d’évaluations ne peut pas être vérifié. Réessayez dans un instant.",
+        { retryable: true },
       );
     }
   }
@@ -263,7 +297,13 @@ function problem(
   code: string,
   detail: string,
   extra?: Record<string, unknown>,
+  responseHeaders?: HeadersInit,
 ): Response {
+  const headers = new Headers(responseHeaders);
+  headers.set("Cache-Control", "no-store");
+  headers.set("Content-Type", "application/problem+json; charset=utf-8");
+  headers.set("X-Content-Type-Options", "nosniff");
+
   return Response.json(
     {
       type: `/problems/${code.toLowerCase()}`,
@@ -274,11 +314,7 @@ function problem(
     },
     {
       status,
-      headers: {
-        "Cache-Control": "no-store",
-        "Content-Type": "application/problem+json; charset=utf-8",
-        "X-Content-Type-Options": "nosniff",
-      },
+      headers,
     },
   );
 }

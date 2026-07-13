@@ -10,8 +10,8 @@
     "build": "vinext build",
     "start": "vinext start",
     "test": "npm run test:unit && npm run build && node --test tests/rendered-html.test.mjs",
-    "test:unit": "node --import tsx --test tests/assessment-core.test.ts",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "test:unit": "node --import tsx --test tests/assessment-core.test.ts tests/assessment-form.test.ts tests/assessment-quota.test.ts tests/local-download.test.ts",
+    "lint": "eslint . --ignore-pattern **/dist/** --ignore-pattern outputs/** --ignore-pattern .next/** --ignore-pattern .vinext/** --ignore-pattern .wrangler/**"
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",
@@ -50,6 +50,11 @@
     "vinext": "0.0.50",
     "vite": "8.0.13",
     "wrangler": "4.92.0"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.10"
+    }
   },
   "type": "module"
 }

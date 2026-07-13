@@ -500,6 +500,12 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
       firstText(assessment, ["createdAt", "completedAt", "timestamp"]),
   );
   const assessmentId = textValue(assessment.id);
+  const persistence = isRecord(assessment.persistence)
+    ? assessment.persistence
+    : null;
+  const persistenceStatus = textValue(persistence?.status);
+  const persistedAssessmentId =
+    textValue(persistence?.assessmentId) ?? assessmentId;
 
   const reportRecord = isRecord(assessment.report) ? assessment.report : null;
   const reportSummary =
@@ -524,13 +530,23 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
         (typeof reportRecord.assessmentId === "string" || isRecord(reportRecord.organization))
           ? reportRecord
           : assessment;
+      let reportRequest: { assessmentId: string } | { localPayload: unknown };
+      if (persistenceStatus === "persisted") {
+        if (!persistedAssessmentId) {
+          throw new Error("La référence du rapport enregistré est absente.");
+        }
+        reportRequest = { assessmentId: persistedAssessmentId };
+      } else {
+        reportRequest = { localPayload: pdfPayload };
+      }
+
       const response = await fetch("/api/reports/pdf", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/pdf, application/problem+json",
         },
-        body: JSON.stringify(pdfPayload),
+        body: JSON.stringify(reportRequest),
       });
 
       if (!response.ok) {

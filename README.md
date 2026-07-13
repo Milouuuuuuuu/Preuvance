@@ -45,6 +45,17 @@ En développement, renseigner au minimum `OPENAI_API_KEY`. Sans cette clé, l’
 
 Supabase est activé lorsque `NEXT_PUBLIC_SUPABASE_URL` et une clé publique (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, ou l’ancienne `NEXT_PUBLIC_SUPABASE_ANON_KEY`) sont présentes. Dans ce mode, une session est requise et l’évaluation, son rapport et son journal de raisonnement sont enregistrés ensemble. Les secrets ne doivent jamais être commités.
 
+## Téléchargement Windows one shot
+
+Le bouton « Télécharger la version locale » sert `public/downloads/preuvance-local.zip`. Après extraction, `LANCER_PREUVANCE.cmd` :
+
+1. vérifie Windows PowerShell et Node.js `22.13.0+` ;
+2. demande la clé OpenAI sans l’afficher si elle n’est pas déjà configurée ;
+3. exécute `npm ci`, puis le build de vérification ;
+4. démarre Vinext uniquement sur `127.0.0.1` et ouvre le navigateur.
+
+Le lanceur ne demande pas les droits administrateur et ne scanne pas le poste. Le détail et la commande de régénération sont dans [`docs/local-launch.md`](docs/local-launch.md).
+
 ## Vérification
 
 ```bash
@@ -60,7 +71,13 @@ npm run build
 - score et tiers calculés de façon déterministe ;
 - PDF serveur via `@react-pdf/renderer` ;
 - Supabase Auth/Postgres/RLS ;
+- quota atomique de cinq démarrages d’évaluation par utilisateur et par heure ;
+- PDF persistant relu sous RLS à partir de son identifiant, jamais forgé depuis le navigateur ;
 - runtime Sites/Vinext compatible Cloudflare Worker.
+
+## Extension locale « System Exposure »
+
+Le prompt d’extension machine suppose un autre socle qui n’est pas présent dans ce workspace : un CLI Python/Typer/Rich avec une commande `aplomb scan` déjà validée trois fois. Preuvance ne simule donc aucun accès PowerShell depuis le navigateur. Le gate, la vérification des cmdlets Windows et la stratégie de reprise sont consignés dans [`docs/preuvance-machine-gate.md`](docs/preuvance-machine-gate.md).
 
 ## Périmètre volontairement exclu
 

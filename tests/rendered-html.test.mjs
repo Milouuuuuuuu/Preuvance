@@ -73,6 +73,12 @@ test("rend la page Preuvance en français sans vestige du starter", async () => 
 
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+  assert.equal(response.headers.get("x-frame-options"), "DENY");
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.match(
+    response.headers.get("content-security-policy") ?? "",
+    /frame-ancestors 'none'/,
+  );
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="fr"/i);
@@ -81,7 +87,27 @@ test("rend la page Preuvance en français sans vestige du starter", async () => 
   assert.match(html, /Référentiel EU AI Act vérifié le 13 juillet 2026/i);
   assert.match(html, /Description libre/i);
   assert.match(html, /Espace/i);
+  assert.match(html, /class="pv-brand-e"/i);
+  assert.match(html, /src="\/og\.png"/i);
+  assert.match(html, /loading="lazy"/i);
+  assert.match(html, /class="pv-mobile-auth-action"[^>]*href="\/auth\/sign-in"/i);
+  assert.match(html, /href="\/downloads\/preuvance-local\.zip"/i);
+  assert.match(html, /id="confidentialite"/i);
+  assert.match(html, /Marquage machine · 50\(2\)/i);
+  assert.match(html, /Contenu synthétique · 50\(4\)/i);
   assert.doesNotMatch(html, /Codex is working|Your site is taking shape|SkeletonPreview/i);
+});
+
+test("rend l’indisponibilité de l’authentification actionnable", async () => {
+  const response = await fetch(
+    `${baseUrl}/auth/sign-in?error=configuration&next=%2F%23evaluation`,
+    { headers: { accept: "text/html" } },
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /variables Supabase ne sont pas configurées/i);
+  assert.match(html, /href="\/#evaluation"[^>]*>Revenir à l’évaluation</i);
 });
 
 test("génère un vrai PDF dans le runtime Worker", async () => {
@@ -94,47 +120,49 @@ test("génère un vrai PDF dans le runtime Worker", async () => {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        assessmentId: "assessment_01",
-        generatedAt: "2026-07-13T14:30:00.000Z",
-        lastRegulatoryVerification: "2026-07-13",
-        organization: {
-          name: "Atelier Horizon",
-          employeeCount: 40,
-          annualRevenueEur: 8_000_000,
-          balanceSheetTotalEur: 5_000_000,
-          smcEligible: false,
-        },
-        system: {
-          name: "Assistant clients",
-          description:
-            "Un assistant répond aux questions des clients à partir de la documentation validée.",
-          intendedUse: "Répondre aux questions fréquentes des clients.",
-        },
-        result: {
-          score: 59,
-          tier: "C",
-          riskLevel: "undetermined",
-          confidence: 0.42,
-          executiveSummary:
-            "La qualification reste à confirmer faute d’informations suffisantes.",
-        },
-        classification: {
-          rationale: "Les faits disponibles ne permettent pas encore de trancher.",
-          articles: [
+        localPayload: {
+          assessmentId: "assessment_01",
+          generatedAt: "2026-07-13T14:30:00.000Z",
+          lastRegulatoryVerification: "2026-07-13",
+          organization: {
+            name: "Atelier Horizon",
+            employeeCount: 40,
+            annualRevenueEur: 8_000_000,
+            balanceSheetTotalEur: 5_000_000,
+            smcEligible: false,
+          },
+          system: {
+            name: "Assistant clients",
+            description:
+              "Un assistant répond aux questions des clients à partir de la documentation validée.",
+            intendedUse: "Répondre aux questions fréquentes des clients.",
+          },
+          result: {
+            score: 59,
+            tier: "C",
+            riskLevel: "undetermined",
+            confidence: 0.42,
+            executiveSummary:
+              "La qualification reste à confirmer faute d’informations suffisantes.",
+          },
+          classification: {
+            rationale: "Les faits disponibles ne permettent pas encore de trancher.",
+            articles: [
+              {
+                reference: "Article 4",
+                finding: "L’obligation de maîtrise de l’IA reste applicable.",
+              },
+            ],
+          },
+          dimensions: [
             {
-              reference: "Article 4",
-              finding: "L’obligation de maîtrise de l’IA reste applicable.",
+              name: "Gouvernance",
+              score: 59,
+              finding: "Les preuves déclarées restent à vérifier.",
             },
           ],
+          gaps: [],
         },
-        dimensions: [
-          {
-            name: "Gouvernance",
-            score: 59,
-            finding: "Les preuves déclarées restent à vérifier.",
-          },
-        ],
-        gaps: [],
       }),
     },
   );
@@ -144,6 +172,41 @@ test("génère un vrai PDF dans le runtime Worker", async () => {
   const bytes = new Uint8Array(await response.arrayBuffer());
   assert.ok(bytes.byteLength > 5_000);
   assert.equal(new TextDecoder().decode(bytes.slice(0, 5)), "%PDF-");
+});
+
+test("refuse l’ancien payload PDF directement fourni par le client", async () => {
+  const response = await fetch(`${baseUrl}/api/reports/pdf`, {
+    method: "POST",
+    headers: {
+      accept: "application/problem+json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      assessmentId: "assessment_01",
+      generatedAt: "2026-07-13T14:30:00.000Z",
+    }),
+  });
+
+  assert.equal(response.status, 422);
+  const problem = await response.json();
+  assert.equal(problem.title, "invalid_report_request");
+});
+
+test("refuse un assessmentId persistant quand Supabase est absent", async () => {
+  const response = await fetch(`${baseUrl}/api/reports/pdf`, {
+    method: "POST",
+    headers: {
+      accept: "application/problem+json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      assessmentId: "00000000-0000-4000-8000-000000000001",
+    }),
+  });
+
+  assert.equal(response.status, 503);
+  const problem = await response.json();
+  assert.equal(problem.title, "report_storage_unavailable");
 });
 
 test("le flux d’évaluation refuse la clé absente sans fabriquer de résultat", async () => {
@@ -166,12 +229,13 @@ test("le flux d’évaluation refuse la clé absente sans fabriquer de résultat
     }),
   });
 
-  assert.equal(response.status, 200);
+  const responseBody = await response.text();
+  assert.equal(response.status, 200, responseBody);
   assert.match(
     response.headers.get("content-type") ?? "",
     /^application\/x-ndjson\b/i,
   );
-  const events = (await response.text())
+  const events = responseBody
     .trim()
     .split("\n")
     .map((line) => JSON.parse(line));
