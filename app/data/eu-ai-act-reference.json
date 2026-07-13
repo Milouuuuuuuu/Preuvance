@@ -1,0 +1,329 @@
+{
+  "metadata": {
+    "product": "PREUVANCE",
+    "jurisdiction": "Union européenne",
+    "verifiedAt": "2026-07-13",
+    "language": "fr",
+    "legalAdviceDisclaimerFr": "Cette évaluation automatisée est informative et ne constitue pas un avis juridique.",
+    "verificationNoteFr": "La position juridiquement contraignante et les modifications signées mais non encore publiées au Journal officiel de l’Union européenne (JOUE) sont présentées séparément."
+  },
+  "sources": [
+    {
+      "id": "eu-ai-act-oj",
+      "title": "Règlement (UE) 2024/1689 — texte publié au JOUE",
+      "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+    },
+    {
+      "id": "omnibus-procedure",
+      "title": "Procédure 2025/0359/COD — Digital Omnibus on AI",
+      "url": "https://eur-lex.europa.eu/procedure/EN/2025_359"
+    },
+    {
+      "id": "omnibus-final-green-light",
+      "title": "Conseil de l’UE — feu vert définitif du 29 juin 2026",
+      "url": "https://www.consilium.europa.eu/fr/press/press-releases/2026/06/29/artificial-intelligence-council-gives-final-green-light-to-simplify-and-streamline-rules/"
+    },
+    {
+      "id": "smc-recommendation",
+      "title": "Recommandation (UE) 2025/1099 — définition des petites entreprises à moyenne capitalisation",
+      "url": "https://eur-lex.europa.eu/eli/reco/2025/1099/oj"
+    },
+    {
+      "id": "sme-recommendation",
+      "title": "Recommandation 2003/361/CE — définition des micro, petites et moyennes entreprises",
+      "url": "https://eur-lex.europa.eu/eli/reco/2003/361/oj"
+    }
+  ],
+  "legalLayers": [
+    {
+      "id": "eu-ai-act-2024-1689",
+      "label": "Règlement (UE) 2024/1689 (AI Act)",
+      "status": "binding_in_force",
+      "entryIntoForce": "2024-08-01",
+      "sourceIds": ["eu-ai-act-oj"],
+      "displayFr": "Droit en vigueur et juridiquement contraignant."
+    },
+    {
+      "id": "digital-omnibus-ai-2025-0359-cod",
+      "label": "Digital Omnibus on AI — 2025/0359(COD)",
+      "status": "signed_pending_official_journal",
+      "signedAt": "2026-07-08",
+      "sourceIds": ["omnibus-procedure", "omnibus-final-green-light"],
+      "displayFr": "Acte signé le 8 juillet 2026, en attente de publication au JOUE au 13 juillet 2026. Ses modifications ne sont pas encore présentées comme du droit en vigueur."
+    }
+  ],
+  "classificationRules": {
+    "prohibitedPracticesBinding": [
+      {
+        "id": "manipulation",
+        "article": "Article 5(1)(a)-(b)",
+        "labelFr": "Techniques subliminales, manipulatrices ou trompeuses, ou exploitation de vulnérabilités, causant ou susceptibles de causer un préjudice significatif"
+      },
+      {
+        "id": "social-scoring",
+        "article": "Article 5(1)(c)",
+        "labelFr": "Notation sociale conduisant à un traitement préjudiciable ou défavorable dans les conditions prévues par le texte"
+      },
+      {
+        "id": "criminal-risk-profiling-only",
+        "article": "Article 5(1)(d)",
+        "labelFr": "Évaluation ou prédiction du risque pénal fondée uniquement sur le profilage ou les traits de personnalité, hors appui à une appréciation humaine fondée sur des faits objectifs"
+      },
+      {
+        "id": "untargeted-facial-scraping",
+        "article": "Article 5(1)(e)",
+        "labelFr": "Constitution ou extension de bases de reconnaissance faciale par collecte non ciblée d’images sur internet ou vidéosurveillance"
+      },
+      {
+        "id": "work-education-emotion",
+        "article": "Article 5(1)(f)",
+        "labelFr": "Inférence des émotions au travail ou dans l’enseignement, sauf finalité médicale ou de sécurité"
+      },
+      {
+        "id": "sensitive-biometric-categorisation",
+        "article": "Article 5(1)(g)",
+        "labelFr": "Catégorisation biométrique individuelle visant à déduire ou inférer certaines données sensibles, sous réserve des exceptions prévues"
+      },
+      {
+        "id": "real-time-remote-biometric-law-enforcement",
+        "article": "Article 5(1)(h), 5(2)-(7)",
+        "labelFr": "Identification biométrique à distance en temps réel dans les espaces accessibles au public à des fins répressives, hors exceptions strictes et garanties"
+      }
+    ],
+    "prohibitedPracticeSignedAmendment": [
+      {
+        "id": "non-consensual-intimate-or-csam-generation",
+        "article": "Modification signée de l’article 5",
+        "labelFr": "Génération de contenus sexuels ou intimes non consentis ou de matériel d’abus sexuels sur enfants",
+        "legalStatus": "signed_pending_official_journal"
+      }
+    ],
+    "annexIII": {
+      "article": "Article 6(2)-(3) et annexe III",
+      "areas": [
+        "biométrie",
+        "infrastructures critiques",
+        "éducation et formation professionnelle",
+        "emploi, gestion des travailleurs et accès au travail indépendant",
+        "accès aux services privés essentiels, aux services publics essentiels et aux prestations",
+        "services répressifs",
+        "migration, asile et gestion des contrôles aux frontières",
+        "administration de la justice et processus démocratiques"
+      ],
+      "importantQualificationFr": "L’appartenance à une zone de l’annexe III ne suffit pas toujours : l’usage précis doit correspondre à un cas listé. L’exception de l’article 6(3) peut s’appliquer lorsqu’il n’existe pas de risque significatif pour la santé, la sécurité ou les droits fondamentaux et que les conditions du texte sont remplies ; un système réalisant du profilage de personnes physiques reste toutefois à haut risque."
+    },
+    "annexI": {
+      "article": "Article 6(1) et annexe I",
+      "testFr": "Deux conditions cumulatives : l’IA est elle-même un produit couvert par la législation d’harmonisation de l’annexe I, ou un composant de sécurité d’un tel produit, et ce produit est soumis à une évaluation de conformité par un tiers."
+    }
+  },
+  "deadlines": [
+    {
+      "id": "ai-literacy",
+      "labelFr": "Maîtrise de l’IA",
+      "articles": ["Article 4"],
+      "bindingPosition": {
+        "date": "2025-02-02",
+        "status": "active",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": null,
+      "noteFr": "Obligation applicable aux fournisseurs et déployeurs de prendre des mesures pour assurer un niveau suffisant de maîtrise de l’IA de leur personnel et des autres personnes concernées."
+    },
+    {
+      "id": "art5-prohibited-practices",
+      "labelFr": "Pratiques interdites",
+      "articles": ["Article 5"],
+      "bindingPosition": {
+        "date": "2025-02-02",
+        "status": "active",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": null,
+      "noteFr": "Les interdictions du règlement 2024/1689 sont déjà applicables. La nouvelle interdiction ajoutée par l’Omnibus est suivie séparément tant que l’acte modificatif n’est pas publié."
+    },
+    {
+      "id": "gpai-provider-obligations",
+      "labelFr": "Obligations des fournisseurs de modèles d’IA à usage général (GPAI)",
+      "articles": ["Articles 51 à 56"],
+      "bindingPosition": {
+        "date": "2025-08-02",
+        "status": "active",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": null,
+      "noteFr": "Ces obligations visent le fournisseur du modèle GPAI. Elles s’appliquent depuis le 2 août 2025 aux modèles mis sur le marché à partir de cette date ; les modèles déjà commercialisés avant le 2 août 2025 ont jusqu’au 2 août 2027. Les pouvoirs de sanction de la Commission pour les GPAI s’appliquent à partir du 2 août 2026. Le simple recours à l’API d’un modèle tiers ne transforme pas automatiquement un déployeur en fournisseur de GPAI."
+    },
+    {
+      "id": "art50-1-human-interaction-disclosure",
+      "labelFr": "Information lors d’une interaction directe avec une IA",
+      "articles": ["Article 50(1)"],
+      "bindingPosition": {
+        "date": "2026-08-02",
+        "status": "scheduled",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": null,
+      "noteFr": "Le fournisseur doit concevoir le système pour que la personne soit informée qu’elle interagit avec une IA, sauf si cela est évident pour une personne normalement informée, attentive et avisée, compte tenu des circonstances et du contexte, ou dans les exceptions légales prévues."
+    },
+    {
+      "id": "art50-2-machine-readable-marking",
+      "labelFr": "Marquage technique des contenus synthétiques",
+      "articles": ["Article 50(2)"],
+      "bindingPosition": {
+        "date": "2026-08-02",
+        "status": "scheduled",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": {
+        "date": "2026-12-02",
+        "status": "signed_pending_official_journal",
+        "legalLayerId": "digital-omnibus-ai-2025-0359-cod",
+        "conditionFr": "Uniquement pour les systèmes générant du contenu déjà mis sur le marché avant le 2 août 2026.",
+        "displayFr": "L’Omnibus signé prévoit un délai jusqu’au 2 décembre 2026 uniquement pour l’article 50(2) et les systèmes générant du contenu déjà mis sur le marché avant le 2 août 2026. Sous réserve de publication au JOUE et d’entrée en vigueur."
+      },
+      "noteFr": "Obligation du fournisseur d’assurer un marquage dans un format lisible par machine et détectable comme artificiellement généré ou manipulé, dans la mesure techniquement faisable. Ce n’est pas la même obligation que l’information visible due par certains déployeurs au titre de l’article 50(4)."
+    },
+    {
+      "id": "art50-3-emotion-biometric-notice",
+      "labelFr": "Information des personnes exposées à la reconnaissance des émotions ou à la catégorisation biométrique",
+      "articles": ["Article 50(3)"],
+      "bindingPosition": {
+        "date": "2026-08-02",
+        "status": "scheduled",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": null,
+      "noteFr": "Obligation du déployeur, avec exceptions légales limitées ; les règles de protection des données restent applicables."
+    },
+    {
+      "id": "art50-4-deepfake-disclosure",
+      "labelFr": "Information visible pour les deepfakes",
+      "articles": ["Article 50(4)"],
+      "bindingPosition": {
+        "date": "2026-08-02",
+        "status": "scheduled",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": null,
+      "noteFr": "Le déployeur doit indiquer que les images, sons ou vidéos constituant un deepfake ont été générés ou manipulés par IA, sous réserve des exceptions et modalités particulières prévues pour certains contenus."
+    },
+    {
+      "id": "art50-4-public-interest-text-disclosure",
+      "labelFr": "Information visible pour certains textes d’intérêt public",
+      "articles": ["Article 50(4)"],
+      "bindingPosition": {
+        "date": "2026-08-02",
+        "status": "scheduled",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": null,
+      "noteFr": "Le déployeur doit signaler le texte généré ou manipulé par IA lorsqu’il est publié afin d’informer le public sur des questions d’intérêt public, sauf lorsqu’un processus de contrôle humain ou de responsabilité éditoriale satisfait à l’exception du texte."
+    },
+    {
+      "id": "high-risk-annex-iii",
+      "labelFr": "Exigences applicables aux systèmes à haut risque autonomes de l’annexe III",
+      "articles": ["Article 6(2)-(3)", "Annexe III", "Articles 8 à 49"],
+      "bindingPosition": {
+        "date": "2026-08-02",
+        "status": "scheduled",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": {
+        "date": "2027-12-02",
+        "status": "signed_pending_official_journal",
+        "legalLayerId": "digital-omnibus-ai-2025-0359-cod",
+        "displayFr": "Report au 2 décembre 2027 dans l’Omnibus signé ; sous réserve de publication au JOUE et d’entrée en vigueur."
+      },
+      "noteFr": "Au 13 juillet 2026, le report est politiquement adopté et l’acte est signé, mais la couche de droit actuellement publiée reste distinguée dans PREUVANCE."
+    },
+    {
+      "id": "high-risk-annex-i",
+      "labelFr": "Exigences applicables aux systèmes à haut risque liés aux produits réglementés de l’annexe I",
+      "articles": ["Article 6(1)", "Annexe I", "Articles 8 à 49"],
+      "bindingPosition": {
+        "date": "2027-08-02",
+        "status": "scheduled",
+        "legalLayerId": "eu-ai-act-2024-1689"
+      },
+      "signedAmendmentPosition": {
+        "date": "2028-08-02",
+        "status": "signed_pending_official_journal",
+        "legalLayerId": "digital-omnibus-ai-2025-0359-cod",
+        "displayFr": "Report au 2 août 2028 dans l’Omnibus signé ; sous réserve de publication au JOUE et d’entrée en vigueur."
+      },
+      "noteFr": "La date de la version actuellement publiée est le 2 août 2027, et non le 2 août 2026."
+    }
+  ],
+  "enterpriseThresholds": {
+    "currency": "EUR",
+    "aggregationWarningFr": "Les effectifs et données financières doivent être calculés en tenant compte, le cas échéant, des entreprises partenaires et liées. Une saisie isolée non consolidée ne permet qu’une préqualification.",
+    "categories": {
+      "micro": {
+        "maxEmployeesExclusive": 10,
+        "maxAnnualRevenueInclusive": 2000000,
+        "maxBalanceSheetInclusive": 2000000,
+        "mustNotBeCategory": null,
+        "sourceIds": ["sme-recommendation"]
+      },
+      "small": {
+        "maxEmployeesExclusive": 50,
+        "maxAnnualRevenueInclusive": 10000000,
+        "maxBalanceSheetInclusive": 10000000,
+        "mustNotBeCategory": null,
+        "sourceIds": ["sme-recommendation"]
+      },
+      "medium": {
+        "maxEmployeesExclusive": 250,
+        "maxAnnualRevenueInclusive": 50000000,
+        "maxBalanceSheetInclusive": 43000000,
+        "mustNotBeCategory": null,
+        "sourceIds": ["sme-recommendation"]
+      },
+      "smallMidCap": {
+        "maxEmployeesExclusive": 750,
+        "maxAnnualRevenueInclusive": 150000000,
+        "maxBalanceSheetInclusive": 129000000,
+        "mustNotBeCategory": "sme",
+        "sourceIds": ["smc-recommendation"]
+      }
+    },
+    "financialTestFr": "Le seuil d’effectif doit être respecté et au moins un des deux plafonds financiers (chiffre d’affaires OU total de bilan) doit être respecté.",
+    "aiActSmcRelief": {
+      "legalStatus": "signed_pending_official_journal",
+      "displayFr": "L’extension à certaines simplifications de l’AI Act et au calcul plafonné des amendes pour les SMC figure dans l’Omnibus signé, mais reste sous réserve de publication au JOUE et d’entrée en vigueur."
+    }
+  },
+  "fines": [
+    {
+      "id": "art5-fine",
+      "articles": ["Article 99(3)", "Article 5"],
+      "fixedMaximumEur": 35000000,
+      "turnoverMaximumPercent": 7,
+      "standardUndertakingRule": "higher_of_fixed_or_percentage",
+      "bindingSmeRule": "lower_of_fixed_or_percentage",
+      "signedSmcRule": "not_extended_to_smc",
+      "labelFr": "Non-respect des pratiques interdites"
+    },
+    {
+      "id": "operator-obligations-fine",
+      "articles": ["Article 99(4)"],
+      "fixedMaximumEur": 15000000,
+      "turnoverMaximumPercent": 3,
+      "standardUndertakingRule": "higher_of_fixed_or_percentage",
+      "bindingSmeRule": "lower_of_fixed_or_percentage",
+      "signedSmcRule": "lower_of_fixed_or_percentage_pending_official_journal",
+      "labelFr": "Non-respect de certaines obligations des opérateurs et organismes notifiés, dont les obligations de transparence de l’article 50 — et pas uniquement les systèmes à haut risque"
+    },
+    {
+      "id": "incorrect-information-fine",
+      "articles": ["Article 99(5)"],
+      "fixedMaximumEur": 7500000,
+      "turnoverMaximumPercent": 1,
+      "standardUndertakingRule": "higher_of_fixed_or_percentage",
+      "bindingSmeRule": "lower_of_fixed_or_percentage",
+      "signedSmcRule": "lower_of_fixed_or_percentage_pending_official_journal",
+      "labelFr": "Informations incorrectes, incomplètes ou trompeuses fournies aux organismes notifiés ou autorités compétentes en réponse à une demande"
+    }
+  ]
+}
