@@ -6,6 +6,7 @@ import {
   ratioToPercentage,
   toPercentage,
 } from "../app/lib/assessment/percentages";
+import { decisionScoreLabel } from "../lib/pdf/assessment-payload";
 
 test("un score entier de 1/100 reste 1 et n’est jamais réinterprété comme 100 %", () => {
   assert.equal(toPercentage(1), 1);
@@ -36,4 +37,10 @@ test("un ratio explicite score/maxScore se convertit sans heuristique", () => {
 test("clampPercentage arrondit et borne sur 0-100", () => {
   assert.equal(clampPercentage(99.6), 100);
   assert.equal(clampPercentage(-1), 0);
+});
+
+test("le journal du PDF affiche « non noté » pour un score absent, jamais un chiffre inventé", () => {
+  assert.equal(decisionScoreLabel(null), "non noté");
+  assert.equal(decisionScoreLabel(1), "1/100");
+  assert.equal(decisionScoreLabel(95), "95/100");
 });

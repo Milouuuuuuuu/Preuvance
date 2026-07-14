@@ -8,6 +8,7 @@ import {
   View,
 } from "@react-pdf/renderer";
 
+import { decisionScoreLabel } from "./assessment-payload";
 import type {
   EvidenceStatus,
   GapPriority,
@@ -264,6 +265,17 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
   const generatedDate = formatDate(assessment.generatedAt);
   const riskStyle = riskBadgeStyle(assessment.result.riskLevel);
 
+  // Les sections 05+ sont conditionnelles : leur numéro est calculé pour
+  // rester consécutif quel que soit le payload validé par le schéma.
+  let sectionNumber = 4;
+  const nextSectionIndex = () => String(++sectionNumber).padStart(2, "0");
+  const journalIndex =
+    assessment.crossCheck || assessment.decisionLog?.length
+      ? nextSectionIndex()
+      : null;
+  const evidenceIndex = assessment.evidence?.length ? nextSectionIndex() : null;
+  const brokerIndex = assessment.brokerContext ? nextSectionIndex() : null;
+
   return (
     <Document
       author="PREUVANCE"
@@ -416,9 +428,9 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
           )}
         </View>
 
-        {assessment.crossCheck || assessment.decisionLog?.length ? (
+        {journalIndex ? (
           <View style={styles.section} break>
-            <SectionHeader index="05" title="Journal des décisions et contre-vérification" />
+            <SectionHeader index={journalIndex} title="Journal des décisions et contre-vérification" />
             {assessment.crossCheck ? (
               <View
                 style={[styles.card, crossCheckCardStyle(assessment.crossCheck.status)]}
@@ -448,7 +460,7 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
                 <View style={styles.dimensionTop}>
                   <Text style={styles.cardTitle}>{entry.title}</Text>
                   <Text style={styles.dimensionScore}>
-                    {entry.score === null ? "non noté" : `${entry.score}/100`}
+                    {decisionScoreLabel(entry.score)}
                   </Text>
                 </View>
                 <Text style={[styles.body, { fontFamily: "Helvetica-Bold", marginBottom: 3 }]}>
@@ -460,9 +472,9 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
           </View>
         ) : null}
 
-        {assessment.evidence?.length ? (
+        {assessment.evidence?.length && evidenceIndex ? (
           <View style={styles.section} break>
-            <SectionHeader index="06" title="Éléments de maîtrise déclarés" />
+            <SectionHeader index={evidenceIndex} title="Éléments de maîtrise déclarés" />
             <View style={styles.tableHeader} fixed>
               <Text style={styles.tableControl}>Contrôle</Text>
               <Text style={styles.tableStatus}>État</Text>
@@ -480,9 +492,9 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
           </View>
         ) : null}
 
-        {assessment.brokerContext ? (
+        {assessment.brokerContext && brokerIndex ? (
           <View style={styles.section}>
-            <SectionHeader index="07" title="Contexte de placement" />
+            <SectionHeader index={brokerIndex} title="Contexte de placement" />
             <View style={[styles.card, styles.brokerGrid]}>
               {assessment.brokerContext.requestedCoverage ? (
                 <BrokerItem

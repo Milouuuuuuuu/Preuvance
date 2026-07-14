@@ -185,6 +185,10 @@ export type GapPriority = (typeof gapPriorities)[number];
 export type EvidenceStatus = (typeof evidenceStatuses)[number];
 export type PreuvanceAssessment = z.infer<typeof preuvanceAssessmentSchema>;
 
+export function decisionScoreLabel(score: number | null): string {
+  return score === null ? "non noté" : `${score}/100`;
+}
+
 export type AssessmentValidationResult =
   | { success: true; data: PreuvanceAssessment }
   | { success: false; errors: string[] };
