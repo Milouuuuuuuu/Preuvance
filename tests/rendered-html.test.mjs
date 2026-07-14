@@ -178,6 +178,97 @@ test("génère un vrai PDF dans le runtime Worker", async () => {
   assert.equal(new TextDecoder().decode(bytes.slice(0, 5)), "%PDF-");
 });
 
+test("génère le PDF complet : contre-vérification, journal et sections conditionnelles", async () => {
+  const response = await fetch(`${baseUrl}/api/reports/pdf`, {
+    method: "POST",
+    headers: {
+      accept: "application/pdf",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      localPayload: {
+        assessmentId: "assessment_02",
+        generatedAt: "2026-07-14T09:30:00.000Z",
+        lastRegulatoryVerification: "2026-07-13",
+        organization: { name: "Atelier Horizon", employeeCount: 40 },
+        system: {
+          name: "Notation clients",
+          description:
+            "Le système attribue une note de comportement global aux usagers pour moduler leur accès aux services.",
+        },
+        result: {
+          score: 12,
+          tier: "D",
+          riskLevel: "prohibited",
+          confidence: 0.35,
+          executiveSummary:
+            "Score plafonné : la contre-vérification déterministe contredit la classification.",
+          appliedCaps: [
+            {
+              cap: 59,
+              reason:
+                "La contre-vérification déterministe contredit la classification sur au moins un point structurant ; revue humaine requise.",
+            },
+            {
+              cap: 15,
+              reason: "Une pratique interdite par le droit en vigueur est identifiée.",
+            },
+          ],
+        },
+        crossCheck: {
+          status: "divergent",
+          version: "preuvance-crosscheck-v1",
+          note:
+            "L’extraction signale une notation sociale mais la classification conclut « non applicable ».",
+        },
+        decisionLog: [
+          {
+            title: "Pratiques interdites — droit publié",
+            decision: "Applicable",
+            score: 88,
+            rationale: "Notation sociale explicite dans la description.",
+          },
+          {
+            title: "Contre-vérification déterministe",
+            decision: "Contradiction détectée — revue humaine requise",
+            score: null,
+            rationale: "Divergence structurante sur l’article 5.",
+          },
+        ],
+        classification: {
+          rationale: "Signal de notation sociale détecté dans la description.",
+          articles: [
+            {
+              reference: "Article 5(1)(c)",
+              finding: "Notation sociale potentiellement interdite.",
+            },
+          ],
+        },
+        dimensions: [
+          { name: "Gouvernance", score: 12, finding: "Pénalités maximales appliquées." },
+        ],
+        gaps: [],
+        evidence: [
+          {
+            control: "Validation humaine",
+            status: "missing",
+            detail: "Aucune preuve exploitable fournie.",
+          },
+        ],
+        brokerContext: {
+          requestedCoverage: "Responsabilité civile professionnelle IA",
+        },
+      },
+    }),
+  });
+
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^application\/pdf\b/i);
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  assert.ok(bytes.byteLength > 5_000);
+  assert.equal(new TextDecoder().decode(bytes.slice(0, 5)), "%PDF-");
+});
+
 test("refuse l’ancien payload PDF directement fourni par le client", async () => {
   const response = await fetch(`${baseUrl}/api/reports/pdf`, {
     method: "POST",
