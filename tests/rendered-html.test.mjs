@@ -41,8 +41,8 @@ test.before(async () => {
     previewLogs += String(chunk);
   });
 
-  // Démarrage à froid mesuré entre 25 s et plus de 60 s selon la charge du
-  // poste (synchronisation OneDrive, antivirus) : le délai doit rester large.
+  // Démarrage à froid mesuré entre 25 s et 152 s selon la charge du poste
+  // (synchronisation OneDrive, antivirus) : le délai doit rester large.
   const startupTimeoutMs =
     Number(process.env.PREUVANCE_TEST_STARTUP_TIMEOUT_MS) || 180_000;
   const deadline = Date.now() + startupTimeoutMs;

@@ -203,15 +203,51 @@ test("un calcul d’entraînement au-delà de 10^25 FLOP sans obligations GPAI e
   );
 });
 
-test("les règles lexicales resserrées ignorent les faux amis bénins", () => {
-  const resultDashboard = runDeterministicCrossCheck({
+test("un seuil GPAI explicitement déclaré sous 10^25 FLOP ne crée pas de divergence", () => {
+  const facts = baseFacts();
+  facts.trainingComputeAboveGpaiThreshold = false;
+
+  const result = runDeterministicCrossCheck({
     description:
-      "Un tableau de bord montre en temps réel les ventes par région et la classe de produit la plus demandée avant chaque examen trimestriel des résultats.",
+      "Nous affinons un petit modèle spécialisé, très loin du seuil de 10^25 FLOP.",
+    facts,
+    classification: baseClassification(),
+  });
+
+  assert.equal(result.status, "concordant");
+});
+
+test("un tableau de bord « temps réel » sans biométrie ne déclenche aucune alerte", () => {
+  const result = runDeterministicCrossCheck({
+    description:
+      "Un tableau de bord affiche en temps réel les indicateurs de ventes par région pour les responsables commerciaux.",
     facts: baseFacts(),
     classification: baseClassification(),
   });
 
-  assert.equal(resultDashboard.status, "concordant");
+  assert.equal(result.status, "concordant");
+});
+
+test("une « classe » de produit hors contexte scolaire ne déclenche aucune alerte", () => {
+  const result = runDeterministicCrossCheck({
+    description:
+      "L’outil regroupe les articles du catalogue par classe de produit et anticipe la demande logistique.",
+    facts: baseFacts(),
+    classification: baseClassification(),
+  });
+
+  assert.equal(result.status, "concordant");
+});
+
+test("un « examen » trimestriel financier ne déclenche aucune alerte", () => {
+  const result = runDeterministicCrossCheck({
+    description:
+      "Le système prépare l’examen trimestriel des résultats financiers présenté au comité de direction.",
+    facts: baseFacts(),
+    classification: baseClassification(),
+  });
+
+  assert.equal(result.status, "concordant");
 });
 
 test("la reconnaissance des émotions au travail non traitée est une divergence art. 5(1)(f)", () => {
