@@ -41,7 +41,11 @@ test.before(async () => {
     previewLogs += String(chunk);
   });
 
-  const deadline = Date.now() + 60_000;
+  // Démarrage à froid mesuré entre 25 s et plus de 60 s selon la charge du
+  // poste (synchronisation OneDrive, antivirus) : le délai doit rester large.
+  const startupTimeoutMs =
+    Number(process.env.PREUVANCE_TEST_STARTUP_TIMEOUT_MS) || 180_000;
+  const deadline = Date.now() + startupTimeoutMs;
   while (Date.now() < deadline) {
     if (preview.exitCode !== null) {
       throw new Error(`Le serveur de test s’est arrêté.\n${previewLogs}`);

@@ -1,3 +1,4 @@
+import type { CrossCheckResult } from "./rules";
 import type {
   GapItemModel,
   ModelClassification,
@@ -69,6 +70,7 @@ export type ReadinessScore = {
 export function computeReadinessScore(
   gaps: readonly GapItemModel[],
   classification: ModelClassification,
+  crossCheck?: CrossCheckResult,
 ): ReadinessScore {
   const dimensions = (Object.keys(DIMENSION_WEIGHTS) as ScoreDimensionId[]).map(
     (dimension): DimensionScore => {
@@ -105,7 +107,7 @@ export function computeReadinessScore(
     ),
   );
 
-  const appliedCaps = determineCaps(gaps, classification);
+  const appliedCaps = determineCaps(gaps, classification, crossCheck);
   const overall = appliedCaps.reduce(
     (score, appliedCap) => Math.min(score, appliedCap.cap),
     weightedScore,
@@ -145,9 +147,18 @@ export function compareGapPriority(a: GapItemModel, b: GapItemModel): number {
 function determineCaps(
   gaps: readonly GapItemModel[],
   classification: ModelClassification,
+  crossCheck?: CrossCheckResult,
 ): ReadinessScore["appliedCaps"] {
   const caps: ReadinessScore["appliedCaps"] = [];
   const prohibited = classification.prohibitedPractices.outcome;
+
+  if (crossCheck?.status === "divergent") {
+    caps.push({
+      cap: 59,
+      reason:
+        "La contre-vérification déterministe contredit la classification sur au moins un point structurant ; revue humaine requise.",
+    });
+  }
 
   if (prohibited === "applies") {
     caps.push({

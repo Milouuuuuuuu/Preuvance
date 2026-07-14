@@ -79,6 +79,36 @@ const evidenceSchema = z
   })
   .strict();
 
+export const crossCheckStatuses = [
+  "concordant",
+  "attention",
+  "divergent",
+] as const;
+
+const appliedCapSchema = z
+  .object({
+    cap: z.number().int().min(0).max(100),
+    reason: boundedString(300),
+  })
+  .strict();
+
+const crossCheckSchema = z
+  .object({
+    status: z.enum(crossCheckStatuses),
+    version: boundedString(60),
+    note: boundedString(1_200),
+  })
+  .strict();
+
+const decisionLogEntrySchema = z
+  .object({
+    title: boundedString(160),
+    decision: boundedString(300),
+    score: z.number().int().min(0).max(100).nullable(),
+    rationale: boundedString(2_000),
+  })
+  .strict();
+
 export const preuvanceAssessmentSchema = z
   .object({
     assessmentId: boundedString(100),
@@ -115,8 +145,11 @@ export const preuvanceAssessmentSchema = z
         riskLevel: z.enum(riskLevels),
         confidence: z.number().min(0).max(1),
         executiveSummary: boundedString(1_600),
+        appliedCaps: z.array(appliedCapSchema).max(8).optional(),
       })
       .strict(),
+    crossCheck: crossCheckSchema.optional(),
+    decisionLog: z.array(decisionLogEntrySchema).max(12).optional(),
     classification: z
       .object({
         rationale: boundedString(4_000),
@@ -146,6 +179,7 @@ export const preuvanceAssessmentSchema = z
   .strict();
 
 export type AssessmentTier = (typeof assessmentTiers)[number];
+export type PdfCrossCheckStatus = (typeof crossCheckStatuses)[number];
 export type RiskLevel = (typeof riskLevels)[number];
 export type GapPriority = (typeof gapPriorities)[number];
 export type EvidenceStatus = (typeof evidenceStatuses)[number];

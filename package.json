@@ -9,9 +9,10 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "npm run test:unit && npm run build && node --test tests/rendered-html.test.mjs",
-    "test:unit": "node --import tsx --test tests/assessment-core.test.ts tests/assessment-form.test.ts tests/assessment-quota.test.ts tests/local-download.test.ts",
-    "lint": "eslint . --ignore-pattern **/dist/** --ignore-pattern outputs/** --ignore-pattern .next/** --ignore-pattern .vinext/** --ignore-pattern .wrangler/**"
+    "test": "npm run lint && npm run typecheck && npm run test:unit && npm run build && node --test tests/rendered-html.test.mjs",
+    "test:unit": "node --import tsx --test tests/assessment-core.test.ts tests/assessment-form.test.ts tests/assessment-quota.test.ts tests/local-download.test.ts tests/score-display.test.ts tests/assessment-rules.test.ts tests/marketing-reference.test.ts tests/assessment-results-render.test.tsx",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@hookform/resolvers": "5.4.0",

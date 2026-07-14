@@ -95,6 +95,7 @@ const PracticeSchema = z
 
 const SignedPracticeSchema = PracticeSchema.extend({
   legalStatus: z.literal("signed_pending_official_journal"),
+  noteFr: z.string().min(1).optional(),
 }).strict();
 
 const FineSchema = z
@@ -142,6 +143,15 @@ export const RegulatoryReferenceSchema = z
           .object({
             article: z.string().min(1),
             testFr: z.string().min(1),
+          })
+          .strict(),
+        gpai: z
+          .object({
+            article: z.string().min(1),
+            systemicRiskThresholdFr: z.string().min(1),
+            commonObligationsFr: z.string().min(1),
+            systemicObligationsFr: z.string().min(1),
+            codeOfPracticeFr: z.string().min(1),
           })
           .strict(),
       })

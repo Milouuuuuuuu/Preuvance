@@ -7,6 +7,7 @@ import {
   getRegulatoryReference,
   hydrateObligations,
 } from "../app/lib/assessment/regulatory";
+import { runDeterministicCrossCheck } from "../app/lib/assessment/rules";
 import {
   computeReadinessScore,
   DIMENSION_WEIGHTS,
@@ -129,15 +130,21 @@ test("la synthèse Art. 50(2) produit directement un rapport PDF valide", () => 
     company,
     reference.enterpriseThresholds,
   );
-  const score = computeReadinessScore([gap], classification);
+  const description =
+    "Le système génère des textes destinés à être publiés après validation par une équipe éditoriale.";
+  const crossCheck = runDeterministicCrossCheck({
+    description,
+    facts: baseFacts(),
+    classification,
+  });
+  const score = computeReadinessScore([gap], classification, crossCheck);
   const assessment = buildAssessment({
     id: "c4029e04-0ecf-4d10-8de1-dd34898d631f",
     generatedAt: "2026-07-13T14:30:00.000Z",
     request: {
       organizationName: "Atelier Horizon",
       systemName: "Générateur éditorial",
-      description:
-        "Le système génère des textes destinés à être publiés après validation par une équipe éditoriale.",
+      description,
       company,
     },
     facts: baseFacts(),
@@ -150,6 +157,7 @@ test("la synthèse Art. 50(2) produit directement un rapport PDF valide", () => 
       insuranceConcerns: ["Traçabilité technique non démontrée"],
     },
     score,
+    crossCheck,
     trace: [],
     models: { reasoning: "gpt-5.6-sol", ancillary: "gpt-5.6-luna" },
     reference,
@@ -159,6 +167,71 @@ test("la synthèse Art. 50(2) produit directement un rapport PDF valide", () => 
   assert.equal(validation.success, true);
   if (validation.success) {
     assert.match(validation.data.gaps[0]?.dueDate ?? "", /2 décembre 2026/);
+  }
+});
+
+test("un cross-check divergent est propagé jusqu’au contrat PDF", () => {
+  const classification = baseClassification();
+  const facts = baseFacts();
+  facts.prohibitedPracticeSignals = ["social-scoring"];
+  const description =
+    "Le système attribue une note de comportement global aux usagers pour moduler leur accès aux services.";
+  const crossCheck = runDeterministicCrossCheck({
+    description,
+    facts,
+    classification,
+  });
+  assert.equal(crossCheck.status, "divergent");
+
+  const company = {
+    employees: 120,
+    annualRevenue: 24_000_000,
+    balanceSheetTotal: 18_000_000,
+  };
+  const enterprise = classifyEnterprise(company, reference.enterpriseThresholds);
+  const score = computeReadinessScore([], classification, crossCheck);
+  const assessment = buildAssessment({
+    id: "c4029e04-0ecf-4d10-8de1-dd34898d631e",
+    generatedAt: "2026-07-13T14:30:00.000Z",
+    request: {
+      organizationName: "Atelier Horizon",
+      systemName: "Notation clients",
+      description,
+      company,
+    },
+    facts,
+    modelClassification: classification,
+    enterprise,
+    gapAnalysis: {
+      summary: "Écarts à instruire après revue humaine.",
+      gaps: [],
+      demonstratedStrengths: [],
+      insuranceConcerns: [],
+    },
+    score,
+    crossCheck,
+    trace: [],
+    models: { reasoning: "gpt-5.6-sol", ancillary: "gpt-5.6-luna" },
+    reference,
+  });
+
+  const validation = validatePreuvanceAssessment(assessment.report);
+  assert.equal(validation.success, true);
+  if (validation.success) {
+    assert.equal(validation.data.crossCheck?.status, "divergent");
+    assert.ok(
+      validation.data.result.appliedCaps?.some(
+        (appliedCap) =>
+          appliedCap.cap === 59 && /contre-vérification/i.test(appliedCap.reason),
+      ),
+    );
+    assert.ok(
+      validation.data.decisionLog?.some(
+        (entry) => entry.title === "Contre-vérification déterministe",
+      ),
+    );
+    assert.match(validation.data.result.executiveSummary, /contre-vérification/i);
+    assert.ok(validation.data.result.score <= 59);
   }
 });
 
@@ -361,6 +434,7 @@ function baseFacts(): ExtractedFacts {
     decisions: ["Proposer un brouillon"],
     outputs: ["Texte"],
     modelType: "third_party_general_purpose_model",
+    trainingComputeAboveGpaiThreshold: null,
     deploymentContext: "Application interne avec publication après validation.",
     directlyInteractsWithPeople: false,
     generatesText: true,

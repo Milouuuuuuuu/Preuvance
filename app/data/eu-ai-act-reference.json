@@ -95,7 +95,8 @@
         "id": "non-consensual-intimate-or-csam-generation",
         "article": "Modification signée de l’article 5",
         "labelFr": "Génération de contenus sexuels ou intimes non consentis ou de matériel d’abus sexuels sur enfants",
-        "legalStatus": "signed_pending_official_journal"
+        "legalStatus": "signed_pending_official_journal",
+        "noteFr": "Vise la génération ou la manipulation par IA de contenus intimes ou sexuels non consentis de personnes identifiables (y compris les applications de « nudification ») et le matériel d’abus sexuels sur enfants, y compris entièrement synthétique. Application prévue le 2 décembre 2026, sous réserve de publication au JOUE et d’entrée en vigueur."
       }
     ],
     "annexIII": {
@@ -115,6 +116,13 @@
     "annexI": {
       "article": "Article 6(1) et annexe I",
       "testFr": "Deux conditions cumulatives : l’IA est elle-même un produit couvert par la législation d’harmonisation de l’annexe I, ou un composant de sécurité d’un tel produit, et ce produit est soumis à une évaluation de conformité par un tiers."
+    },
+    "gpai": {
+      "article": "Articles 51 à 56",
+      "systemicRiskThresholdFr": "Présomption réfragable de risque systémique lorsque le calcul cumulé d’entraînement dépasse 10^25 FLOP (article 51), complétée par des critères qualitatifs et une désignation possible par la Commission.",
+      "commonObligationsFr": "Socle commun (article 53) pour tout fournisseur de modèle GPAI : documentation technique (annexe XI), information des intégrateurs en aval (annexe XII), politique de respect du droit d’auteur, résumé public suffisamment détaillé des données d’entraînement. L’exception open source ne couvre jamais les modèles à risque systémique.",
+      "systemicObligationsFr": "Obligations renforcées (article 55) au-delà du seuil : évaluations de modèle et tests adversariaux, évaluation et atténuation des risques systémiques au niveau de l’Union, signalement des incidents graves sans retard injustifié, cybersécurité adéquate du modèle et de son infrastructure.",
+      "codeOfPracticeFr": "Le Code de bonnes pratiques GPAI, entériné le 1er août 2025, est un outil volontaire qui crée une présomption de conformité pour ses signataires. Le Digital Omnibus signé ne modifie ni le seuil des 10^25 FLOP ni les obligations de fond des articles 51 à 55."
     }
   },
   "deadlines": [
@@ -152,7 +160,7 @@
         "legalLayerId": "eu-ai-act-2024-1689"
       },
       "signedAmendmentPosition": null,
-      "noteFr": "Ces obligations visent le fournisseur du modèle GPAI. Elles s’appliquent depuis le 2 août 2025 aux modèles mis sur le marché à partir de cette date ; les modèles déjà commercialisés avant le 2 août 2025 ont jusqu’au 2 août 2027. Les pouvoirs de sanction de la Commission pour les GPAI s’appliquent à partir du 2 août 2026. Le simple recours à l’API d’un modèle tiers ne transforme pas automatiquement un déployeur en fournisseur de GPAI."
+      "noteFr": "Ces obligations visent le fournisseur du modèle GPAI. Elles s’appliquent depuis le 2 août 2025 aux modèles mis sur le marché à partir de cette date ; les modèles déjà commercialisés avant le 2 août 2025 ont jusqu’au 2 août 2027. Les pouvoirs de sanction de la Commission pour les GPAI s’appliquent à partir du 2 août 2026. Le simple recours à l’API d’un modèle tiers ne transforme pas automatiquement un déployeur en fournisseur de GPAI. Un modèle dont le calcul cumulé d’entraînement dépasse 10^25 FLOP est présumé à risque systémique (article 51) et relève en plus des obligations renforcées de l’article 55."
     },
     {
       "id": "art50-1-human-interaction-disclosure",
@@ -182,7 +190,7 @@
         "conditionFr": "Uniquement pour les systèmes générant du contenu déjà mis sur le marché avant le 2 août 2026.",
         "displayFr": "L’Omnibus signé prévoit un délai jusqu’au 2 décembre 2026 uniquement pour l’article 50(2) et les systèmes générant du contenu déjà mis sur le marché avant le 2 août 2026. Sous réserve de publication au JOUE et d’entrée en vigueur."
       },
-      "noteFr": "Obligation du fournisseur d’assurer un marquage dans un format lisible par machine et détectable comme artificiellement généré ou manipulé, dans la mesure techniquement faisable. Ce n’est pas la même obligation que l’information visible due par certains déployeurs au titre de l’article 50(4)."
+      "noteFr": "Obligation du fournisseur d’assurer un marquage dans un format lisible par machine et détectable comme artificiellement généré ou manipulé, dans la mesure techniquement faisable. Ce n’est pas la même obligation que l’information visible due par certains déployeurs au titre de l’article 50(4). Les systèmes mis sur le marché à partir du 2 août 2026 doivent être conformes dès cette date : la transition signée ne bénéficie qu’aux systèmes antérieurs."
     },
     {
       "id": "art50-3-emotion-biometric-notice",

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.0"
+          cache: npm
+
+      - name: Dépendances reproductibles
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Vérification des types
+        run: npm run typecheck
+
+      - name: Tests unitaires
+        run: npm run test:unit
+
+      - name: Build de production
+        run: npm run build
+
+      - name: Tests HTTP sous Workerd
+        run: node --test tests/rendered-html.test.mjs

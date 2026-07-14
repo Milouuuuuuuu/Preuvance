@@ -17,10 +17,11 @@ Le détail des sources est dans [`docs/research.md`](docs/research.md). Toutes l
 1. identification de l’organisation et du système, description libre et données de taille d’entreprise ;
 2. extraction factuelle structurée ;
 3. classification contre une référence réglementaire versionnée ;
-4. écarts et actions associés à des articles précis ;
-5. score déterministe et notes de confiance par décision ;
-6. rapport PDF de préparation courtier ;
-7. persistance atomique et contrôle d’accès Supabase lorsque les variables sont configurées.
+4. contre-vérification déterministe de la classification par un moteur de règles (faits structurés + analyse lexicale) : toute contradiction plafonne le score et exige une revue humaine ;
+5. écarts et actions associés à des articles précis ;
+6. score déterministe et notes de confiance par décision ;
+7. rapport PDF de préparation courtier ;
+8. persistance atomique et contrôle d’accès Supabase lorsque les variables sont configurées.
 
 ## Contrainte réglementaire importante
 
@@ -59,15 +60,18 @@ Le lanceur ne demande pas les droits administrateur et ne scanne pas le poste. L
 ## Vérification
 
 ```bash
-npm run lint
 npm test
-npm run build
 ```
+
+`npm test` enchaîne lint, `tsc --noEmit`, tests unitaires, build de production et tests HTTP sous Workerd. La même chaîne s’exécute en CI (`.github/workflows/ci.yml`) sur chaque push et pull request. Les étapes restent disponibles séparément : `npm run lint`, `npm run typecheck`, `npm run test:unit`, `npm run build`.
 
 ## Architecture
 
 - Next App Router, React, TypeScript strict, Tailwind ;
+- page d’accueil rendue côté serveur, interactions isolées dans un îlot client ;
+- dates réglementaires de la page dérivées du référentiel JSON, sans duplication (test anti-dérive) ;
 - API Responses OpenAI avec JSON Schema strict ;
+- moteur de règles déterministe (`preuvance-crosscheck-v1`) en contre-vérification de chaque classification ;
 - score et tiers calculés de façon déterministe ;
 - PDF serveur via `@react-pdf/renderer` ;
 - Supabase Auth/Postgres/RLS ;
@@ -82,3 +86,7 @@ Le prompt d’extension machine suppose un autre socle qui n’est pas présent 
 ## Périmètre volontairement exclu
 
 Pas d’intégration assureur réelle, de tarification, de paiement, de générateur Annexe IV complet, de monitoring continu ni de promesse de couverture.
+
+---
+
+Corrections et durcissement qualité des 13-14 juillet 2026 (D-042 à D-054 de [`BEHAVIOR.md`](BEHAVIOR.md)) rédigés par **Claude (Fable 5), Anthropic**.
