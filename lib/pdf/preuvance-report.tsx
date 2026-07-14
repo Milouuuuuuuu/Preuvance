@@ -11,6 +11,7 @@ import {
 import type {
   EvidenceStatus,
   GapPriority,
+  PdfCrossCheckStatus,
   PreuvanceAssessment,
   RiskLevel,
 } from "./assessment-payload";
@@ -415,9 +416,53 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
           )}
         </View>
 
+        {assessment.crossCheck || assessment.decisionLog?.length ? (
+          <View style={styles.section} break>
+            <SectionHeader index="05" title="Journal des décisions et contre-vérification" />
+            {assessment.crossCheck ? (
+              <View
+                style={[styles.card, crossCheckCardStyle(assessment.crossCheck.status)]}
+                wrap={false}
+              >
+                <Text style={styles.cardTitle}>
+                  Contre-vérification déterministe — {crossCheckLabel(assessment.crossCheck.status)}
+                </Text>
+                <Text style={styles.body}>{assessment.crossCheck.note}</Text>
+                <Text style={styles.articleMeta}>
+                  Moteur de règles {assessment.crossCheck.version}, indépendant du modèle de langage.
+                </Text>
+              </View>
+            ) : null}
+            {assessment.result.appliedCaps?.length ? (
+              <View style={styles.card} wrap={false}>
+                <Text style={styles.cardTitle}>Plafonds prudentiels appliqués au score</Text>
+                {assessment.result.appliedCaps.map((appliedCap, index) => (
+                  <Text key={`${appliedCap.cap}-${index}`} style={[styles.body, { marginBottom: 3 }]}>
+                    Plafond {appliedCap.cap}/100 — {appliedCap.reason}
+                  </Text>
+                ))}
+              </View>
+            ) : null}
+            {assessment.decisionLog?.map((entry, index) => (
+              <View key={`${entry.title}-${index}`} style={styles.card} wrap={false}>
+                <View style={styles.dimensionTop}>
+                  <Text style={styles.cardTitle}>{entry.title}</Text>
+                  <Text style={styles.dimensionScore}>
+                    {entry.score === null ? "non noté" : `${entry.score}/100`}
+                  </Text>
+                </View>
+                <Text style={[styles.body, { fontFamily: "Helvetica-Bold", marginBottom: 3 }]}>
+                  {entry.decision}
+                </Text>
+                <Text style={[styles.muted, { fontSize: 7.5 }]}>{entry.rationale}</Text>
+              </View>
+            ))}
+          </View>
+        ) : null}
+
         {assessment.evidence?.length ? (
           <View style={styles.section} break>
-            <SectionHeader index="05" title="Éléments de maîtrise déclarés" />
+            <SectionHeader index="06" title="Éléments de maîtrise déclarés" />
             <View style={styles.tableHeader} fixed>
               <Text style={styles.tableControl}>Contrôle</Text>
               <Text style={styles.tableStatus}>État</Text>
@@ -437,7 +482,7 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
 
         {assessment.brokerContext ? (
           <View style={styles.section}>
-            <SectionHeader index="06" title="Contexte de placement" />
+            <SectionHeader index="07" title="Contexte de placement" />
             <View style={[styles.card, styles.brokerGrid]}>
               {assessment.brokerContext.requestedCoverage ? (
                 <BrokerItem
@@ -543,6 +588,24 @@ function BrokerItem({ label, value }: { label: string; value: string }) {
       <Text style={styles.body}>{value}</Text>
     </View>
   );
+}
+
+function crossCheckLabel(status: PdfCrossCheckStatus) {
+  return {
+    concordant: "concordante avec la classification",
+    attention: "signaux à examiner",
+    divergent: "contradiction détectée, revue humaine requise",
+  }[status];
+}
+
+function crossCheckCardStyle(status: PdfCrossCheckStatus) {
+  if (status === "divergent") {
+    return { backgroundColor: colors.redPale, borderColor: colors.red };
+  }
+  if (status === "attention") {
+    return { backgroundColor: colors.amberPale, borderColor: colors.amber };
+  }
+  return { backgroundColor: colors.greenPale, borderColor: colors.green };
 }
 
 function riskLabel(level: RiskLevel) {

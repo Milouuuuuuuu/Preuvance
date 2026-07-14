@@ -11,6 +11,7 @@ import {
   GAP_INSTRUCTIONS,
 } from "./prompts";
 import { getRegulatoryReference } from "./regulatory";
+import { runDeterministicCrossCheck } from "./rules";
 import { computeReadinessScore } from "./scoring";
 import {
   ExtractedFactsSchema,
@@ -141,12 +142,22 @@ export async function runAssessmentPipeline(
   await options?.onProgress?.({ stage: "synthesis", status: "running" });
   const synthesisTimer = logger.start("synthesis", null);
   try {
-    const score = computeReadinessScore(gapAnalysis.data.gaps, classification);
+    const crossCheck = runDeterministicCrossCheck({
+      description: request.description,
+      facts: extraction.data,
+      classification,
+    });
+    const score = computeReadinessScore(
+      gapAnalysis.data.gaps,
+      classification,
+      crossCheck,
+    );
     logger.complete(synthesisTimer, {
       summary: {
         score: score.overall,
         tier: score.tier,
         appliedCapCount: score.appliedCaps.length,
+        crossCheckStatus: crossCheck.status,
       },
     });
     const assessment = buildAssessment({
@@ -158,6 +169,7 @@ export async function runAssessmentPipeline(
       enterprise,
       gapAnalysis: gapAnalysis.data,
       score,
+      crossCheck,
       trace: logger.entries,
       models: config.models,
       reference,

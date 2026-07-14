@@ -20,11 +20,18 @@ type AssessmentFormProps = {
 
 const MIN_DESCRIPTION_LENGTH = 50;
 
-function isNonNegativeNumber(value: string) {
-  const normalized = value.trim().replace(",", ".");
-  if (!normalized) return false;
+export function parseMillionsInput(value: string): number | null {
+  const normalized = value
+    .trim()
+    .replace(/[\s  ]/g, "")
+    .replaceAll(",", ".");
+  if (!normalized || (normalized.match(/\./g) ?? []).length > 1) return null;
   const parsed = Number(normalized);
-  return Number.isFinite(parsed) && parsed >= 0;
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+}
+
+function isNonNegativeNumber(value: string) {
+  return parseMillionsInput(value) !== null;
 }
 
 export const assessmentFormSchema = z.object({
@@ -47,12 +54,12 @@ export const assessmentFormSchema = z.object({
     .string()
     .trim()
     .refine(isNonNegativeNumber, "Renseignez un chiffre d’affaires valide.")
-    .refine((value) => Number(value.replace(",", ".")) <= 1_000_000_000, "Le montant déclaré est trop élevé."),
+    .refine((value) => (parseMillionsInput(value) ?? Infinity) <= 1_000_000_000, "Le montant déclaré est trop élevé."),
   balanceSheetTotal: z
     .string()
     .trim()
     .refine(isNonNegativeNumber, "Renseignez un total de bilan valide.")
-    .refine((value) => Number(value.replace(",", ".")) <= 1_000_000_000, "Le montant déclaré est trop élevé."),
+    .refine((value) => (parseMillionsInput(value) ?? Infinity) <= 1_000_000_000, "Le montant déclaré est trop élevé."),
 });
 
 type AssessmentFormValues = z.infer<typeof assessmentFormSchema>;
@@ -114,8 +121,8 @@ export function AssessmentForm({
   const description = watch("description") ?? "";
 
   function submit(values: AssessmentFormValues) {
-    const revenueInMillions = Number(values.annualRevenue.replace(",", "."));
-    const balanceInMillions = Number(values.balanceSheetTotal.replace(",", "."));
+    const revenueInMillions = parseMillionsInput(values.annualRevenue) ?? 0;
+    const balanceInMillions = parseMillionsInput(values.balanceSheetTotal) ?? 0;
     onSubmit({
       organizationName: values.organizationName.trim(),
       systemName: values.systemName.trim(),

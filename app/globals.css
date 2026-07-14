@@ -1093,6 +1093,44 @@ a {
   margin-top: 1px;
 }
 
+.pv-crosscheck-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 20px;
+  padding: 13px 15px;
+  border-radius: var(--pv-radius-sm);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.pv-crosscheck-banner strong {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 0.84rem;
+}
+
+.pv-crosscheck-banner p {
+  margin: 0;
+}
+
+.pv-crosscheck-banner.is-risk {
+  border: 1px solid #efb4b4;
+  background: var(--pv-risk-pale);
+  color: #991b1b;
+}
+
+.pv-crosscheck-banner.is-caution {
+  border: 1px solid #ecd1a6;
+  background: var(--pv-caution-pale);
+  color: var(--pv-caution);
+}
+
+.pv-crosscheck-banner svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
 .pv-score-hero {
   --pv-score-tone: var(--pv-line-strong);
   display: grid;

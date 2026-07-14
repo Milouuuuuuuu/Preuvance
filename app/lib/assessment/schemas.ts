@@ -108,6 +108,7 @@ export const ExtractedFactsSchema = z
       "procedural_or_rules_based_tool",
       "unknown",
     ]),
+    trainingComputeAboveGpaiThreshold: nullableBoolean,
     deploymentContext: z.string().min(1).max(1_000),
     directlyInteractsWithPeople: nullableBoolean,
     generatesText: nullableBoolean,

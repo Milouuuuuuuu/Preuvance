@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { assessmentFormSchema } from "../app/components/AssessmentForm";
+import {
+  assessmentFormSchema,
+  parseMillionsInput,
+} from "../app/components/AssessmentForm";
 
 const validForm = {
   organizationName: "Atelier Horizon",
@@ -49,4 +52,24 @@ test("le formulaire accepte un zéro financier explicite", () => {
   });
 
   assert.equal(result.success, true);
+});
+
+test("les montants français avec espaces et virgule décimale sont compris", () => {
+  assert.equal(parseMillionsInput("1 234,5"), 1234.5);
+  assert.equal(parseMillionsInput("24"), 24);
+  assert.equal(parseMillionsInput("0,75"), 0.75);
+  assert.equal(parseMillionsInput("1 500"), 1500);
+});
+
+test("les montants ambigus à séparateurs multiples sont rejetés", () => {
+  assert.equal(parseMillionsInput("1,234,567"), null);
+  assert.equal(parseMillionsInput("1.2.3"), null);
+  assert.equal(parseMillionsInput("-4"), null);
+  assert.equal(parseMillionsInput("abc"), null);
+
+  const result = assessmentFormSchema.safeParse({
+    ...validForm,
+    annualRevenue: "1,234,567",
+  });
+  assert.equal(result.success, false);
 });

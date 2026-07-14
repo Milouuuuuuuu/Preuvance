@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { Assessment, JsonRecord } from "./assessment-types";
 import { isRecord } from "./assessment-types";
+import { ratioToPercentage, toPercentage } from "../lib/assessment/percentages";
 
 type AssessmentResultsProps = {
   assessment: Assessment;
@@ -115,12 +116,6 @@ function firstNumber(record: JsonRecord | null, keys: string[]): number | null {
   return numericValue(firstValue(record, keys));
 }
 
-function toPercentage(value: number | null): number | null {
-  if (value === null) return null;
-  const percentage = value >= 0 && value <= 1 ? value * 100 : value;
-  return Math.max(0, Math.min(100, Math.round(percentage)));
-}
-
 function humanizeKey(key: string) {
   if (LABELS[key]) return LABELS[key];
 
@@ -181,7 +176,7 @@ function normalizeDimensions(value: unknown): Dimension[] {
       const maxScore = firstNumber(item, ["maxScore", "maximum", "max"]);
       const score =
         rawScore !== null && maxScore !== null && maxScore > 0
-          ? toPercentage(rawScore / maxScore)
+          ? ratioToPercentage(rawScore, maxScore)
           : toPercentage(rawScore);
 
       return {
@@ -348,7 +343,7 @@ function normalizeDecisions(value: unknown): Decision[] {
 }
 
 function useCountUp(target: number | null) {
-  const [displayValue, setDisplayValue] = useState(target);
+  const [displayValue, setDisplayValue] = useState(target === null ? null : 0);
 
   useEffect(() => {
     if (target === null) {
@@ -507,6 +502,15 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
   const persistedAssessmentId =
     textValue(persistence?.assessmentId) ?? assessmentId;
 
+  const crossCheck = isRecord(assessment.crossCheck) ? assessment.crossCheck : null;
+  const crossCheckStatus = textValue(crossCheck?.status);
+  const crossCheckNote = textValue(crossCheck?.noteFr);
+  const metadataRecord = isRecord(assessment.metadata) ? assessment.metadata : null;
+  const referenceVerifiedAt = textValue(
+    metadataRecord?.regulatoryReferenceVerifiedAt,
+  );
+  const methodVersion = firstText(scoreRecord, ["methodVersion"]);
+
   const reportRecord = isRecord(assessment.report) ? assessment.report : null;
   const reportSummary =
     textValue(assessment.report) ??
@@ -594,6 +598,10 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
           <p className="pv-results-meta">
             {generatedAt ? `Générée le ${generatedAt}` : "Évaluation générée"}
             {assessmentId ? ` · Référence ${assessmentId}` : ""}
+            {referenceVerifiedAt
+              ? ` · Référentiel vérifié le ${referenceVerifiedAt.split("-").reverse().join(".")}`
+              : ""}
+            {methodVersion ? ` · Méthode ${methodVersion}` : ""}
           </p>
         </div>
         <div className="pv-results-actions">
@@ -619,6 +627,24 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
         <div className="pv-pdf-error" role="alert">
           <AlertTriangle size={17} aria-hidden="true" />
           {pdfError}
+        </div>
+      ) : null}
+
+      {crossCheckNote &&
+      (crossCheckStatus === "divergent" || crossCheckStatus === "attention") ? (
+        <div
+          className={`pv-crosscheck-banner ${crossCheckStatus === "divergent" ? "is-risk" : "is-caution"}`}
+          role="status"
+        >
+          <AlertTriangle size={17} aria-hidden="true" />
+          <div>
+            <strong>
+              {crossCheckStatus === "divergent"
+                ? "Contre-vérification déterministe : contradiction détectée"
+                : "Contre-vérification déterministe : points à examiner"}
+            </strong>
+            <p>{crossCheckNote}</p>
+          </div>
         </div>
       ) : null}
 

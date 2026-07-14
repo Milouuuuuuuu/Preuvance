@@ -5,6 +5,7 @@ import {
   type HydratedObligation,
   type RegulatoryReference,
 } from "./regulatory";
+import type { CrossCheckResult } from "./rules";
 import { compareGapPriority, type ReadinessScore } from "./scoring";
 import type {
   AssessmentRequest,
@@ -55,6 +56,7 @@ export function buildAssessment(options: {
   enterprise: EnterpriseAssessment;
   gapAnalysis: GapAnalysisModel;
   score: ReadinessScore;
+  crossCheck: CrossCheckResult;
   trace: PipelineTraceEntry[];
   models: AssessmentModels;
   reference: RegulatoryReference;
@@ -64,6 +66,11 @@ export function buildAssessment(options: {
     .map(hydrateGap)
     .sort(compareHydratedGapPriority);
   const riskLabel = RISK_LABELS[options.modelClassification.riskTier];
+  const decisionLog = buildDecisionLog(
+    options.modelClassification,
+    options.enterprise,
+    options.crossCheck,
+  );
   const executiveSummary = `${buildExecutiveSummary(
     options.score,
     riskLabel,
@@ -72,7 +79,7 @@ export function buildAssessment(options: {
     options.score,
     options.enterprise,
     options.gapAnalysis,
-  )}`;
+  )}`.slice(0, 1_600);
   const report: PreuvanceAssessment = {
     assessmentId: options.id,
     generatedAt: options.generatedAt,
@@ -100,7 +107,22 @@ export function buildAssessment(options: {
       riskLevel: reportRiskLevel(options.modelClassification.riskTier),
       confidence: options.modelClassification.overallConfidence / 100,
       executiveSummary,
+      appliedCaps: options.score.appliedCaps.slice(0, 8).map((appliedCap) => ({
+        cap: appliedCap.cap,
+        reason: appliedCap.reason.slice(0, 300),
+      })),
     },
+    crossCheck: {
+      status: options.crossCheck.status,
+      version: options.crossCheck.version,
+      note: options.crossCheck.noteFr.slice(0, 1_200),
+    },
+    decisionLog: decisionLog.slice(0, 12).map((entry) => ({
+      title: entry.title.slice(0, 160),
+      decision: entry.decision.slice(0, 300),
+      score: entry.score,
+      rationale: entry.rationale.slice(0, 2_000),
+    })),
     classification: {
       rationale: options.modelClassification.summary,
       articles: obligations.map((obligation) => ({
@@ -169,11 +191,13 @@ export function buildAssessment(options: {
       insuranceConcerns: options.gapAnalysis.insuranceConcerns,
     },
     score: options.score,
-    decisionLog: buildDecisionLog(options.modelClassification, options.enterprise),
+    crossCheck: options.crossCheck,
+    decisionLog,
     trace: options.trace,
     report,
     metadata: {
       regulatoryReferenceVerifiedAt: options.reference.metadata.verifiedAt,
+      crossCheckVersion: options.crossCheck.version,
       models: options.models,
       llmCalls: 3,
       synthesis: "deterministic" as const,
@@ -245,9 +269,22 @@ function compareHydratedGapPriority(a: HydratedGap, b: HydratedGap): number {
   return compareGapPriority(a, b);
 }
 
+const CROSSCHECK_DECISION_LABELS: Record<CrossCheckResult["status"], string> = {
+  concordant: "Concordante avec la classification",
+  attention: "Signaux lexicaux à examiner",
+  divergent: "Contradiction détectée — revue humaine requise",
+};
+
+const CROSSCHECK_DECISION_SCORES: Record<CrossCheckResult["status"], number> = {
+  concordant: 95,
+  attention: 60,
+  divergent: 20,
+};
+
 function buildDecisionLog(
   classification: ModelClassification,
   enterprise: EnterpriseAssessment,
+  crossCheck: CrossCheckResult,
 ) {
   return [
     {
@@ -299,6 +336,13 @@ function buildDecisionLog(
       score: 80,
       rationale: `${enterprise.rationale} Préqualification arithmétique sur les chiffres déclarés ; ${enterprise.aggregationWarning}`,
     },
+    {
+      step: "Contre-vérification déterministe",
+      title: "Contre-vérification déterministe",
+      decision: CROSSCHECK_DECISION_LABELS[crossCheck.status],
+      score: CROSSCHECK_DECISION_SCORES[crossCheck.status],
+      rationale: crossCheck.noteFr,
+    },
   ];
 }
 
@@ -308,9 +352,11 @@ function buildExecutiveSummary(
   gapCount: number,
 ): string {
   const capNotice = score.appliedCaps.length
-    ? ` ${score.appliedCaps.length} plafond(s) prudentiel(s) ont été appliqués.`
+    ? ` Plafond(s) prudentiel(s) appliqué(s) : ${score.appliedCaps
+        .map((appliedCap) => `${appliedCap.cap}/100 — ${appliedCap.reason}`)
+        .join(" · ")}`
     : "";
-  return `PREUVANCE attribue un score de ${score.overall}/100 (tier ${score.tier}). Préqualification principale : ${riskLabel}. ${gapCount} écart(s) ont été priorisés.${capNotice}`;
+  return `PREUVANCE attribue un score de ${score.overall}/100 (tier ${score.tier}). Préqualification principale : ${riskLabel}. ${gapCount} écart(s) ont été priorisés.${capNotice}`.slice(0, 1_100);
 }
 
 function buildInsuranceNarrative(
