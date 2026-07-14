@@ -102,6 +102,20 @@ test("rend la page Preuvance en français sans vestige du starter", async () => 
   assert.doesNotMatch(html, /Codex is working|Your site is taking shape|SkeletonPreview/i);
 });
 
+test("met en avant le scan local comme option A et rend la page /scan", async () => {
+  const home = await fetch(baseUrl, { headers: { accept: "text/html" } });
+  const homeHtml = await home.text();
+  assert.match(homeHtml, /Option A/i);
+  assert.match(homeHtml, /Scanner votre poste en local/i);
+  assert.match(homeHtml, /shadow AI/i);
+
+  const scan = await fetch(`${baseUrl}/scan`, { headers: { accept: "text/html" } });
+  assert.equal(scan.status, 200);
+  const scanHtml = await scan.text();
+  assert.match(scanHtml, /Analysez votre poste, sans rien envoyer/i);
+  assert.match(scanHtml, /preuvance-scan\.json/i);
+});
+
 test("rend l’indisponibilité de l’authentification actionnable", async () => {
   const response = await fetch(
     `${baseUrl}/auth/sign-in?error=configuration&next=%2F%23evaluation`,

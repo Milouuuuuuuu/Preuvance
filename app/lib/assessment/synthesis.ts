@@ -235,8 +235,10 @@ function buildReportEvidence(
 ): PreuvanceAssessment["evidence"] {
   const declared = facts.existingControls.map((control) => ({
     control,
-    status: "documented" as EvidenceStatus,
-    detail: "Contrôle déclaré dans la description ; pièce justificative à vérifier.",
+    // « déclaré, non vérifié » : un contrôle mentionné dans la description
+    // n'est jamais présenté comme documenté tant qu'aucune pièce n'est fournie.
+    status: "declared" as EvidenceStatus,
+    detail: "Contrôle déclaré dans la description ; aucune pièce justificative vérifiée.",
   }));
   const findings = gaps.map((gap) => ({
     control: gap.title,

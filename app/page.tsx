@@ -4,8 +4,10 @@ import {
   Download,
   FileText,
   Landmark,
+  MonitorCheck,
   Scale,
   ShieldCheck,
+  Zap,
 } from "lucide-react";
 import { AssessmentExperience } from "./components/AssessmentExperience";
 import { Brand } from "./components/Brand";
@@ -26,6 +28,7 @@ export default function Home() {
             <Brand />
           </a>
           <nav className="pv-main-nav" aria-label="Navigation principale">
+            <a href="/scan">Scanner en local</a>
             <a href="#methode">Méthode</a>
             <a href="#referentiel">Référentiel</a>
             <a href="/auth/sign-in">Espace</a>
@@ -68,6 +71,39 @@ export default function Home() {
               rapport de préparation partageable avec votre courtier, assureur
               ou investisseur.
             </p>
+
+            <div className="pv-path-choice" aria-label="Deux façons de commencer">
+              <a className="pv-path-card pv-path-primary" href="/scan">
+                <span className="pv-path-tag">Option A · recommandé</span>
+                <span className="pv-path-heading">
+                  <MonitorCheck size={20} aria-hidden="true" />
+                  Scanner votre poste en local
+                </span>
+                <span className="pv-path-copy">
+                  100 % local, rien n’est envoyé. Détecte les appels d’IA non
+                  déclarés (« shadow AI ») et les fichiers sensibles exposés.
+                </span>
+                <span className="pv-path-cta">
+                  Ouvrir le scan local
+                  <ArrowRight size={16} aria-hidden="true" />
+                </span>
+              </a>
+              <a className="pv-path-card" href="#evaluation">
+                <span className="pv-path-tag">Option B · rapide</span>
+                <span className="pv-path-heading">
+                  <Zap size={20} aria-hidden="true" />
+                  Évaluation express en ligne
+                </span>
+                <span className="pv-path-copy">
+                  Décrivez votre système en français ; classification, score et
+                  rapport PDF en quelques minutes.
+                </span>
+                <span className="pv-path-cta">
+                  Décrire mon système
+                  <ArrowRight size={16} aria-hidden="true" />
+                </span>
+              </a>
+            </div>
 
             <ul className="pv-proof-list" aria-label="Bénéfices de Preuvance">
               <li>

@@ -193,6 +193,39 @@ export function runDeterministicCrossCheck(options: {
     });
   }
 
+  const nonHighRiskTiers: ReadonlyArray<ModelClassification["riskTier"]> = [
+    "minimal_risk",
+    "limited_transparency_risk",
+  ];
+  const applies = (
+    outcome: ModelClassification["prohibitedPractices"]["outcome"],
+  ) => outcome === "applies" || outcome === "likely_applies";
+
+  if (
+    applies(classification.prohibitedPractices.outcome) &&
+    classification.riskTier !== "prohibited"
+  ) {
+    divergences.push({
+      topic: "Niveau de risque incohérent avec une pratique interdite",
+      origin: "faits_structures",
+      article: "Article 5",
+      detail: `La classification conclut à une pratique interdite (${classification.prohibitedPractices.outcome}) mais retient un niveau de risque « ${classification.riskTier} » au lieu de « interdit ».`,
+    });
+  }
+
+  if (
+    (applies(classification.annexIII.outcome) ||
+      applies(classification.annexI.outcome)) &&
+    nonHighRiskTiers.includes(classification.riskTier)
+  ) {
+    divergences.push({
+      topic: "Niveau de risque incohérent avec une qualification haut risque",
+      origin: "faits_structures",
+      article: "Article 6 · Annexes I et III",
+      detail: `La classification retient une qualification haut risque (annexe I/III) mais affiche un niveau de risque « ${classification.riskTier} ».`,
+    });
+  }
+
   if (
     facts.usesRemoteBiometricIdentification === true &&
     classification.riskTier === "minimal_risk"
