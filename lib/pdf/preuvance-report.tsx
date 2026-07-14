@@ -659,6 +659,7 @@ function priorityBadgeStyle(priority: GapPriority) {
 function evidenceLabel(status: EvidenceStatus) {
   return {
     documented: "Documenté",
+    declared: "Déclaré · non vérifié",
     partial: "Partiel",
     missing: "Manquant",
     unverified: "Non vérifié",
@@ -669,7 +670,7 @@ function evidenceLabel(status: EvidenceStatus) {
 function evidenceColor(status: EvidenceStatus) {
   if (status === "documented") return colors.green;
   if (status === "partial") return colors.amber;
-  if (status === "unverified") return colors.blue;
+  if (status === "declared" || status === "unverified") return colors.blue;
   if (status === "missing") return colors.red;
   return colors.muted;
 }

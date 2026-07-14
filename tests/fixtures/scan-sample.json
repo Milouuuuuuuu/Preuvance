@@ -1,0 +1,58 @@
+{
+    "schemaVersion":  "preuvance-scan-v1",
+    "generatedAt":  "2026-07-14T18:10:57.476Z",
+    "host":  {
+                 "profile":  "personal",
+                 "domainJoined":  false,
+                 "osCaption":  "Microsoft Windows 11 Famille",
+                 "elevated":  false
+             },
+    "capabilities":  {
+                         "dnsClientLog":  true,
+                         "connectionSampling":  true,
+                         "fileInventory":  true
+                     },
+    "network":  {
+                    "mode":  "snapshot",
+                    "durationSeconds":  0,
+                    "samples":  1,
+                    "aiEndpoints":  [
+                                        {
+                                            "host":  "api.anthropic.com",
+                                            "provider":  "Anthropic",
+                                            "firstSeen":  "2026-07-14T18:10:40.439Z",
+                                            "lastSeen":  "2026-07-14T18:10:40.511Z",
+                                            "hitCount":  1,
+                                            "processes":  [
+                                                              "claude"
+                                                          ],
+                                            "remoteAddresses":  [
+                                                                    "160.79.104.10"
+                                                                ],
+                                            "declared":  false
+                                        }
+                                    ],
+                    "otherExternalEndpoints":  61
+                },
+    "files":  {
+                  "rootsScanned":  [
+                                       "c:\\Users\\ganda\\OneDrive\\Documents\\Aplomb\\aplomb-app\\scripts",
+                                       "c:\\Users\\ganda\\OneDrive\\Documents\\Aplomb\\aplomb-app\\.env.example"
+                                   ],
+                  "sensitive":  [
+                                    {
+                                        "path":  "C:\\Users\\ganda\\OneDrive\\Documents\\Aplomb\\aplomb-app\\.env.example",
+                                        "category":  "secret",
+                                        "sizeBytes":  344,
+                                        "modifiedAt":  "2026-07-13T14:12:48.299Z",
+                                        "sha256":  "ec407b1062e8244596eecd669e57c543cb388c4046ec3e3b2ae447a615b8e17b"
+                                    }
+                                ],
+                  "truncated":  false
+              },
+    "notes":  [
+                  "Les empreintes SHA-256 pointent les fichiers sans les copier. Un hash de très petit fichier reste théoriquement réversible : conservez ce rapport localement.",
+                  "Détection réseau fondée sur le nom d\u0027hôte (cache DNS), fiable pour identifier le fournisseur mais pas exhaustive : le cache expire (TTL court) et l\u0027attribution au processus reste au mieux indicative. Pour une couverture réseau sérieuse, lancez le mode surveillance (-WatchMinutes 60) et laissez tourner pendant que vous travaillez.",
+                  "Mode instantané : une seule lecture du cache réseau. De nombreux appels courts ont pu échapper à l\u0027observation."
+              ]
+}

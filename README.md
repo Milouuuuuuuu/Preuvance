@@ -48,14 +48,23 @@ Supabase est activé lorsque `NEXT_PUBLIC_SUPABASE_URL` et une clé publique (`N
 
 ## Téléchargement Windows one shot
 
-Le bouton « Télécharger la version locale » sert `public/downloads/preuvance-local.zip`. Après extraction, `LANCER_PREUVANCE.cmd` :
+Le bouton « Télécharger la version locale » sert `public/downloads/preuvance-local.zip`. Après extraction, trois points d’entrée :
 
-1. vérifie Windows PowerShell et Node.js `22.13.0+` ;
-2. demande la clé OpenAI sans l’afficher si elle n’est pas déjà configurée ;
-3. exécute `npm ci`, puis le build de vérification ;
-4. démarre Vinext uniquement sur `127.0.0.1` et ouvre le navigateur.
+- **`LANCER_PREUVANCE.cmd`** — lance l’application web locale : vérifie PowerShell et Node.js `22.13.0+`, demande la clé OpenAI sans l’afficher, exécute `npm ci` puis le build, démarre Vinext sur `127.0.0.1` et ouvre le navigateur ;
+- **`SCANNER_PREUVANCE.cmd`** — lance le scan local (aucune clé API requise) : scan rapide ou surveillance réseau d’une heure ;
+- **`DESINSTALLER_PREUVANCE.cmd`** — nettoyage propre (clé API, caches, dépendances, rapports) ou suppression complète.
 
-Le lanceur ne demande pas les droits administrateur et ne scanne pas le poste. Le détail et la commande de régénération sont dans [`docs/local-launch.md`](docs/local-launch.md).
+Aucun de ces scripts ne demande les droits administrateur. Détail du lancement dans [`docs/local-launch.md`](docs/local-launch.md), du scan dans [`docs/preuvance-scan.md`](docs/preuvance-scan.md).
+
+## Scan local (option A)
+
+Le scan local (`scripts/preuvance-scan.ps1`) tourne entièrement sur le poste, avec consentement, sans rien envoyer sur Internet :
+
+- **profil** personnel ou professionnel (domaine / Entra ID) ;
+- **inventaire des fichiers sensibles** par nom/extension, avec empreinte SHA-256, **sans copier ni lire le contenu** ;
+- **détection « shadow AI »** : appels réseau vers des API d’IA connues, par nom d’hôte (jamais par plage d’IP, qui donnerait des faux positifs), avec un mode surveillance d’une heure.
+
+Le rapport `preuvance-scan.json` se charge dans la page **« Scanner en local »**, lue dans le navigateur (aucun upload), qui affiche un **score d’exposition déterministe** : un appel d’IA non déclaré ou un secret exposé fait baisser la note. Détail et limites dans [`docs/preuvance-scan.md`](docs/preuvance-scan.md).
 
 ## Vérification
 
@@ -89,4 +98,4 @@ Pas d’intégration assureur réelle, de tarification, de paiement, de généra
 
 ---
 
-Corrections et durcissement qualité des 13-14 juillet 2026 (D-042 à D-054 de [`BEHAVIOR.md`](BEHAVIOR.md)) rédigés par **Claude (Fable 5), Anthropic**.
+Corrections, scan local et durcissement qualité des 13-14 juillet 2026 (D-042 à D-062 de [`BEHAVIOR.md`](BEHAVIOR.md)) rédigés par **Claude (Fable 5), Anthropic**. La revue de l’audit externe **ChatGPT 5.6** figure dans [`docs/revue-audit-externe.md`](docs/revue-audit-externe.md) : son analyse est attribuée à son auteur, et la documentation n’est pas signée sous une autre identité que celle qui l’a rédigée.

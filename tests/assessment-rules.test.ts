@@ -186,6 +186,44 @@ test("un fournisseur GPAI extrait sans obligations GPAI conclues est une diverge
   );
 });
 
+test("un niveau de risque minimal affiché avec une pratique interdite applicable est une divergence", () => {
+  const classification = baseClassification();
+  classification.prohibitedPractices.outcome = "applies";
+  classification.riskTier = "minimal_risk";
+
+  const result = runDeterministicCrossCheck({
+    description: "Description neutre.",
+    facts: baseFacts(),
+    classification,
+  });
+
+  assert.equal(result.status, "divergent");
+  assert.ok(
+    result.divergences.some(
+      (item) => item.topic.includes("incohérent") && item.article === "Article 5",
+    ),
+  );
+});
+
+test("une qualification haut risque affichée en risque limité est une divergence", () => {
+  const classification = baseClassification();
+  classification.annexIII.outcome = "applies";
+  classification.riskTier = "limited_transparency_risk";
+
+  const result = runDeterministicCrossCheck({
+    description: "Description neutre.",
+    facts: baseFacts(),
+    classification,
+  });
+
+  assert.equal(result.status, "divergent");
+  assert.ok(
+    result.divergences.some((item) =>
+      item.article.includes("Annexes I et III"),
+    ),
+  );
+});
+
 test("un calcul d’entraînement au-delà de 10^25 FLOP sans obligations GPAI est une divergence", () => {
   const facts = baseFacts();
   facts.trainingComputeAboveGpaiThreshold = true;

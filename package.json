@@ -10,7 +10,7 @@
     "build": "vinext build",
     "start": "vinext start",
     "test": "npm run lint && npm run typecheck && npm run test:unit && npm run build && node --test tests/rendered-html.test.mjs",
-    "test:unit": "node --import tsx --test tests/assessment-core.test.ts tests/assessment-form.test.ts tests/assessment-quota.test.ts tests/local-download.test.ts tests/score-display.test.ts tests/assessment-rules.test.ts tests/marketing-reference.test.ts tests/assessment-results-render.test.tsx",
+    "test:unit": "node --import tsx --test tests/assessment-core.test.ts tests/assessment-form.test.ts tests/assessment-quota.test.ts tests/local-download.test.ts tests/score-display.test.ts tests/assessment-rules.test.ts tests/marketing-reference.test.ts tests/assessment-results-render.test.tsx tests/scan-scoring.test.ts tests/scan-fixture.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },

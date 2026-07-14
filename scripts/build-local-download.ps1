@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
 $ErrorActionPreference = "Stop"
@@ -76,6 +76,8 @@ $files = @(
   "AGENTS.md",
   "BEHAVIOR.md",
   "LANCER_PREUVANCE.cmd",
+  "SCANNER_PREUVANCE.cmd",
+  "DESINSTALLER_PREUVANCE.cmd",
   "README.md",
   "eslint.config.mjs",
   "next.config.ts",
@@ -107,13 +109,18 @@ $readme = @"
 PREUVANCE LOCAL — LANCEMENT WINDOWS
 
 1. Extrayez completement cette archive.
-2. Double-cliquez sur LANCER_PREUVANCE.cmd.
-3. Au premier lancement, saisissez votre cle API OpenAI lorsque Windows la demande.
-4. Le script installe, construit, lance Preuvance sur 127.0.0.1 et ouvre le navigateur.
+2. Double-cliquez sur LANCER_PREUVANCE.cmd pour lancer l'application web locale.
+   Au premier lancement, saisissez votre cle API OpenAI lorsque Windows la demande.
+   Le script installe, construit, lance Preuvance sur 127.0.0.1 et ouvre le navigateur.
 
-Prerequis : Windows PowerShell 5.1+ et Node.js 22.13+.
-Le lanceur ne demande aucun droit administrateur et ne scanne pas votre machine.
-Les secrets restent dans .env.local, fichier exclu de cette archive et ignore par Git.
+Scanner votre poste (option A, sans cle API) :
+   Double-cliquez sur SCANNER_PREUVANCE.cmd, puis chargez le rapport preuvance-scan.json
+   dans la page "Scanner en local". Le scan reste 100% local et ne copie aucun contenu.
+
+Tout desinstaller : double-cliquez sur DESINSTALLER_PREUVANCE.cmd.
+
+Prerequis : Windows PowerShell 5.1+ et Node.js 22.13+ (l'application ; le scan n'exige que PowerShell).
+Aucun droit administrateur n'est requis. Les secrets restent dans .env.local, exclu de cette archive.
 "@
 [System.IO.File]::WriteAllText(
   (Join-Path $stagingProject "LISEZ-MOI.txt"),

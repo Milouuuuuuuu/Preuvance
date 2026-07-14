@@ -13,6 +13,7 @@ export const riskLevels = [
 export const gapPriorities = ["critical", "high", "medium", "low"] as const;
 export const evidenceStatuses = [
   "documented",
+  "declared",
   "partial",
   "missing",
   "unverified",
