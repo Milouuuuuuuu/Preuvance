@@ -54,15 +54,19 @@ function Resolve-AiProvider([string]$HostName) {
 }
 
 # --- Catégories de fichiers sensibles (nom/extension uniquement, sans lecture de contenu) ---
+# Les gabarits versionnés (.example/.sample/.template/.dist), sans valeur secrète
+# réelle, sont exclus pour éviter un faux positif systématique sur .env.example.
+$fileTemplateSuffixPattern = '\.(example|sample|template|dist)$'
 $fileRules = @(
   @{ Category = "secret";        Pattern = '(^\.env$|\.env\.|\.pem$|\.key$|\.pfx$|\.p12$|\.keystore$|\.jks$|\.ppk$|\.tfstate$|(^|[\\/])id_rsa$|(^|[\\/])id_ed25519$|secret.*\.(json|txt|ya?ml)$)' }
   @{ Category = "credential";    Pattern = '(credential.*\.(json|txt|ya?ml)$|\.kdbx$|\.ovpn$|(^|[\\/])\.npmrc$|(^|[\\/])\.pypirc$|(^|[\\/])\.netrc$|(^|[\\/])\.git-credentials$)' }
   @{ Category = "financial";     Pattern = '(facture|invoice|(^|[\\/])rib|releve|bilan|paie|salaire|comptab|\.qbo$|\.ofx$)' }
-  @{ Category = "personal_data"; Pattern = '(\.vcf$|passeport|(carte.?identite)|(^|[\\/])cni|patient|dossier.?rh|donnees.?personnelles|rgpd)' }
+  @{ Category = "personal_data"; Pattern = '(\.vcf$|passeport|(carte.?identite)|(^|[\\/])cni(?![a-z])|patient|dossier.?rh|donnees.?personnelles|rgpd)' }
 )
 
 function Resolve-FileCategory([string]$FullPath) {
   $lower = $FullPath.ToLowerInvariant()
+  if ($lower -match $fileTemplateSuffixPattern) { return $null }
   foreach ($rule in $fileRules) {
     if ($lower -match $rule.Pattern) { return $rule.Category }
   }

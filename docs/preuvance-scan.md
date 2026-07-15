@@ -14,8 +14,10 @@ indépendant de tout modèle de langage.
 2. **Inventaire des fichiers sensibles** — chemin, taille, dates et empreinte
    SHA-256, **sans jamais copier ni lire le contenu**. La détection est fondée sur
    le nom et l'extension (`.env`, `.pem`, `id_rsa`, `.pfx`, documents financiers,
-   motifs de données personnelles). C'est un « pointage » d'actifs conforme à
-   l'esprit de NIST CSF 2.0 (ID.AM-07) et ISO 27001 (A.5.9).
+   motifs de données personnelles). Les gabarits versionnés sans valeur secrète
+   réelle (`.env.example`, `.env.sample`, `.env.template`, `.dist`) sont exclus.
+   C'est un « pointage » d'actifs conforme à l'esprit de NIST CSF 2.0 (ID.AM-07)
+   et ISO 27001 (A.5.9).
 3. **Observation réseau « shadow AI »** — détecte les appels de vos logiciels vers
    des API d'IA connues (OpenAI, Anthropic, Azure OpenAI, Google, Mistral, etc.).
    En mode surveillance, l'utilisateur peut laisser le scan tourner une heure
@@ -46,8 +48,20 @@ Limites assumées, écrites dans le rapport lui-même (`notes`) :
 
 - l'absence de détection **ne prouve pas** l'absence d'appel (échantillonnage,
   TTL) — d'où la recommandation du mode surveillance sur une heure ;
-- l'attribution au processus est au mieux indicative ;
+- l'attribution au processus est au mieux indicative, et dépend des droits du
+  compte utilisateur (`Get-NetTCPConnection` peut ne pas tout énumérer selon la
+  session) ;
 - une résolution DNS n'est pas une connexion effective.
+
+**Limite connue du MVP — tout appel d'IA détecté est marqué non déclaré.** Le
+scanner écrit systématiquement `declared: false` : rien, dans le produit actuel,
+ne permet à l'utilisateur de dire « cet outil d'IA est un usage connu et
+gouverné ». Conséquence concrète, observée sur ce projet lui-même : Claude Code
+(éditeur utilisé par l'équipe) est correctement détecté, mais s'affiche comme
+« shadow AI critique » au même titre qu'un appel réellement caché. Ce n'est pas
+un mensonge du scan — techniquement, rien ne le distingue avant lecture humaine
+— mais une déclaration manuelle des outils d'IA connus (checklist en amont du
+scan) reste à construire pour éviter ce faux positif de gravité.
 
 Une capture exhaustive (journal DNS ETW, `pktmon`, audit WFP 5156) existe mais
 exige des droits administrateur : hors périmètre du scan sans élévation, par
