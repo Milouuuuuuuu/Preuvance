@@ -10,7 +10,7 @@ Preuvance ne délivre ni avis juridique, ni certification, ni décision d’assu
 
 Le nom initial **Aplomb** a été rejeté après recherche : les trois domaines visés sont enregistrés et une entreprise homonyme intervient déjà en gouvernance IA et réglementaire. **Preuvance** a été retenu à **86/100**. Les contrôles RDAP sont favorables mais l’achat du domaine et la recherche EUIPO/TMview restent à effectuer avant lancement public.
 
-Le détail des sources est dans [`docs/research.md`](docs/research.md). Toutes les décisions et leur note sur 100 sont consignées dans [`BEHAVIOR.md`](BEHAVIOR.md).
+Le détail des sources est dans [`docs/research.md`](docs/research.md). Toutes les décisions et leur note sur 100 sont consignées dans [`BEHAVIOR.md`](BEHAVIOR.md). Pour une présentation simple, sans jargon technique, de tout ce que fait Preuvance : [`docs/preuvance-en-clair.md`](docs/preuvance-en-clair.md).
 
 ## Ce que fait le MVP
 
