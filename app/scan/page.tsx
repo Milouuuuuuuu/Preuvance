@@ -25,6 +25,7 @@ export default function ScanPage() {
           <nav className="pv-main-nav" aria-label="Navigation principale">
             <Link href="/#methode">Méthode</Link>
             <Link href="/#referentiel">Référentiel</Link>
+            <Link href="/en-clair">En clair</Link>
             <Link href="/auth/sign-in">Espace</Link>
           </nav>
           <div className="pv-header-actions">
@@ -41,10 +42,13 @@ export default function ScanPage() {
           <p className="pv-kicker">Option A — le scan local</p>
           <h1 id="scan-hero-title">Analysez votre poste, sans rien envoyer.</h1>
           <p className="pv-scan-hero-lede">
-            Le scan tourne sur votre machine, détecte les appels d’IA non déclarés
-            et inventorie vos fichiers sensibles (chemin et empreinte seulement,
-            jamais leur contenu). Vous chargez ensuite le rapport ici pour voir
-            votre score d’exposition. Rien ne quitte votre poste.
+            Avant le scan, vous déclarez les outils d’IA que vous utilisez
+            sciemment. Le scan observe ensuite la réalité du poste — appels d’IA
+            et fichiers sensibles (chemin et empreinte seulement, jamais leur
+            contenu) — et la compare à votre déclaration : c’est la
+            <strong> concordance déclaré / observé</strong>, une déclaration
+            corroborée plutôt qu’une déclaration sur l’honneur. Rien ne quitte
+            votre poste.
           </p>
 
           <ol className="pv-scan-steps">
@@ -62,10 +66,11 @@ export default function ScanPage() {
             <li>
               <span className="pv-method-number">02</span>
               <Terminal size={20} aria-hidden="true" />
-              <h3>Scanner</h3>
+              <h3>Déclarer puis scanner</h3>
               <p>
-                Double-cliquez sur <code>SCANNER_PREUVANCE.cmd</code>. Choisissez
-                le scan rapide ou la surveillance réseau d’une heure.
+                Double-cliquez sur <code>SCANNER_PREUVANCE.cmd</code>. Déclarez
+                vos outils d’IA connus, puis choisissez le scan rapide ou la
+                surveillance réseau d’une heure.
               </p>
             </li>
             <li>
@@ -75,6 +80,14 @@ export default function ScanPage() {
               <p>Déposez ci-dessous le fichier <code>preuvance-scan.json</code> obtenu.</p>
             </li>
           </ol>
+
+          <p className="pv-scan-hint">
+            Windows peut afficher « Windows a protégé votre ordinateur »
+            (SmartScreen) au premier lancement d’un script téléchargé : cliquez
+            sur « Informations complémentaires » puis « Exécuter quand même ».
+            Les scripts sont lisibles en clair dans l’archive et ne demandent
+            aucun droit administrateur.
+          </p>
         </section>
 
         <ScanReportLoader />

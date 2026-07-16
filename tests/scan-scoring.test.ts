@@ -165,3 +165,147 @@ test("une observation réseau limitée est signalée comme angle mort", () => {
     exposure.findings.some((finding) => finding.id === "limited-network-observation"),
   );
 });
+
+test("le titre du constat de secrets reflète la composition réelle (credential seul)", () => {
+  const exposure = computeScanExposure(
+    baseReport({
+      files: {
+        rootsScanned: ["C:/Users/demo"],
+        truncated: false,
+        sensitive: [
+          { path: "C:/Users/demo/.npmrc", category: "credential", sizeBytes: 120 },
+        ],
+      },
+    }),
+  );
+
+  const finding = exposure.findings.find((item) => item.id === "exposed-secrets");
+  assert.ok(finding, "constat exposed-secrets attendu");
+  assert.match(finding.title, /identifiant \/ certificat/);
+  assert.doesNotMatch(finding.title, /secret ou clé d’API/);
+});
+
+test("la catégorie « other » est comptée et produit un constat mineur", () => {
+  const exposure = computeScanExposure(
+    baseReport({
+      files: {
+        rootsScanned: ["C:/Users/demo"],
+        truncated: false,
+        sensitive: [
+          { path: "C:/Users/demo/divers.bin", category: "other", sizeBytes: 64 },
+        ],
+      },
+    }),
+  );
+
+  assert.equal(exposure.observed.otherSensitiveFiles, 1);
+  const finding = exposure.findings.find((item) => item.id === "other-sensitive-files");
+  assert.equal(finding?.severity, "minor");
+  assert.ok(exposure.exposureScore < 100);
+});
+
+test("concordance : déclaration corroborée par l’observation → concordant", () => {
+  const exposure = computeScanExposure(
+    baseReport({
+      network: {
+        mode: "watch",
+        durationSeconds: 3_600,
+        samples: 720,
+        otherExternalEndpoints: 10,
+        aiEndpoints: [
+          {
+            host: "api.anthropic.com",
+            provider: "Anthropic",
+            hitCount: 4,
+            processes: ["claude"],
+            remoteAddresses: [],
+            // Le champ écrit par le scanner est volontairement contredit :
+            // la déclaration fait foi, indépendamment de ce champ.
+            declared: false,
+          },
+        ],
+      },
+      declaration: {
+        providers: ["anthropic"],
+        method: "interactive",
+        collectedAt: "2026-07-14T08:59:00.000Z",
+      },
+    }),
+  );
+
+  assert.equal(exposure.concordance.status, "concordant");
+  assert.deepEqual(exposure.concordance.corroborated, ["Anthropic"]);
+  assert.equal(exposure.observed.undeclaredAiEndpoints, 0);
+  assert.ok(exposure.exposureScore >= 90, "un usage déclaré et corroboré reste mineur");
+});
+
+test("concordance : usage observé hors déclaration → divergent et critique", () => {
+  const exposure = computeScanExposure(
+    baseReport({
+      network: {
+        mode: "watch",
+        durationSeconds: 3_600,
+        samples: 720,
+        otherExternalEndpoints: 10,
+        aiEndpoints: [
+          {
+            host: "api.mistral.ai",
+            provider: "Mistral",
+            hitCount: 2,
+            processes: [],
+            remoteAddresses: [],
+            declared: false,
+          },
+        ],
+      },
+      declaration: {
+        providers: ["openai"],
+        method: "parameter",
+      },
+    }),
+  );
+
+  assert.equal(exposure.concordance.status, "divergent");
+  assert.deepEqual(exposure.concordance.undeclaredObserved, ["Mistral"]);
+  assert.deepEqual(exposure.concordance.declaredNotObserved, ["OpenAI"]);
+  assert.ok(exposure.exposureScore <= 55);
+});
+
+test("concordance : déclaration sans observation → non corroborée, sans pénalité", () => {
+  const exposure = computeScanExposure(
+    baseReport({
+      declaration: {
+        providers: ["openai"],
+        method: "interactive",
+      },
+    }),
+  );
+
+  assert.equal(exposure.concordance.status, "uncorroborated");
+  assert.deepEqual(exposure.concordance.declaredProviders, ["OpenAI"]);
+  assert.equal(exposure.exposureScore, 100);
+});
+
+test("concordance : rapport sans bloc de déclaration → no_declaration (rétrocompatibilité)", () => {
+  const exposure = computeScanExposure(baseReport());
+  assert.equal(exposure.concordance.status, "no_declaration");
+});
+
+test("le contrat rejette une empreinte sha256 mal formée", () => {
+  const invalid = validateScanReport({
+    ...baseReport(),
+    files: {
+      rootsScanned: [],
+      truncated: false,
+      sensitive: [
+        {
+          path: "C:/Users/demo/.env",
+          category: "secret",
+          sizeBytes: 10,
+          sha256: "pas-un-hash",
+        },
+      ],
+    },
+  });
+  assert.equal(invalid.success, false);
+});

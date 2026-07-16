@@ -56,15 +56,17 @@ Le bouton « Télécharger la version locale » sert `public/downloads/preuvance
 
 Aucun de ces scripts ne demande les droits administrateur. Détail du lancement dans [`docs/local-launch.md`](docs/local-launch.md), du scan dans [`docs/preuvance-scan.md`](docs/preuvance-scan.md).
 
-## Scan local (option A)
+## Scan local (option A) et concordance déclaré / observé
 
 Le scan local (`scripts/preuvance-scan.ps1`) tourne entièrement sur le poste, avec consentement, sans rien envoyer sur Internet :
 
+- **déclaration d’usage d’IA** recueillie avant le scan (interactif ou `-DeclaredProviders openai,anthropic`) ;
 - **profil** personnel ou professionnel (domaine / Entra ID) ;
 - **inventaire des fichiers sensibles** par nom/extension, avec empreinte SHA-256, **sans copier ni lire le contenu** ;
-- **détection « shadow AI »** : appels réseau vers des API d’IA connues, par nom d’hôte (jamais par plage d’IP, qui donnerait des faux positifs), avec un mode surveillance d’une heure.
+- **détection « shadow AI »** : appels réseau vers des API d’IA connues, par nom d’hôte (jamais par plage d’IP, qui donnerait des faux positifs), avec un mode surveillance d’une heure ;
+- **concordance déclaré / observé** : l’observation corrobore ou contredit la déclaration — une déclaration corroborée plutôt qu’une déclaration sur l’honneur (esprit de l’art. L113-2 du Code des assurances). Un usage observé hors déclaration est un écart de sincérité, critique.
 
-Le rapport `preuvance-scan.json` se charge dans la page **« Scanner en local »**, lue dans le navigateur (aucun upload), qui affiche un **score d’exposition déterministe** : un appel d’IA non déclaré ou un secret exposé fait baisser la note. Détail et limites dans [`docs/preuvance-scan.md`](docs/preuvance-scan.md).
+Le rapport `preuvance-scan.json` se charge dans la page **« Scanner en local »**, lue dans le navigateur (aucun upload), qui affiche le verdict de concordance et un **score d’exposition déterministe**. Les fonctions pures du script sont couvertes par des autotests (`-SelfTest`) intégrés à la chaîne de tests, avec un garde-fou qui interdit toute dérive entre le catalogue PowerShell et `lib/scan/scan-contract.ts`. Détail et limites dans [`docs/preuvance-scan.md`](docs/preuvance-scan.md).
 
 ## Vérification
 

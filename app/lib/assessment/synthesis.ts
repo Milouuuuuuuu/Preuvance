@@ -64,7 +64,7 @@ export function buildAssessment(options: {
   const obligations = hydrateObligations(options.modelClassification.obligationIds);
   const gaps = options.gapAnalysis.gaps
     .map(hydrateGap)
-    .sort(compareHydratedGapPriority);
+    .sort(compareGapPriority);
   const riskLabel = RISK_LABELS[options.modelClassification.riskTier];
   const decisionLog = buildDecisionLog(
     options.modelClassification,
@@ -143,7 +143,9 @@ export function buildAssessment(options: {
       score: dimension.score,
       finding: dimension.detail,
     })),
-    gaps: gaps.map((gap) => ({
+    // Le schéma amont borne déjà gaps à 18 ; la borne du contrat PDF (25) est
+    // réappliquée ici pour ne pas dépendre d'un plafond maintenu ailleurs.
+    gaps: gaps.slice(0, 25).map((gap) => ({
       priority: reportGapPriority(gap.severity),
       title: gap.title,
       finding: gap.rationale,
@@ -218,15 +220,15 @@ function reportRiskLevel(
   return "minimal";
 }
 
-function reportGapPriority(
-  severity: GapItemModel["severity"],
-): GapPriority {
-  return {
-    critical: "critical",
-    major: "high",
-    moderate: "medium",
-    minor: "low",
-  }[severity] as GapPriority;
+const GAP_PRIORITY_BY_SEVERITY: Record<GapItemModel["severity"], GapPriority> = {
+  critical: "critical",
+  major: "high",
+  moderate: "medium",
+  minor: "low",
+};
+
+function reportGapPriority(severity: GapItemModel["severity"]): GapPriority {
+  return GAP_PRIORITY_BY_SEVERITY[severity];
 }
 
 function buildReportEvidence(
@@ -242,7 +244,7 @@ function buildReportEvidence(
   }));
   const findings = gaps.map((gap) => ({
     control: gap.title,
-    status: gap.status as EvidenceStatus,
+    status: gap.status satisfies EvidenceStatus,
     detail:
       gap.currentEvidence ??
       "Aucune preuve exploitable n’a été décrite pour ce contrôle.",
@@ -265,10 +267,6 @@ function hydrateGap(gap: GapItemModel): HydratedGap {
       : null,
     references,
   };
-}
-
-function compareHydratedGapPriority(a: HydratedGap, b: HydratedGap): number {
-  return compareGapPriority(a, b);
 }
 
 const CROSSCHECK_DECISION_LABELS: Record<CrossCheckResult["status"], string> = {

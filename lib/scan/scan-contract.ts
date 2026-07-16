@@ -51,6 +51,18 @@ export function providerLabelForHost(host: string): string | null {
   return entry ? entry.label : null;
 }
 
+export function providerIdForHost(host: string): string | null {
+  const entry = AI_PROVIDER_HOSTS.find((candidate) => candidate.match.test(host));
+  return entry ? entry.provider : null;
+}
+
+export function providerLabelForId(providerId: string): string | null {
+  const entry = AI_PROVIDER_HOSTS.find(
+    (candidate) => candidate.provider === providerId,
+  );
+  return entry ? entry.label : null;
+}
+
 export const SENSITIVE_FILE_CATEGORIES = [
   "secret",
   "credential",
@@ -88,7 +100,26 @@ const sensitiveFileSchema = z
     sizeBytes: z.number().int().min(0),
     modifiedAt: isoDateTime.optional(),
     // Empreinte SHA-256 (pointage sans copie). Jamais le contenu du fichier.
-    sha256: boundedString(64).optional(),
+    sha256: z
+      .string()
+      .trim()
+      .regex(/^[0-9a-f]{64}$/i, "empreinte SHA-256 invalide")
+      .optional(),
+  })
+  .strict();
+
+/**
+ * Déclaration d'usage d'IA recueillie avant le scan (concordance).
+ * `providers` liste les identifiants du catalogue AI_PROVIDER_HOSTS que
+ * l'utilisateur reconnaît utiliser sciemment. Une liste vide avec une méthode
+ * de recueil explicite signifie « je déclare n'utiliser aucune IA » — ce qui
+ * n'est pas la même chose qu'une déclaration absente (rapports antérieurs).
+ */
+const declarationSchema = z
+  .object({
+    providers: z.array(boundedString(60, 1)).max(40),
+    method: z.enum(["interactive", "parameter"]),
+    collectedAt: isoDateTime.optional(),
   })
   .strict();
 
@@ -127,6 +158,7 @@ export const scanReportSchema = z
         truncated: z.boolean(),
       })
       .strict(),
+    declaration: declarationSchema.optional(),
     notes: z.array(boundedString(500)).max(50),
   })
   .strict();
@@ -134,6 +166,7 @@ export const scanReportSchema = z
 export type ScanReport = z.infer<typeof scanReportSchema>;
 export type ScanAiEndpoint = z.infer<typeof aiEndpointSchema>;
 export type ScanSensitiveFile = z.infer<typeof sensitiveFileSchema>;
+export type ScanDeclaration = z.infer<typeof declarationSchema>;
 
 export type ScanValidationResult =
   | { success: true; data: ScanReport }

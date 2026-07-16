@@ -118,15 +118,33 @@ const LEXICAL_RULES: LexicalRule[] = [
   },
 ];
 
-const CLEARED_OUTCOMES: ReadonlyArray<
+/**
+ * Issues où la classification ne traite PAS affirmativement le point :
+ * « non applicable », mais aussi « informations insuffisantes » — si
+ * l'extraction déterministe a déjà produit un signal structuré, un
+ * classifieur qui répond « informations insuffisantes » l'ignore, ce qui
+ * est une contradiction au même titre qu'un « non applicable ».
+ */
+const UNTREATED_OUTCOMES: ReadonlyArray<
   ModelClassification["prohibitedPractices"]["outcome"]
-> = ["does_not_apply"];
+> = ["does_not_apply", "insufficient_information"];
+
+const UNTREATED_OUTCOME_LABELS: Record<string, string> = {
+  does_not_apply: "non applicable",
+  insufficient_information: "informations insuffisantes",
+};
+
+function untreatedLabel(
+  outcome: ModelClassification["prohibitedPractices"]["outcome"],
+): string {
+  return UNTREATED_OUTCOME_LABELS[outcome] ?? outcome;
+}
 
 export function normalizeForScreening(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 export function runDeterministicCrossCheck(options: {
@@ -141,19 +159,19 @@ export function runDeterministicCrossCheck(options: {
 
   if (
     facts.prohibitedPracticeSignals.length > 0 &&
-    CLEARED_OUTCOMES.includes(classification.prohibitedPractices.outcome)
+    UNTREATED_OUTCOMES.includes(classification.prohibitedPractices.outcome)
   ) {
     divergences.push({
       topic: "Pratiques interdites",
       origin: "faits_structures",
       article: "Article 5",
-      detail: `L’extraction signale ${facts.prohibitedPracticeSignals.join(", ")} mais la classification conclut « non applicable ».`,
+      detail: `L’extraction signale ${facts.prohibitedPracticeSignals.join(", ")} mais la classification conclut « ${untreatedLabel(classification.prohibitedPractices.outcome)} ».`,
     });
   }
 
   if (
     facts.signedAmendmentProhibitedPracticeSignals.length > 0 &&
-    CLEARED_OUTCOMES.includes(
+    UNTREATED_OUTCOMES.includes(
       classification.signedAmendmentProhibitedPractices.outcome,
     )
   ) {
@@ -161,15 +179,14 @@ export function runDeterministicCrossCheck(options: {
       topic: "Nouvelle interdiction (Omnibus signé)",
       origin: "faits_structures",
       article: "Modification signée de l’article 5",
-      detail:
-        "L’extraction signale un risque de contenus intimes non consentis ou CSAM mais la classification conclut « non applicable ».",
+      detail: `L’extraction signale un risque de contenus intimes non consentis ou CSAM mais la classification conclut « ${untreatedLabel(classification.signedAmendmentProhibitedPractices.outcome)} ».`,
     });
   }
 
   if (
     facts.usesEmotionRecognition === true &&
     (facts.sector === "employment" || facts.sector === "education") &&
-    CLEARED_OUTCOMES.includes(classification.prohibitedPractices.outcome)
+    UNTREATED_OUTCOMES.includes(classification.prohibitedPractices.outcome)
   ) {
     divergences.push({
       topic: "Émotions au travail ou dans l’enseignement",
@@ -241,40 +258,37 @@ export function runDeterministicCrossCheck(options: {
 
   if (
     facts.modelType === "general_purpose_model_provider" &&
-    CLEARED_OUTCOMES.includes(classification.gpaiProviderObligations.outcome)
+    UNTREATED_OUTCOMES.includes(classification.gpaiProviderObligations.outcome)
   ) {
     divergences.push({
       topic: "Fournisseur de modèle GPAI",
       origin: "faits_structures",
       article: "Articles 51 à 56",
-      detail:
-        "Le rôle de fournisseur de modèle à usage général est extrait mais les obligations GPAI sont conclues « non applicables ».",
+      detail: `Le rôle de fournisseur de modèle à usage général est extrait mais les obligations GPAI sont conclues « ${untreatedLabel(classification.gpaiProviderObligations.outcome)} ».`,
     });
   }
 
   if (
     facts.trainingComputeAboveGpaiThreshold === true &&
-    CLEARED_OUTCOMES.includes(classification.gpaiProviderObligations.outcome)
+    UNTREATED_OUTCOMES.includes(classification.gpaiProviderObligations.outcome)
   ) {
     divergences.push({
       topic: "Seuil de calcul GPAI dépassé",
       origin: "faits_structures",
       article: "Articles 51 et 55",
-      detail:
-        "Un calcul cumulé d’entraînement supérieur à 10^25 FLOP est déclaré (présomption de risque systémique) mais les obligations GPAI sont conclues « non applicables ».",
+      detail: `Un calcul cumulé d’entraînement supérieur à 10^25 FLOP est déclaré (présomption de risque systémique) mais les obligations GPAI sont conclues « ${untreatedLabel(classification.gpaiProviderObligations.outcome)} ».`,
     });
   }
 
   if (
     facts.createsDeepfakes === true &&
-    CLEARED_OUTCOMES.includes(classification.article50.outcome)
+    UNTREATED_OUTCOMES.includes(classification.article50.outcome)
   ) {
     divergences.push({
       topic: "Deepfakes sans obligation de transparence",
       origin: "faits_structures",
       article: "Article 50(4)",
-      detail:
-        "La génération de deepfakes est extraite mais l’article 50 est conclu « non applicable ».",
+      detail: `La génération de deepfakes est extraite mais l’article 50 est conclu « ${untreatedLabel(classification.article50.outcome)} ».`,
     });
   }
 
@@ -285,7 +299,7 @@ export function runDeterministicCrossCheck(options: {
 
     if (rule.kind === "art5") {
       const treated =
-        !CLEARED_OUTCOMES.includes(classification.prohibitedPractices.outcome) ||
+        !UNTREATED_OUTCOMES.includes(classification.prohibitedPractices.outcome) ||
         (rule.practiceId !== undefined &&
           classification.prohibitedPractices.matchedPracticeIds.includes(
             rule.practiceId,
@@ -301,7 +315,7 @@ export function runDeterministicCrossCheck(options: {
     } else {
       const treated =
         classification.riskTier === "high_risk_annex_iii" ||
-        !CLEARED_OUTCOMES.includes(classification.annexIII.outcome) ||
+        !UNTREATED_OUTCOMES.includes(classification.annexIII.outcome) ||
         (rule.area !== undefined &&
           classification.annexIII.matchedAreas.includes(rule.area));
       if (!treated) {

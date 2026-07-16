@@ -31,6 +31,7 @@ export default function Home() {
             <a href="/scan">Scanner en local</a>
             <a href="#methode">Méthode</a>
             <a href="#referentiel">Référentiel</a>
+            <a href="/en-clair">En clair</a>
             <a href="/auth/sign-in">Espace</a>
           </nav>
           <div className="pv-header-actions">
@@ -74,14 +75,20 @@ export default function Home() {
 
             <div className="pv-path-choice" aria-label="Deux façons de commencer">
               <a className="pv-path-card pv-path-primary" href="/scan">
-                <span className="pv-path-tag">Option A · recommandé</span>
+                <span className="pv-path-tag">Option A · recommandé en premier</span>
                 <span className="pv-path-heading">
                   <MonitorCheck size={20} aria-hidden="true" />
                   Scanner votre poste en local
                 </span>
                 <span className="pv-path-copy">
-                  100 % local, rien n’est envoyé. Détecte les appels d’IA non
-                  déclarés (« shadow AI ») et les fichiers sensibles exposés.
+                  100 % local, rien n’est envoyé. Vous déclarez vos outils d’IA,
+                  le scan observe la réalité du poste et mesure la concordance :
+                  une déclaration corroborée, pas sur l’honneur — et tout usage
+                  non déclaré (« shadow AI ») ressort.
+                </span>
+                <span className="pv-path-produces">
+                  Produit : score d’exposition + concordance déclaré / observé
+                  (pas de PDF courtier — c’est l’option B).
                 </span>
                 <span className="pv-path-cta">
                   Ouvrir le scan local
@@ -89,14 +96,19 @@ export default function Home() {
                 </span>
               </a>
               <a className="pv-path-card" href="#evaluation">
-                <span className="pv-path-tag">Option B · rapide</span>
+                <span className="pv-path-tag">Option B · le dossier courtier</span>
                 <span className="pv-path-heading">
                   <Zap size={20} aria-hidden="true" />
                   Évaluation express en ligne
                 </span>
                 <span className="pv-path-copy">
-                  Décrivez votre système en français ; classification, score et
-                  rapport PDF en quelques minutes.
+                  Décrivez votre système en français : classification
+                  réglementaire contre-vérifiée, plan d’action et score en
+                  quelques minutes.
+                </span>
+                <span className="pv-path-produces">
+                  Produit : classification EU AI Act + rapport PDF partageable
+                  avec votre courtier.
                 </span>
                 <span className="pv-path-cta">
                   Décrire mon système
@@ -264,6 +276,7 @@ export default function Home() {
           <p>Maîtrisez votre risque IA, prouvez-le à votre assureur.</p>
           <nav className="pv-footer-links" aria-label="Liens de pied de page">
             <a href="#confidentialite">Confidentialité</a>
+            <a href="/en-clair">Preuvance en clair</a>
             <a href="#evaluation">
               Évaluer un système
               <ArrowRight size={15} aria-hidden="true" />

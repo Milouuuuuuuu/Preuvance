@@ -6,9 +6,14 @@ import {
   normalizeForScreening,
   runDeterministicCrossCheck,
 } from "../app/lib/assessment/rules";
-import { computeReadinessScore } from "../app/lib/assessment/scoring";
+import {
+  compareGapPriority,
+  computeReadinessScore,
+  gapPenalty,
+} from "../app/lib/assessment/scoring";
 import type {
   ExtractedFacts,
+  GapItemModel,
   ModelClassification,
 } from "../app/lib/assessment/schemas";
 
@@ -116,6 +121,69 @@ test("un signal art. 5 extrait mais ignoré par la classification est une diverg
   const score = computeReadinessScore([], baseClassification(), result);
   assert.ok(score.overall <= 59);
   assert.ok(score.appliedCaps.some((cap) => cap.cap === 59));
+});
+
+function makeGap(overrides: Partial<GapItemModel>): GapItemModel {
+  return {
+    id: "gap-test",
+    title: "Écart de test",
+    priority: "before_next_release",
+    severity: "moderate",
+    dimension: "governance",
+    status: "missing",
+    currentEvidence: null,
+    rationale: "Justification de test.",
+    action: "Action de test.",
+    evidenceNeeded: [],
+    referenceIds: [],
+    implementationEffort: "small",
+    ...overrides,
+  };
+}
+
+test("les écarts du rapport sont triés par pénalité décroissante puis par titre", () => {
+  const minor = makeGap({ id: "g1", title: "Zeta", severity: "minor" });
+  const critical = makeGap({
+    id: "g2",
+    title: "Alpha",
+    severity: "critical",
+    priority: "immediate",
+  });
+  const moderateA = makeGap({ id: "g3", title: "Bravo", severity: "moderate" });
+  const moderateB = makeGap({ id: "g4", title: "Août", severity: "moderate" });
+
+  const sorted = [minor, moderateA, critical, moderateB].sort(compareGapPriority);
+
+  assert.deepEqual(
+    sorted.map((gap) => gap.id),
+    ["g2", "g4", "g3", "g1"],
+    "critique d’abord, puis les modérés à égalité départagés par titre (locale fr), le mineur en dernier",
+  );
+  assert.ok(gapPenalty(critical) > gapPenalty(moderateA));
+  assert.ok(gapPenalty(moderateA) === gapPenalty(moderateB));
+});
+
+test("un signal extrait face à « informations insuffisantes » est aussi une divergence", () => {
+  const facts = baseFacts();
+  facts.prohibitedPracticeSignals = ["social-scoring"];
+
+  const classification = baseClassification();
+  classification.prohibitedPractices = {
+    ...classification.prohibitedPractices,
+    outcome: "insufficient_information",
+  };
+
+  const result = runDeterministicCrossCheck({
+    description:
+      "Le système attribue une note de comportement global aux usagers pour moduler leur accès aux services.",
+    facts,
+    classification,
+  });
+
+  assert.equal(result.status, "divergent");
+  const divergence = result.divergences.find((item) => item.article === "Article 5");
+  assert.ok(divergence, "divergence article 5 attendue");
+  assert.match(divergence.detail, /informations insuffisantes/);
 });
 
 test("des mots-clés annexe III non traités déclenchent une alerte sans plafonner", () => {
