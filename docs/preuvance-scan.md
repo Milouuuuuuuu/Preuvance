@@ -3,25 +3,58 @@
 Le scan local est l'**option A** de Preuvance : une analyse de conformité IA qui
 tourne entièrement sur le poste de l'utilisateur, avec son consentement, sans
 rien envoyer sur Internet. Il alimente un score d'exposition déterministe,
-indépendant de tout modèle de langage.
+indépendant de tout modèle de langage, et une **concordance déclaré / observé**
+qui corrobore (ou contredit) la déclaration d'usage d'IA de l'utilisateur.
 
 ## Ce qu'il fait
 
-1. **Profil du poste** — personnel ou professionnel, détecté via
+1. **Déclaration d'usage d'IA** — avant le scan, l'utilisateur déclare les
+   fournisseurs d'IA que son organisation utilise sciemment (liste interactive,
+   ou `-DeclaredProviders openai,anthropic`, ou `aucun`). Cette déclaration est
+   enregistrée dans le rapport (`declaration`), avec sa méthode de recueil.
+2. **Profil du poste** — personnel ou professionnel, détecté via
    `Win32_ComputerSystem.PartOfDomain` et `dsregcmd /status` (jonction domaine ou
    Entra ID). Sur un poste professionnel géré, le rapport recommande de passer par
    le canal IT/DPO officiel plutôt que par ce script ad hoc.
-2. **Inventaire des fichiers sensibles** — chemin, taille, dates et empreinte
+3. **Inventaire des fichiers sensibles** — chemin, taille, dates et empreinte
    SHA-256, **sans jamais copier ni lire le contenu**. La détection est fondée sur
    le nom et l'extension (`.env`, `.pem`, `id_rsa`, `.pfx`, documents financiers,
    motifs de données personnelles). Les gabarits versionnés sans valeur secrète
    réelle (`.env.example`, `.env.sample`, `.env.template`, `.dist`) sont exclus.
    C'est un « pointage » d'actifs conforme à l'esprit de NIST CSF 2.0 (ID.AM-07)
    et ISO 27001 (A.5.9).
-3. **Observation réseau « shadow AI »** — détecte les appels de vos logiciels vers
+4. **Observation réseau « shadow AI »** — détecte les appels de vos logiciels vers
    des API d'IA connues (OpenAI, Anthropic, Azure OpenAI, Google, Mistral, etc.).
    En mode surveillance, l'utilisateur peut laisser le scan tourner une heure
    pendant qu'il travaille.
+
+## La concordance déclaré / observé
+
+C'est la spécificité du scan Preuvance : il ne se contente ni de croire la
+déclaration (comme un questionnaire), ni d'observer sans cadre (comme un outil
+de sécurité). Il **compare les deux**, dans l'esprit de la déclaration du
+risque en assurance (art. L113-2 du Code des assurances) — une déclaration
+corroborée par une observation indépendante vaut plus qu'une déclaration sur
+l'honneur.
+
+| Verdict | Signification |
+|---|---|
+| **Concordant** | Au moins un usage déclaré est effectivement observé, et aucun usage non déclaré n'est détecté. La déclaration est corroborée. |
+| **Divergent** | Un usage d'IA est observé sans figurer dans la déclaration (« shadow AI ») : écart de sincérité, pénalité critique jusqu'à résolution. |
+| **Non corroboré** | Rien ne contredit la déclaration, mais rien ne la corrobore encore (instantané trop court, TTL DNS) : relancer en mode surveillance. |
+| **Sans déclaration** | Rapport produit sans déclaration (`-Yes` sans `-DeclaredProviders`, ou rapport antérieur) : comportement historique, tous les endpoints sont traités comme non déclarés. |
+
+Le champ `declared` de chaque endpoint est recalculé côté application à partir
+du bloc `declaration` et du nom d'hôte (jamais sur la seule foi du champ écrit
+par le scanner), ce qui rend le verdict robuste à une édition manuelle du
+champ. Cas concret résolu : Claude Code, utilisé par l'équipe sur ce projet,
+était auparavant affiché « shadow AI critique » ; déclaré avant le scan, il
+apparaît désormais comme un usage corroboré, mineur.
+
+Limites résiduelles, assumées : la déclaration reste auto-déclarative (le
+rapport est produit par l'utilisateur, pour l'utilisateur) ; la corroboration
+est au niveau du fournisseur contacté, pas de l'usage métier qui en est fait ;
+et une absence d'observation ne prouve jamais une absence d'usage.
 
 Le rapport est écrit dans `Documents\Preuvance\preuvance-scan.json`, puis chargé
 dans la page **« Scanner en local »** de l'application, qui reste elle aussi 100 %
@@ -53,16 +86,6 @@ Limites assumées, écrites dans le rapport lui-même (`notes`) :
   session) ;
 - une résolution DNS n'est pas une connexion effective.
 
-**Limite connue du MVP — tout appel d'IA détecté est marqué non déclaré.** Le
-scanner écrit systématiquement `declared: false` : rien, dans le produit actuel,
-ne permet à l'utilisateur de dire « cet outil d'IA est un usage connu et
-gouverné ». Conséquence concrète, observée sur ce projet lui-même : Claude Code
-(éditeur utilisé par l'équipe) est correctement détecté, mais s'affiche comme
-« shadow AI critique » au même titre qu'un appel réellement caché. Ce n'est pas
-un mensonge du scan — techniquement, rien ne le distingue avant lecture humaine
-— mais une déclaration manuelle des outils d'IA connus (checklist en amont du
-scan) reste à construire pour éviter ce faux positif de gravité.
-
 Une capture exhaustive (journal DNS ETW, `pktmon`, audit WFP 5156) existe mais
 exige des droits administrateur : hors périmètre du scan sans élévation, par
 choix de proportionnalité.
@@ -75,9 +98,10 @@ Calcul déterministe et auditable (`app/lib/assessment/scan-scoring.ts`,
 | Signal | Gravité | Effet |
 |---|---|---|
 | Appel d'IA **non déclaré** | critique | forte baisse — un système d'IA hors inventaire échappe à la classification et aux obligations |
-| Appel d'IA déclaré | mineur | trace, sans pénalité forte |
-| Secrets/certificats en clair | majeur → critique | risque de gouvernance des données |
+| Appel d'IA déclaré (corroboré) | mineur | trace, sans pénalité forte |
+| Secrets/certificats/identifiants en clair | majeur → critique | risque de gouvernance des données (le titre du constat distingue secrets et identifiants) |
 | Fichiers de données personnelles | modéré → majeur | à rattacher à une finalité et une durée |
+| Autres fichiers sensibles non catégorisés | mineur | à vérifier manuellement |
 | Observation réseau indisponible | mineur | angle mort signalé |
 
 ## Confidentialité
@@ -93,18 +117,29 @@ Calcul déterministe et auditable (`app/lib/assessment/scan-scoring.ts`,
 ## Utilisation
 
 ```powershell
-# Scan rapide (instantané)
+# Scan rapide (instantané) — la déclaration d'usage est demandée en interactif
 powershell -ExecutionPolicy Bypass -File scripts\preuvance-scan.ps1
 
-# Surveillance réseau d'une heure
-powershell -ExecutionPolicy Bypass -File scripts\preuvance-scan.ps1 -WatchMinutes 60
+# Surveillance réseau d'une heure, déclaration en paramètre
+powershell -ExecutionPolicy Bypass -File scripts\preuvance-scan.ps1 -WatchMinutes 60 -DeclaredProviders openai,anthropic
+
+# Autotests des fonctions pures (détection, catégories, déclaration)
+powershell -ExecutionPolicy Bypass -File scripts\preuvance-scan.ps1 -SelfTest
 ```
 
 Ou, sans ligne de commande : `SCANNER_PREUVANCE.cmd`.
 
+Les fonctions pures du script (catalogue de fournisseurs, catégories de
+fichiers, adresses privées, analyse de la déclaration) sont couvertes par des
+autotests (`-SelfTest`) exécutés dans la chaîne de tests standard
+(`tests/scan-script.test.ts`), qui vérifie aussi que le catalogue PowerShell
+reste strictement aligné sur `lib/scan/scan-contract.ts`.
+
 ---
 
-Conçu et vérifié le 14 juillet 2026 par **Claude (Fable 5), Anthropic**. Faisabilité
-technique et bonnes pratiques établies par recherche de sources primaires
-(Microsoft Learn pktmon/DNS, documentation des plages IP Anthropic/OpenAI/Azure,
-NIST CSF 2.0, ISO 27001, EDPB Guidelines 01/2025).
+Conçu et vérifié les 14-16 juillet 2026 par **Fable (Claude Fable 5), Anthropic**.
+Faisabilité technique et bonnes pratiques établies par recherche de sources
+primaires (Microsoft Learn pktmon/DNS, documentation des plages IP
+Anthropic/OpenAI/Azure, NIST CSF 2.0, ISO 27001, EDPB Guidelines 01/2025).
+La concordance déclaré / observé s'inspire du devoir de déclaration du risque
+de l'article L113-2 du Code des assurances.

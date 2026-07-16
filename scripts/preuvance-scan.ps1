@@ -12,6 +12,11 @@ param(
   # Empreinte SHA-256 des fichiers pointés (jamais leur contenu). -NoHash pour l'omettre.
   [switch]$NoHash,
   [string]$OutFile,
+  # Déclaration d'usage d'IA (concordance) : identifiants du catalogue
+  # (ex: openai,anthropic) ou "aucun" pour déclarer zéro usage sciemment.
+  [string[]]$DeclaredProviders,
+  # Exécute les autotests des fonctions pures puis sort (aucun scan, aucune écriture).
+  [switch]$SelfTest,
   # Ignore la demande de consentement (pour l'automatisation et les tests).
   [switch]$Yes
 )
@@ -33,7 +38,7 @@ $aiProviders = @(
   @{ Provider = "openai";       Label = "OpenAI";                 Pattern = '(^|\.)api\.openai\.com$' }
   @{ Provider = "anthropic";    Label = "Anthropic";              Pattern = '(^|\.)api\.anthropic\.com$' }
   @{ Provider = "azure-openai"; Label = "Azure OpenAI";           Pattern = '\.openai\.azure\.com$' }
-  @{ Provider = "google";       Label = "Google (Gemini/Vertex)"; Pattern = '(^|\.)(generativelanguage|aiplatform)\.googleapis\.com$' }
+  @{ Provider = "google";       Label = "Google (Gemini / Vertex)"; Pattern = '(^|\.)(generativelanguage|aiplatform)\.googleapis\.com$' }
   @{ Provider = "mistral";      Label = "Mistral";                Pattern = '(^|\.)api\.mistral\.ai$' }
   @{ Provider = "cohere";       Label = "Cohere";                 Pattern = '(^|\.)api\.cohere\.(ai|com)$' }
   @{ Provider = "aws-bedrock";  Label = "AWS Bedrock";            Pattern = '(^|\.)bedrock[a-z0-9.-]*\.amazonaws\.com$' }
@@ -58,7 +63,7 @@ function Resolve-AiProvider([string]$HostName) {
 # réelle, sont exclus pour éviter un faux positif systématique sur .env.example.
 $fileTemplateSuffixPattern = '\.(example|sample|template|dist)$'
 $fileRules = @(
-  @{ Category = "secret";        Pattern = '(^\.env$|\.env\.|\.pem$|\.key$|\.pfx$|\.p12$|\.keystore$|\.jks$|\.ppk$|\.tfstate$|(^|[\\/])id_rsa$|(^|[\\/])id_ed25519$|secret.*\.(json|txt|ya?ml)$)' }
+  @{ Category = "secret";        Pattern = '((^|[\\/])\.env$|\.env\.|\.pem$|\.key$|\.pfx$|\.p12$|\.keystore$|\.jks$|\.ppk$|\.tfstate$|(^|[\\/])id_rsa$|(^|[\\/])id_ed25519$|secret.*\.(json|txt|ya?ml)$)' }
   @{ Category = "credential";    Pattern = '(credential.*\.(json|txt|ya?ml)$|\.kdbx$|\.ovpn$|(^|[\\/])\.npmrc$|(^|[\\/])\.pypirc$|(^|[\\/])\.netrc$|(^|[\\/])\.git-credentials$)' }
   @{ Category = "financial";     Pattern = '(facture|invoice|(^|[\\/])rib|releve|bilan|paie|salaire|comptab|\.qbo$|\.ofx$)' }
   @{ Category = "personal_data"; Pattern = '(\.vcf$|passeport|(carte.?identite)|(^|[\\/])cni(?![a-z])|patient|dossier.?rh|donnees.?personnelles|rgpd)' }
@@ -78,6 +83,88 @@ function Test-PrivateAddress([string]$Address) {
     $Address -match '^(10\.|127\.|169\.254\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)' -or
     $Address -eq '::1' -or $Address -match '^(fe80|fc|fd)' -or $Address -eq '0.0.0.0' -or $Address -eq '::'
   )
+}
+
+# Transforme une saisie de déclaration (numéros du catalogue ou identifiants,
+# séparés par virgules) en tableau d'identifiants. "aucun"/"none" = déclaration
+# explicite de zéro usage. Retourne $null si la saisie est invalide.
+function ConvertTo-DeclaredIds([string]$InputText) {
+  $trimmed = ("" + $InputText).Trim().ToLowerInvariant()
+  if (-not $trimmed) { return $null }
+  if ($trimmed -in @("aucun", "none")) { return ,@() }
+  $ids = New-Object System.Collections.Generic.List[string]
+  foreach ($token in ($trimmed -split '[,;\s]+')) {
+    if (-not $token) { continue }
+    if ($token -match '^\d+$') {
+      $index = [int]$token
+      if ($index -lt 1 -or $index -gt $aiProviders.Count) { return $null }
+      $candidate = $aiProviders[$index - 1].Provider
+    } else {
+      $candidate = $token
+      if (-not ($aiProviders | Where-Object { $_.Provider -eq $candidate })) { return $null }
+    }
+    if (-not $ids.Contains($candidate)) { $ids.Add($candidate) }
+  }
+  return ,$ids.ToArray()
+}
+
+# --- Autotests des fonctions pures (-SelfTest : aucun scan, aucune écriture) ---
+if ($SelfTest) {
+  $script:selfTestFailures = New-Object System.Collections.Generic.List[string]
+  $script:selfTestCount = 0
+  function Assert-Case([bool]$Condition, [string]$Name) {
+    $script:selfTestCount++
+    if (-not $Condition) { [void]$script:selfTestFailures.Add($Name) }
+  }
+
+  Assert-Case ($null -ne (Resolve-AiProvider "api.openai.com") -and (Resolve-AiProvider "api.openai.com").Provider -eq "openai") "api.openai.com -> openai"
+  Assert-Case ($null -ne (Resolve-AiProvider "api.anthropic.com") -and (Resolve-AiProvider "api.anthropic.com").Provider -eq "anthropic") "api.anthropic.com -> anthropic"
+  Assert-Case ($null -ne (Resolve-AiProvider "moninstance.openai.azure.com") -and (Resolve-AiProvider "moninstance.openai.azure.com").Provider -eq "azure-openai") "*.openai.azure.com -> azure-openai"
+  Assert-Case ($null -ne (Resolve-AiProvider "generativelanguage.googleapis.com") -and (Resolve-AiProvider "generativelanguage.googleapis.com").Provider -eq "google") "gemini -> google"
+  Assert-Case ($null -ne (Resolve-AiProvider "openrouter.ai") -and (Resolve-AiProvider "openrouter.ai").Provider -eq "openrouter") "openrouter.ai -> openrouter"
+  Assert-Case ($null -eq (Resolve-AiProvider "chat.openai.com")) "chat.openai.com ignore (pas une API)"
+  Assert-Case ($null -eq (Resolve-AiProvider "api.openai.com.evil.example")) "suffixe usurpe ignore"
+  Assert-Case ($null -eq (Resolve-AiProvider "storage.googleapis.com")) "googleapis non-IA ignore"
+
+  Assert-Case ((Resolve-FileCategory "C:\p\.env") -eq "secret") ".env -> secret"
+  Assert-Case ((Resolve-FileCategory "C:\p\.env.local") -eq "secret") ".env.local -> secret"
+  Assert-Case ($null -eq (Resolve-FileCategory "C:\p\.env.example")) ".env.example exclu (gabarit)"
+  Assert-Case ($null -eq (Resolve-FileCategory "C:\p\config.sample")) "*.sample exclu (gabarit)"
+  Assert-Case ((Resolve-FileCategory "C:\p\id_rsa") -eq "secret") "id_rsa -> secret"
+  Assert-Case ((Resolve-FileCategory "C:\p\coffre.kdbx") -eq "credential") "*.kdbx -> credential"
+  Assert-Case ((Resolve-FileCategory "C:\p\.npmrc") -eq "credential") ".npmrc -> credential"
+  Assert-Case ((Resolve-FileCategory "C:\p\facture-mars.pdf") -eq "financial") "facture -> financial"
+  Assert-Case ((Resolve-FileCategory "C:\p\cni-recto.jpg") -eq "personal_data") "cni -> personal_data"
+  Assert-Case ($null -eq (Resolve-FileCategory "C:\p\cnil-notification.pdf")) "cnil non confondu avec cni"
+  Assert-Case ($null -eq (Resolve-FileCategory "C:\p\rapport-projet.docx")) "document ordinaire ignore"
+
+  Assert-Case (Test-PrivateAddress "10.1.2.3") "10/8 privee"
+  Assert-Case (Test-PrivateAddress "192.168.1.10") "192.168/16 privee"
+  Assert-Case (Test-PrivateAddress "172.31.255.1") "172.31 privee"
+  Assert-Case (-not (Test-PrivateAddress "172.32.0.1")) "172.32 publique"
+  Assert-Case (-not (Test-PrivateAddress "8.8.8.8")) "8.8.8.8 publique"
+  Assert-Case (Test-PrivateAddress "::1") "::1 boucle locale"
+  Assert-Case (Test-PrivateAddress "fe80::1234") "fe80 lien-local"
+  Assert-Case (-not (Test-PrivateAddress "2001:4860:4860::8888")) "ipv6 publique"
+
+  $parsedNumbers = ConvertTo-DeclaredIds "1, 2"
+  Assert-Case ($null -ne $parsedNumbers -and $parsedNumbers.Count -eq 2 -and $parsedNumbers[0] -eq "openai" -and $parsedNumbers[1] -eq "anthropic") "declaration par numeros"
+  $parsedIds = ConvertTo-DeclaredIds "mistral,anthropic"
+  Assert-Case ($null -ne $parsedIds -and $parsedIds.Count -eq 2 -and ($parsedIds -contains "mistral") -and ($parsedIds -contains "anthropic")) "declaration par identifiants"
+  $parsedNone = ConvertTo-DeclaredIds "aucun"
+  Assert-Case ($null -ne $parsedNone -and $parsedNone.Count -eq 0) "declaration 'aucun' = liste vide"
+  Assert-Case ($null -eq (ConvertTo-DeclaredIds "42")) "numero hors catalogue rejete"
+  Assert-Case ($null -eq (ConvertTo-DeclaredIds "skynet")) "identifiant inconnu rejete"
+  Assert-Case ($null -eq (ConvertTo-DeclaredIds "")) "saisie vide rejetee"
+  $parsedDedup = ConvertTo-DeclaredIds "openai,1"
+  Assert-Case ($null -ne $parsedDedup -and $parsedDedup.Count -eq 1) "doublon numero/identifiant dedoublonne"
+
+  if ($script:selfTestFailures.Count -eq 0) {
+    Write-Output "AUTOTEST OK ($script:selfTestCount assertions)"
+    exit 0
+  }
+  Write-Output ("AUTOTEST ECHEC ($($script:selfTestFailures.Count)/$script:selfTestCount) : " + ($script:selfTestFailures -join " | "))
+  exit 1
 }
 
 # --- Consentement explicite ---
@@ -101,6 +188,50 @@ if (-not $Yes) {
 }
 
 $notes = New-Object System.Collections.Generic.List[string]
+
+# --- Déclaration d'usage d'IA (concordance déclaré / observé) ---
+# La déclaration recueillie AVANT le scan est ensuite comparée à ce qui est
+# réellement observé sur le réseau : la concordance corrobore la déclaration,
+# un écart signale un usage non déclaré (« shadow AI »).
+$declaredIds = $null
+$declarationMethod = $null
+$declarationCollectedAt = $null
+
+if ($DeclaredProviders) {
+  $declaredIds = ConvertTo-DeclaredIds ($DeclaredProviders -join ",")
+  if ($null -eq $declaredIds) {
+    $validIds = ($aiProviders | ForEach-Object { $_.Provider }) -join ", "
+    Write-Host "Valeur -DeclaredProviders invalide. Identifiants valides : $validIds (ou 'aucun')." -ForegroundColor Red
+    exit 1
+  }
+  $declarationMethod = "parameter"
+  $declarationCollectedAt = Get-UtcIso
+} elseif (-not $Yes) {
+  Write-Section "Déclaration d'usage d'IA (concordance déclaré / observé)"
+  Write-Host "Déclarez les fournisseurs d'IA que votre organisation utilise sciemment."
+  Write-Host "Le scan comparera cette déclaration à ce qu'il observe réellement :"
+  Write-Host "une déclaration corroborée renforce votre dossier ; un écart signale un usage non déclaré."
+  for ($i = 0; $i -lt $aiProviders.Count; $i++) {
+    Write-Host ("  {0,2}. {1}" -f ($i + 1), $aiProviders[$i].Label)
+  }
+  $declarationAttempts = 0
+  while ($null -eq $declaredIds -and $declarationAttempts -lt 3) {
+    $declarationAttempts++
+    $declarationAnswer = Read-Host "Fournisseurs utilisés sciemment (ex: 1,3 ou openai,anthropic), ou 'aucun'"
+    $declaredIds = ConvertTo-DeclaredIds $declarationAnswer
+    if ($null -eq $declaredIds) {
+      Write-Host "  Saisie non reconnue : numéros du catalogue, identifiants, ou 'aucun'." -ForegroundColor Yellow
+    }
+  }
+  if ($null -ne $declaredIds) {
+    $declarationMethod = "interactive"
+    $declarationCollectedAt = Get-UtcIso
+  } else {
+    $notes.Add("Aucune déclaration d'usage d'IA recueillie (saisie non reconnue) : la concordance déclaré / observé ne sera pas calculée pour ce rapport.")
+  }
+} else {
+  $notes.Add("Scan lancé sans déclaration d'usage d'IA (-Yes sans -DeclaredProviders) : la concordance déclaré / observé ne sera pas calculée pour ce rapport.")
+}
 
 # --- Profil poste : personnel vs professionnel ---
 $domainJoined = $false
@@ -254,7 +385,7 @@ foreach ($key in $endpoints.Keys) {
     hitCount        = [int]$endpoint.hitCount
     processes       = @($endpoint.processes)
     remoteAddresses = @($endpoint.remoteAddresses)
-    declared        = $false
+    declared        = [bool]($null -ne $declaredIds -and $declaredIds -contains $endpoint.providerId)
   })
 }
 Write-Host ("  $($aiEndpoints.Count) endpoint(s) d'IA détecté(s) ; $($otherIps.Count) autre(s) destination(s) externe(s).")
@@ -298,14 +429,28 @@ $report = [ordered]@{
   notes = $notes.ToArray()
 }
 
+if ($null -ne $declarationMethod) {
+  $report.declaration = [ordered]@{
+    providers   = [string[]]$declaredIds
+    method      = $declarationMethod
+    collectedAt = $declarationCollectedAt
+  }
+}
+
 if (-not $OutFile) {
   $outDir = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "Preuvance"
   if (-not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
   $OutFile = Join-Path $outDir "preuvance-scan.json"
 }
 
-$json = $report | ConvertTo-Json -Depth 8
-[System.IO.File]::WriteAllText($OutFile, $json, [System.Text.UTF8Encoding]::new($false))
+try {
+  $json = $report | ConvertTo-Json -Depth 8
+  [System.IO.File]::WriteAllText($OutFile, $json, [System.Text.UTF8Encoding]::new($false))
+} catch {
+  Write-Host "Impossible d'écrire le rapport dans « $OutFile » : $($_.Exception.Message)" -ForegroundColor Red
+  Write-Host "Vérifiez que le fichier n'est pas ouvert dans un autre programme et que le dossier est accessible en écriture, puis relancez le scan."
+  exit 1
+}
 
 Write-Section "Scan terminé"
 Write-Host "  Rapport écrit : $OutFile" -ForegroundColor Green

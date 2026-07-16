@@ -1,9 +1,12 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import {
   AlertTriangle,
+  ArrowRight,
   FileSearch,
+  Scale,
   ShieldAlert,
   ShieldCheck,
   Upload,
@@ -11,7 +14,9 @@ import {
 import { validateScanReport, type ScanReport } from "@/lib/scan/scan-contract";
 import {
   computeScanExposure,
+  type ScanConcordance,
   type ScanExposure,
+  type ScanFindingSeverity,
 } from "@/app/lib/assessment/scan-scoring";
 
 type LoadState =
@@ -19,15 +24,36 @@ type LoadState =
   | { status: "error"; message: string }
   | { status: "ready"; report: ScanReport; exposure: ScanExposure };
 
+const SEVERITY_LABELS: Record<ScanFindingSeverity, string> = {
+  critical: "critique",
+  major: "majeur",
+  moderate: "modéré",
+  minor: "mineur",
+};
+
+const CONCORDANCE_LABELS: Record<ScanConcordance["status"], string> = {
+  concordant: "Concordant — déclaration corroborée",
+  uncorroborated: "Non contredit — corroboration à renforcer",
+  divergent: "Divergent — usage non déclaré détecté",
+  no_declaration: "Sans déclaration d’usage",
+};
+
 function toneForScore(score: number) {
   if (score >= 85) return "is-pass";
   if (score >= 65) return "is-caution";
   return "is-risk";
 }
 
-function toneForSeverity(severity: string) {
+function toneForSeverity(severity: ScanFindingSeverity) {
   if (severity === "critical" || severity === "major") return "is-risk";
   if (severity === "moderate") return "is-caution";
+  return "is-neutral";
+}
+
+function toneForConcordance(status: ScanConcordance["status"]) {
+  if (status === "concordant") return "is-pass";
+  if (status === "divergent") return "is-risk";
+  if (status === "uncorroborated") return "is-caution";
   return "is-neutral";
 }
 
@@ -134,6 +160,45 @@ export function ScanReportLoader() {
             </dl>
           </article>
 
+          <article
+            className={`pv-scan-concordance ${toneForConcordance(state.exposure.concordance.status)}`}
+          >
+            <div className="pv-scan-concordance-head">
+              <Scale size={18} aria-hidden="true" />
+              <h3>Concordance déclaré / observé</h3>
+              <span className="pv-scan-badge">
+                {CONCORDANCE_LABELS[state.exposure.concordance.status]}
+              </span>
+            </div>
+            <p>{state.exposure.concordance.note}</p>
+            <dl className="pv-scan-concordance-detail">
+              <div>
+                <dt>Déclarés avant le scan</dt>
+                <dd>
+                  {state.exposure.concordance.declaredProviders.length
+                    ? state.exposure.concordance.declaredProviders.join(", ")
+                    : "aucun"}
+                </dd>
+              </div>
+              <div>
+                <dt>Corroborés par l’observation</dt>
+                <dd>
+                  {state.exposure.concordance.corroborated.length
+                    ? state.exposure.concordance.corroborated.join(", ")
+                    : "—"}
+                </dd>
+              </div>
+              <div>
+                <dt>Observés sans déclaration</dt>
+                <dd>
+                  {state.exposure.concordance.undeclaredObserved.length
+                    ? state.exposure.concordance.undeclaredObserved.join(", ")
+                    : "—"}
+                </dd>
+              </div>
+            </dl>
+          </article>
+
           <div className="pv-scan-findings">
             <div className="pv-scan-findings-head">
               <FileSearch size={18} aria-hidden="true" />
@@ -145,7 +210,7 @@ export function ScanReportLoader() {
                   <li key={finding.id}>
                     <div className="pv-scan-finding-head">
                       <span className={`pv-scan-badge ${toneForSeverity(finding.severity)}`}>
-                        {finding.severity}
+                        {SEVERITY_LABELS[finding.severity]}
                       </span>
                       <strong>{finding.title}</strong>
                     </div>
@@ -173,6 +238,19 @@ export function ScanReportLoader() {
               </ul>
             </div>
           ) : null}
+
+          <div className="pv-scan-next">
+            <p>
+              Ce scan mesure l’exposition du poste ; il ne produit ni
+              classification réglementaire, ni rapport PDF pour votre courtier.
+              C’est le rôle de l’évaluation en ligne — et votre concordance
+              déclaré / observé en renforcera la crédibilité.
+            </p>
+            <Link className="pv-scan-next-cta" href="/#evaluation">
+              Poursuivre avec l’évaluation réglementaire (option B)
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          </div>
         </div>
       ) : null}
     </section>

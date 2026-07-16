@@ -1,6 +1,6 @@
 {
     "schemaVersion":  "preuvance-scan-v1",
-    "generatedAt":  "2026-07-15T07:12:34.757Z",
+    "generatedAt":  "2026-07-16T08:08:32.942Z",
     "host":  {
                  "profile":  "personal",
                  "domainJoined":  false,
@@ -20,8 +20,8 @@
                                         {
                                             "host":  "api.anthropic.com",
                                             "provider":  "Anthropic",
-                                            "firstSeen":  "2026-07-15T07:12:28.742Z",
-                                            "lastSeen":  "2026-07-15T07:12:28.760Z",
+                                            "firstSeen":  "2026-07-16T08:08:29.565Z",
+                                            "lastSeen":  "2026-07-16T08:08:29.578Z",
                                             "hitCount":  1,
                                             "processes":  [
                                                               "claude",
@@ -30,23 +30,29 @@
                                             "remoteAddresses":  [
                                                                     "160.79.104.10"
                                                                 ],
-                                            "declared":  false
+                                            "declared":  true
                                         }
                                     ],
-                    "otherExternalEndpoints":  83
+                    "otherExternalEndpoints":  38
                 },
     "files":  {
                   "rootsScanned":  [
-                                       "c:\\Users\\ganda\\OneDrive\\Documents\\Aplomb\\aplomb-app\\scripts",
-                                       "C:\\Users\\ganda\\AppData\\Local\\Temp\\preuvance-scan-fixture-src"
+                                       "C:\\Users\\ganda\\AppData\\Local\\Temp\\claude\\c--Users-ganda-OneDrive-Documents-Aplomb-aplomb-app\\9cb4dee7-ac4b-46cb-b6a0-b705805bd0bb\\scratchpad\\scan-fixture-root"
                                    ],
                   "sensitive":  [
                                     {
-                                        "path":  "C:\\Users\\ganda\\AppData\\Local\\Temp\\preuvance-scan-fixture-src\\.env.local",
+                                        "path":  "C:\\Users\\ganda\\AppData\\Local\\Temp\\claude\\c--Users-ganda-OneDrive-Documents-Aplomb-aplomb-app\\9cb4dee7-ac4b-46cb-b6a0-b705805bd0bb\\scratchpad\\scan-fixture-root\\.env.local",
                                         "category":  "secret",
-                                        "sizeBytes":  384,
-                                        "modifiedAt":  "2026-07-15T07:11:46.808Z",
-                                        "sha256":  "7ce266953c1bfb2acbae2c70ebdb878d9b3779dd906fd634008a3fd55cc0bdef"
+                                        "sizeBytes":  28,
+                                        "modifiedAt":  "2026-07-16T08:07:53.238Z",
+                                        "sha256":  "7ea80915230eef204ee74d928e2848146c3afcfba4930089a88df87c89b96a5b"
+                                    },
+                                    {
+                                        "path":  "C:\\Users\\ganda\\AppData\\Local\\Temp\\claude\\c--Users-ganda-OneDrive-Documents-Aplomb-aplomb-app\\9cb4dee7-ac4b-46cb-b6a0-b705805bd0bb\\scratchpad\\scan-fixture-root\\facture-demo.pdf",
+                                        "category":  "financial",
+                                        "sizeBytes":  6,
+                                        "modifiedAt":  "2026-07-16T08:07:53.243Z",
+                                        "sha256":  "a33f1eaa6dde74881fb719324e3255265f37fdfe27291b3253b86099fec6aca0"
                                     }
                                 ],
                   "truncated":  false
@@ -55,5 +61,12 @@
                   "Les empreintes SHA-256 pointent les fichiers sans les copier. Un hash de très petit fichier reste théoriquement réversible : conservez ce rapport localement.",
                   "Détection réseau fondée sur le nom d\u0027hôte (cache DNS), fiable pour identifier le fournisseur mais pas exhaustive : le cache expire (TTL court) et l\u0027attribution au processus reste au mieux indicative. Pour une couverture réseau sérieuse, lancez le mode surveillance (-WatchMinutes 60) et laissez tourner pendant que vous travaillez.",
                   "Mode instantané : une seule lecture du cache réseau. De nombreux appels courts ont pu échapper à l\u0027observation."
-              ]
+              ],
+    "declaration":  {
+                        "providers":  [
+                                          "anthropic"
+                                      ],
+                        "method":  "parameter",
+                        "collectedAt":  "2026-07-16T08:08:26.011Z"
+                    }
 }

@@ -76,11 +76,7 @@ export function computeReadinessScore(
     (dimension): DimensionScore => {
       const relevantGaps = gaps.filter((gap) => gap.dimension === dimension);
       const rawPenalty = relevantGaps.reduce(
-        (sum, gap) =>
-          sum +
-          SEVERITY_PENALTY[gap.severity] *
-            STATUS_MULTIPLIER[gap.status] *
-            PRIORITY_MULTIPLIER[gap.priority],
+        (sum, gap) => sum + rawGapPenalty(gap),
         0,
       );
       const penalty = roundOneDecimal(rawPenalty);
@@ -132,12 +128,21 @@ export function tierForScore(score: number): ScoreTier {
   return "D";
 }
 
-export function gapPenalty(gap: GapItemModel): number {
-  return roundOneDecimal(
+/**
+ * Formule de pénalité unique : gravité × état × priorité. Toute évolution
+ * passe ici et s'applique donc à la fois au score par dimension et au tri
+ * des écarts du rapport.
+ */
+function rawGapPenalty(gap: GapItemModel): number {
+  return (
     SEVERITY_PENALTY[gap.severity] *
-      STATUS_MULTIPLIER[gap.status] *
-      PRIORITY_MULTIPLIER[gap.priority],
+    STATUS_MULTIPLIER[gap.status] *
+    PRIORITY_MULTIPLIER[gap.priority]
   );
+}
+
+export function gapPenalty(gap: GapItemModel): number {
+  return roundOneDecimal(rawGapPenalty(gap));
 }
 
 export function compareGapPriority(a: GapItemModel, b: GapItemModel): number {

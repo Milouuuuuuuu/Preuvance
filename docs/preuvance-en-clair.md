@@ -14,10 +14,12 @@ d'assurabilité. C'est un outil de préparation, pas un jugement final.
 
 Sur la page d'accueil, deux chemins sont proposés :
 
-- **Option A — Scanner votre poste en local** (mise en avant, recommandée).
-  Un programme tourne sur votre ordinateur, sans rien envoyer sur Internet, et
-  révèle des angles morts concrets : des outils d'IA utilisés sans être
-  déclarés, ou des fichiers sensibles laissés en clair sur le poste.
+- **Option A — Scanner votre poste en local** (mise en avant, recommandée en
+  premier). Un programme tourne sur votre ordinateur, sans rien envoyer sur
+  Internet : vous déclarez d'abord les outils d'IA que vous utilisez sciemment,
+  puis le scan observe la réalité du poste et mesure la **concordance** entre
+  les deux — il révèle les outils d'IA utilisés sans être déclarés et les
+  fichiers sensibles laissés en clair.
 - **Option B — Évaluation express en ligne**. Vous décrivez votre système d'IA
   en français courant ; Preuvance produit une classification réglementaire, un
   score et un rapport PDF en quelques minutes.
@@ -30,37 +32,50 @@ poste, l'évaluation en ligne qualifie juridiquement un système donné.
 Le scan (`SCANNER_PREUVANCE.cmd`) est un programme Windows qui reste
 **entièrement sur votre machine**. Concrètement :
 
-1. **Il identifie le contexte du poste** — personnel, ou professionnel (relié à
+1. **Il recueille votre déclaration** — vous cochez les outils d'IA que votre
+   organisation utilise sciemment (OpenAI, Anthropic, Mistral, etc.), ou vous
+   déclarez n'en utiliser aucun. C'est la même logique que la déclaration d'un
+   risque à un assureur : dire ce que l'on sait, avant la vérification.
+2. **Il identifie le contexte du poste** — personnel, ou professionnel (relié à
    un domaine d'entreprise). Sur un poste professionnel géré, il recommande de
    passer plutôt par le service informatique ou le délégué à la protection des
    données de l'entreprise.
-2. **Il repère les fichiers sensibles** — clés secrètes, certificats,
+3. **Il repère les fichiers sensibles** — clés secrètes, certificats,
    documents financiers, données personnelles — par leur nom et leur
    emplacement. **Il ne copie et ne lit jamais le contenu d'un fichier** :
    seuls le chemin, la taille, la date et une empreinte numérique (un
    « code-barres » du fichier, pas son contenu) sont enregistrés. C'est un
    inventaire, pas une extraction.
-3. **Il détecte les appels vers des IA non déclarées** (« shadow AI ») — si un
-   logiciel de votre poste communique avec OpenAI, Anthropic, Azure OpenAI,
-   Google Gemini, Mistral et une dizaine d'autres fournisseurs, le scan le
-   repère par le nom du service contacté (jamais en lisant le contenu, qui
-   reste chiffré et illisible de l'extérieur). Vous pouvez lancer une
-   **surveillance d'une heure** pendant que vous travaillez normalement, pour
-   une détection plus fiable qu'un simple instantané.
-4. **Il calcule un score d'exposition sur 100**, de façon entièrement
-   automatique et vérifiable (pas d'intelligence artificielle dans ce calcul) :
-   un usage d'IA non déclaré fait fortement chuter la note ; des secrets
-   exposés aussi. Chaque point perdu est expliqué.
+4. **Il détecte les appels vers des services d'IA** — si un logiciel de votre
+   poste communique avec OpenAI, Anthropic, Azure OpenAI, Google Gemini,
+   Mistral et une dizaine d'autres fournisseurs, le scan le repère par le nom
+   du service contacté (jamais en lisant le contenu, qui reste chiffré et
+   illisible de l'extérieur). Vous pouvez lancer une **surveillance d'une
+   heure** pendant que vous travaillez normalement, pour une détection plus
+   fiable qu'un simple instantané.
+5. **Il rend le verdict de concordance et un score d'exposition sur 100**, de
+   façon entièrement automatique et vérifiable (pas d'intelligence artificielle
+   dans ce calcul) :
+   - **concordant** — ce qui est observé corrobore ce que vous avez déclaré :
+     votre déclaration n'est plus une déclaration sur l'honneur, elle est
+     vérifiée par les faits ;
+   - **divergent** — un usage d'IA est observé sans avoir été déclaré
+     (« shadow AI ») : l'écart est nommé et fait fortement chuter la note tant
+     qu'il n'est pas résolu (déclarer l'outil, ou cesser de l'utiliser) ;
+   - **non contredit** — rien n'infirme la déclaration, sans la confirmer
+     encore ; la surveillance d'une heure renforce l'observation.
+   Des secrets exposés font aussi chuter la note, et chaque point perdu est
+   expliqué.
 
 Le rapport produit (`preuvance-scan.json`) reste un fichier sur votre disque.
 La page **« Scanner en local »** du site le lit **dans votre navigateur**, sans
-jamais l'envoyer où que ce soit, et affiche le score et les explications.
+jamais l'envoyer où que ce soit, et affiche la concordance, le score et les
+explications.
 
-**Limite assumée** : le scan ne sait pas encore distinguer un outil d'IA que
-vous utilisez sciemment et de façon encadrée d'un usage réellement caché — tout
-appel détecté est aujourd'hui traité comme un signal à vérifier. Ce n'est pas
-un défaut caché : c'est écrit dans le rapport lui-même et dans la documentation
-technique.
+**Limites assumées** : la déclaration reste la vôtre (le scan ne peut pas
+vérifier ce que vous faites des outils déclarés), et une absence de détection
+ne prouve jamais une absence d'usage. Ce n'est pas un défaut caché : c'est
+écrit dans le rapport lui-même et dans la documentation technique.
 
 ## Ce que fait l'évaluation en ligne (Option B)
 
@@ -145,7 +160,7 @@ dans le dépôt du projet : `README.md` (vue d'ensemble technique),
 
 ---
 
-Document rédigé le 15 juillet 2026 par **Claude (Fable 5), Anthropic**, à partir
+Document rédigé le 15 juillet 2026 par ChatGPT Sol 5.6, à partir
 d'une connaissance directe et vérifiée du code du projet (chaîne de tests
 automatisés au vert : 60 tests unitaires et 8 tests de bout en bout au moment de
 la rédaction).
