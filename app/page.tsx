@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   CalendarDays,
+  Database,
   Download,
   FileText,
   Landmark,
@@ -29,6 +30,7 @@ export default function Home() {
           </a>
           <nav className="pv-main-nav" aria-label="Navigation principale">
             <a href="/scan">Scanner en local</a>
+            <a href="/outils/migration-sqlite-postgresql">Portabilité</a>
             <a href="#methode">Méthode</a>
             <a href="#referentiel">Référentiel</a>
             <a href="/en-clair">En clair</a>
@@ -233,21 +235,42 @@ export default function Home() {
             </p>
           </div>
           <figure className="pv-evidence-figure">
-            {/* L’original reste servi tel quel pour préserver l’identité validée. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/og.png"
-              width="1729"
+              src="/og-v2.png"
+              width="1728"
               height="910"
               loading="lazy"
               decoding="async"
               fetchPriority="low"
-              alt="Aperçu illustré d’un dossier Preuvance avec score, contrôles et preuves structurées."
+              alt="Aperçu d’un dossier Preuvance montrant le score, la concordance déclaré-observé et la portabilité locale SQLite-PostgreSQL."
             />
             <figcaption>
               Dossier de préparation courtier · référentiel EU AI Act daté
             </figcaption>
           </figure>
+        </section>
+
+        <section className="pv-portability-band" aria-labelledby="portability-title">
+          <div className="pv-portability-icon" aria-hidden="true">
+            <Database size={28} />
+          </div>
+          <div className="pv-portability-copy">
+            <p className="pv-kicker">Boîte à outils locale</p>
+            <h2 id="portability-title">
+              Faites circuler vos données sans les exposer.
+            </h2>
+            <p>
+              Le bridge SQLite ↔ PostgreSQL traduit les schémas dans les deux
+              sens et transforme une base <code>.sqlite</code> en dump
+              PostgreSQL, entièrement sur votre machine. Le mode strict bloque
+              les cas qui exigent une validation humaine.
+            </p>
+          </div>
+          <a className="pv-portability-action" href="/outils/migration-sqlite-postgresql">
+            Découvrir l’outil open source
+            <ArrowRight size={16} aria-hidden="true" />
+          </a>
         </section>
 
         <section className="pv-reference-band" id="referentiel" aria-labelledby="reference-title">
@@ -277,6 +300,7 @@ export default function Home() {
           <nav className="pv-footer-links" aria-label="Liens de pied de page">
             <a href="#confidentialite">Confidentialité</a>
             <a href="/en-clair">Preuvance en clair</a>
+            <a href="/outils/migration-sqlite-postgresql">Portabilité des données</a>
             <a href="#evaluation">
               Évaluer un système
               <ArrowRight size={15} aria-hidden="true" />

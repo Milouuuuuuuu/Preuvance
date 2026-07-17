@@ -88,7 +88,8 @@ $files = @(
   "vite.config.ts",
   "worker-configuration.d.ts",
   "wrangler.jsonc",
-  "public\og.png"
+  "public\og.png",
+  "public\og-v2.png"
 )
 
 foreach ($directory in $directories) {
@@ -116,6 +117,10 @@ PREUVANCE LOCAL — LANCEMENT WINDOWS
 Scanner votre poste (option A, sans cle API) :
    Double-cliquez sur SCANNER_PREUVANCE.cmd, puis chargez le rapport preuvance-scan.json
    dans la page "Scanner en local". Le scan reste 100% local et ne copie aucun contenu.
+
+Portabilite SQLite / PostgreSQL (outil open source separe) :
+   https://github.com/Milouuuuuuuu/sqlite-postgres-bridge/releases/latest
+   Utilisez d'abord le mode --dry-run et importez toujours dans une base de test.
 
 Tout desinstaller : double-cliquez sur DESINSTALLER_PREUVANCE.cmd.
 

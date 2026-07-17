@@ -92,7 +92,7 @@ test("rend la page Preuvance en français sans vestige du starter", async () => 
   assert.match(html, /Description libre/i);
   assert.match(html, /Espace/i);
   assert.match(html, /class="pv-brand-e"/i);
-  assert.match(html, /src="\/og\.png"/i);
+  assert.match(html, /src="\/og-v2\.png"/i);
   assert.match(html, /loading="lazy"/i);
   assert.match(html, /class="pv-mobile-auth-action"[^>]*href="\/auth\/sign-in"/i);
   assert.match(html, /href="\/downloads\/preuvance-local\.zip"/i);
@@ -355,4 +355,23 @@ test("le flux d’évaluation refuse la clé absente sans fabriquer de résultat
     ),
   );
   assert.equal(events.some((event) => event.type === "result"), false);
+});
+
+test("présente le bridge comme outil de portabilité séparé", async () => {
+  const home = await fetch(baseUrl, { headers: { accept: "text/html" } });
+  const homeHtml = await home.text();
+  assert.match(homeHtml, /Portabilité des données/i);
+  assert.match(homeHtml, /migration-sqlite-postgresql/i);
+
+  const response = await fetch(
+    `${baseUrl}/outils/migration-sqlite-postgresql`,
+    { headers: { accept: "text/html" } },
+  );
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /SQLite et PostgreSQL/i);
+  assert.match(html, /--dry-run/i);
+  assert.match(html, /PostgreSQL 14 et 18/i);
+  assert.match(html, /ne lance jamais automatiquement un dump arbitraire/i);
+  assert.match(html, /sqlite-postgres-bridge-v0\.1\.0\.zip/i);
 });

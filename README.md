@@ -12,6 +12,8 @@ Le nom initial **Aplomb** a été rejeté après recherche : les trois domaines 
 
 Le détail des sources est dans [`docs/research.md`](docs/research.md). Toutes les décisions et leur note sur 100 sont consignées dans [`BEHAVIOR.md`](BEHAVIOR.md). Pour une présentation simple, sans jargon technique, de tout ce que fait Preuvance : [`docs/preuvance-en-clair.md`](docs/preuvance-en-clair.md).
 
+Le cadrage de démonstration, la note hackathon et les hypothèses de valorisation sont dans [`docs/HACKATHON_2026_VALORISATION.md`](docs/HACKATHON_2026_VALORISATION.md).
+
 ## Ce que fait le MVP
 
 1. identification de l’organisation et du système, description libre et données de taille d’entreprise ;
@@ -67,6 +69,19 @@ Le scan local (`scripts/preuvance-scan.ps1`) tourne entièrement sur le poste, a
 - **concordance déclaré / observé** : l’observation corrobore ou contredit la déclaration — une déclaration corroborée plutôt qu’une déclaration sur l’honneur (esprit de l’art. L113-2 du Code des assurances). Un usage observé hors déclaration est un écart de sincérité, critique.
 
 Le rapport `preuvance-scan.json` se charge dans la page **« Scanner en local »**, lue dans le navigateur (aucun upload), qui affiche le verdict de concordance et un **score d’exposition déterministe**. Les fonctions pures du script sont couvertes par des autotests (`-SelfTest`) intégrés à la chaîne de tests, avec un garde-fou qui interdit toute dérive entre le catalogue PowerShell et `lib/scan/scan-contract.ts`. Détail et limites dans [`docs/preuvance-scan.md`](docs/preuvance-scan.md).
+
+## Boîte à outils de portabilité des données
+
+La page **« Portabilité »** présente `sqlite-postgres-bridge`, un outil MIT séparé
+qui traduit SQL dans les deux sens et convertit une base `.sqlite` en dump
+PostgreSQL, entièrement hors ligne. Son mode `--dry-run` ne produit aucun SQL et
+renvoie le code 2 dès qu’une action manuelle reste nécessaire. Les dumps sont
+chargés en CI dans de vrais PostgreSQL 14 et 18.
+
+Cette brique reste volontairement distincte du cœur réglementaire de Preuvance :
+elle ne déduit ni le sens métier, ni les permissions, ni les politiques RLS et
+n’importe jamais automatiquement une base arbitraire dans Supabase. Code source :
+[`sqlite-postgres-bridge`](https://github.com/Milouuuuuuuu/sqlite-postgres-bridge).
 
 ## Vérification
 
