@@ -29,6 +29,8 @@ test("le packager utilise une allowlist et exclut les secrets et caches", () => 
   assert.match(packager, /outputs\\local-download-staging/);
   assert.match(packager, /public\\downloads/);
   assert.match(packager, /\^\\\.env/);
+  assert.match(packager, /sqlite-postgres-bridge\/releases\/latest/);
+  assert.match(packager, /--dry-run/);
   assert.doesNotMatch(packager, /Copy-Item[^\r\n]+\$projectRoot[^\r\n]+-Recurse/i);
 });
 

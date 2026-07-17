@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const metadataBase = host
     ? new URL(`${protocol}://${host}`)
     : new URL(configuredUrl ?? "http://localhost:3000");
-  const imageUrl = new URL("/og.png", metadataBase).toString();
+  const imageUrl = new URL("/og-v2.png", metadataBase).toString();
 
   return {
     metadataBase,
@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Preuvance",
       title,
       description,
-      images: [{ url: imageUrl, width: 1729, height: 910, alt: title }],
+      images: [{ url: imageUrl, width: 1728, height: 910, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
