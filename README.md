@@ -1,8 +1,8 @@
 # Preuvance
 
-**Maîtrisez votre risque IA, préparez-en la preuve pour votre courtier.**
+**Décrivez votre IA. Preuvance bâtit le dossier — preuve par preuve.**
 
-Preuvance est un MVP français de préparation au règlement européen sur l’IA pour PME et small mid-caps. L’utilisateur décrit son système en langage courant ; une chaîne de raisonnement structurée extrait les faits, classe le risque, produit une liste d’écarts priorisés, calcule un score de préparation de 0 à 100 et génère un dossier PDF destiné à une première conversation avec un courtier ou un investisseur.
+Preuvance est un environnement français de préparation au règlement européen sur l’IA pour PME et small mid-caps. À partir d’une description en langage courant — enrichie facultativement par un digest de dépendances et un scan local expurgé — il construit un **dossier de maîtrise IA instantané, vivant et traçable** : faits structurés, classification, écarts, score déterministe, registre de preuves et PDF destiné à une première conversation avec un courtier ou un investisseur.
 
 Preuvance ne délivre ni avis juridique, ni certification, ni décision d’assurabilité.
 
@@ -14,16 +14,20 @@ Le détail des sources est dans [`docs/research.md`](docs/research.md). Toutes l
 
 Le cadrage de démonstration, la note hackathon et les hypothèses de valorisation sont dans [`docs/HACKATHON_2026_VALORISATION.md`](docs/HACKATHON_2026_VALORISATION.md).
 
-## Ce que fait le MVP
+## Vision livrée : « dossier instantané »
 
-1. identification de l’organisation et du système, description libre et données de taille d’entreprise ;
-2. extraction factuelle structurée ;
-3. classification contre une référence réglementaire versionnée ;
-4. contre-vérification déterministe de la classification par un moteur de règles (faits structurés + analyse lexicale) : toute contradiction plafonne le score et exige une revue humaine ;
-5. écarts et actions associés à des articles précis ;
-6. score déterministe et notes de confiance par décision ;
-7. rapport PDF de préparation courtier ;
-8. persistance atomique et contrôle d’accès Supabase lorsque les variables sont configurées.
+1. l’utilisateur identifie l’organisation et le système, puis le décrit librement ;
+2. il peut joindre des manifestes connus (`package.json`, `package-lock.json`, `requirements*.txt`) : ils sont lus dans le navigateur et seul un digest IA borné est transmis ;
+3. un scan local peut aussi être relié, après consentement, sous forme de compteurs et de verdict agrégés — jamais avec les chemins, IP ou noms de processus ;
+4. GPT-5.6 extrait les faits, classe le risque et propose les écarts dans des schémas stricts ; les identifiants de modèles réellement retournés sont conservés ;
+5. un moteur de règles contre-vérifie la classification, puis calcule le score et ses plafonds de façon déterministe ;
+6. chaque élément de `evidenceNeeded[]` devient une ligne propre du registre : **manquante → déclarée → détectée/documentée → attestée** ;
+7. une pièce n’est jamais promue automatiquement : l’état attesté exige un relecteur et une date, et reste explicitement distinct d’une certification externe ;
+8. le dossier peut être repris, enrichi, exporté en manifeste JSON et rendu en PDF ; Supabase ajoute RLS, historique d’événements et contrôle de concurrence lorsque les variables sont configurées.
+
+La **couverture documentaire** affichée par le registre est indépendante du score réglementaire. Le SHA-256 d’un fichier démontre son intégrité, pas sa véracité.
+
+Documentation détaillée : [`docs/dossier-instantane.md`](docs/dossier-instantane.md), [`docs/evidence-ledger.md`](docs/evidence-ledger.md) et [`docs/dependency-scan.md`](docs/dependency-scan.md).
 
 ## Contrainte réglementaire importante
 
@@ -48,6 +52,26 @@ En développement, renseigner au minimum `OPENAI_API_KEY`. Sans cette clé, l’
 
 Supabase est activé lorsque `NEXT_PUBLIC_SUPABASE_URL` et une clé publique (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, ou l’ancienne `NEXT_PUBLIC_SUPABASE_ANON_KEY`) sont présentes. Dans ce mode, une session est requise et l’évaluation, son rapport et son journal de raisonnement sont enregistrés ensemble. Les secrets ne doivent jamais être commités.
 
+### Démonstration locale
+
+Après `npm run dev` :
+
+- `http://localhost:3000/` — produit complet ;
+- `http://localhost:3000/build-week` — diaporama interactif 16:9, navigable au clavier avec `←`, `→`, `Home` et `End` ;
+- `http://localhost:3000/scan` — lecture locale d’un rapport de scan et handoff expurgé vers le dossier.
+
+Le mode présentation utilise le film procédural propre dans `public/media/preuvance-proof-film.mp4`. Les clips Veo trouvés dans les téléchargements sont volontairement exclus : ils portent un filigrane visible et des artefacts textuels incompatibles avec une soumission crédible. Voir [`docs/animation-review.md`](docs/animation-review.md).
+
+### Migration du registre vivant
+
+Pour la persistance cloud, appliquer les migrations Supabase dans l’ordre, dont :
+
+```text
+supabase/migrations/202607200001_evidence_dossier.sql
+```
+
+Cette migration crée le registre canonique, reprend les preuves historiques, ajoute l’historique d’événements et la révision optimiste, puis ferme les mutations directes sensibles sur `assessments`. Tant qu’elle n’est pas appliquée, le registre fonctionne localement dans le navigateur mais l’historique cloud n’est pas annoncé comme actif. Procédure : [`docs/backend-setup.md`](docs/backend-setup.md).
+
 ## Téléchargement Windows one shot
 
 Le bouton « Télécharger la version locale » sert `public/downloads/preuvance-local.zip`. Après extraction, trois points d’entrée :
@@ -58,7 +82,7 @@ Le bouton « Télécharger la version locale » sert `public/downloads/preuvance
 
 Aucun de ces scripts ne demande les droits administrateur. Détail du lancement dans [`docs/local-launch.md`](docs/local-launch.md), du scan dans [`docs/preuvance-scan.md`](docs/preuvance-scan.md).
 
-## Scan local (option A) et concordance déclaré / observé
+## Scan local complémentaire et concordance déclaré / observé
 
 Le scan local (`scripts/preuvance-scan.ps1`) tourne entièrement sur le poste, avec consentement, sans rien envoyer sur Internet :
 
@@ -83,6 +107,23 @@ elle ne déduit ni le sens métier, ni les permissions, ni les politiques RLS et
 n’importe jamais automatiquement une base arbitraire dans Supabase. Code source :
 [`sqlite-postgres-bridge`](https://github.com/Milouuuuuuuu/sqlite-postgres-bridge).
 
+## OpenAI Build Week 2026
+
+Le paquet de candidature est préparé pour la catégorie **Work & Productivity** sous le titre :
+
+> **Preuvance — Instant AI Assurance, Evidence by Evidence**
+
+Livrables :
+
+- guide de soumission et checklist propriétaire : [`docs/OPENAI_BUILD_WEEK_2026.md`](docs/OPENAI_BUILD_WEEK_2026.md) ;
+- copie Devpost anglaise prête à adapter : [`docs/BUILD_WEEK_SUBMISSION_COPY.md`](docs/BUILD_WEEK_SUBMISSION_COPY.md) ;
+- narration et plan de tournage de 2 min 45 s : [`docs/DEMO_SCRIPT_BUILD_WEEK.md`](docs/DEMO_SCRIPT_BUILD_WEEK.md) ;
+- séparation vérifiable entre socle antérieur et ajouts Build Week : [`docs/build-week-change-log.md`](docs/build-week-change-log.md) ;
+- deck PowerPoint : généré localement dans `outputs/preuvance-openai-build-week.pptx` (dossier non suivi) via `scripts/build-week-deck.mjs` ;
+- diaporama exécutable : `/build-week`.
+
+Échéance officielle : **mardi 21 juillet 2026 à 17:00 PT**, soit **mercredi 22 juillet 2026 à 02:00 à Paris**. Les actions qui restent nécessairement au propriétaire sont : rejoindre le Devpost, confirmer équipe/éligibilité, choisir dépôt public + licence ou partage privé, récupérer le Session ID via `/feedback`, enregistrer et publier la vidéo YouTube avec audio, puis valider la soumission finale. Aucune de ces actions externes n’est simulée par le dépôt.
+
 ## Vérification
 
 ```bash
@@ -97,12 +138,15 @@ npm test
 - page d’accueil rendue côté serveur, interactions isolées dans un îlot client ;
 - dates réglementaires de la page dérivées du référentiel JSON, sans duplication (test anti-dérive) ;
 - API Responses OpenAI avec JSON Schema strict ;
+- registre de preuves partagé entre UI, rapport PDF et persistance ;
+- scan navigateur borné des dépendances IA et handoff local expurgé ;
 - moteur de règles déterministe (`preuvance-crosscheck-v1`) en contre-vérification de chaque classification ;
 - score et tiers calculés de façon déterministe ;
 - PDF serveur via `@react-pdf/renderer` ;
 - Supabase Auth/Postgres/RLS ;
 - quota atomique de cinq démarrages d’évaluation par utilisateur et par heure ;
 - PDF persistant relu sous RLS à partir de son identifiant, jamais forgé depuis le navigateur ;
+- registre cloud canonique avec événements, normalisation serveur et révision optimiste ;
 - runtime Sites/Vinext compatible Cloudflare Worker.
 
 ## Extension locale « System Exposure »
@@ -111,8 +155,10 @@ Le prompt d’extension machine suppose un autre socle qui n’est pas présent 
 
 ## Périmètre volontairement exclu
 
-Pas d’intégration assureur réelle, de tarification, de paiement, de générateur Annexe IV complet, de monitoring continu ni de promesse de couverture.
+Pas d’intégration assureur réelle, de tarification, de paiement, de générateur Annexe IV complet, de monitoring continu ni de promesse de couverture. Le scan des manifestes n’est pas un SCA exhaustif ; le statut « Prouvé / attesté » n’est pas une certification ; la migration Supabase doit être appliquée et testée sur une instance de staging avant toute annonce de persistance cloud en production.
 
 ---
 
 Corrections, scan local et durcissement qualité des 13-14 juillet 2026 (D-042 à D-062 de [`BEHAVIOR.md`](BEHAVIOR.md)) rédigés par **Claude (Fable 5), Anthropic**. La revue de l’audit externe **ChatGPT 5.6** figure dans [`docs/revue-audit-externe.md`](docs/revue-audit-externe.md) : son analyse est attribuée à son auteur, et la documentation n’est pas signée sous une autre identité que celle qui l’a rédigée.
+
+Vision « dossier instantané », registre preuve par preuve et paquet OpenAI Build Week du 20 juillet 2026 : **ChatGPT 5.6, OpenAI**.
