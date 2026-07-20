@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { dependencyDigestSchema } from "@/lib/scan/dependency-contract";
+import { scanDigestSchema } from "@/lib/scan/scan-handoff";
 
 export const DEADLINE_IDS = [
   "ai-literacy",
@@ -63,6 +65,8 @@ export const AssessmentRequestSchema = z
     systemName: z.string().trim().min(2).max(160),
     description: z.string().trim().min(50).max(5_000),
     company: CompanyInputSchema,
+    dependencyDigest: dependencyDigestSchema.optional(),
+    scanDigest: scanDigestSchema.optional(),
   })
   .strict();
 

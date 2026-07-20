@@ -172,6 +172,11 @@ export async function runAssessmentPipeline(
       crossCheck,
       trace: logger.entries,
       models: config.models,
+      resolvedModels: {
+        extraction: extraction.model,
+        classification: classificationResponse.model,
+        gapAnalysis: gapAnalysis.model,
+      },
       reference,
     });
     await options?.onProgress?.({ stage: "synthesis", status: "completed" });

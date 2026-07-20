@@ -10,10 +10,125 @@ type OrganizationRole = "owner" | "member";
 type AssessmentStatus = "draft" | "running" | "completed" | "failed";
 type ReasoningStage = "extraction" | "classification" | "gap_analysis" | "synthesis";
 type ReasoningStatus = "pending" | "running" | "completed" | "failed";
+type EvidenceStatus =
+  | "verified"
+  | "documented"
+  | "detected"
+  | "declared"
+  | "partial"
+  | "missing"
+  | "unverified"
+  | "not-applicable";
 
 export type Database = {
   public: {
     Tables: {
+      assessment_evidence: {
+        Row: {
+          assessment_id: string;
+          organization_id: string;
+          id: string;
+          sort_order: number;
+          control: string;
+          status: EvidenceStatus;
+          detail: string;
+          gap_id: string | null;
+          article_references: string[];
+          owner: string | null;
+          source_type: string;
+          source_label: string | null;
+          file_name: string | null;
+          file_size_bytes: number | null;
+          sha256: string | null;
+          collected_at: string | null;
+          valid_until: string | null;
+          reviewed_by: string | null;
+          reviewed_at: string | null;
+          reviewed_by_user_id: string | null;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          assessment_id: string;
+          organization_id: string;
+          id: string;
+          sort_order: number;
+          control: string;
+          status: EvidenceStatus;
+          detail: string;
+          gap_id?: string | null;
+          article_references?: string[];
+          owner?: string | null;
+          source_type: string;
+          source_label?: string | null;
+          file_name?: string | null;
+          file_size_bytes?: number | null;
+          sha256?: string | null;
+          collected_at?: string | null;
+          valid_until?: string | null;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by_user_id?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          sort_order?: number;
+          control?: string;
+          status?: EvidenceStatus;
+          detail?: string;
+          gap_id?: string | null;
+          article_references?: string[];
+          owner?: string | null;
+          source_type?: string;
+          source_label?: string | null;
+          file_name?: string | null;
+          file_size_bytes?: number | null;
+          sha256?: string | null;
+          collected_at?: string | null;
+          valid_until?: string | null;
+          reviewed_by?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by_user_id?: string | null;
+          updated_by?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      assessment_evidence_events: {
+        Row: {
+          id: string;
+          assessment_id: string;
+          organization_id: string;
+          evidence_id: string;
+          event_type: string;
+          previous_status: EvidenceStatus | null;
+          next_status: EvidenceStatus | null;
+          previous_snapshot: Json | null;
+          after_snapshot: Json | null;
+          actor_user_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          assessment_id: string;
+          organization_id: string;
+          evidence_id: string;
+          event_type: string;
+          previous_status?: EvidenceStatus | null;
+          next_status?: EvidenceStatus | null;
+          previous_snapshot?: Json | null;
+          after_snapshot?: Json | null;
+          actor_user_id?: string | null;
+          created_at?: string;
+        };
+        Update: Record<string, never>;
+        Relationships: [];
+      };
       assessment_rate_limits: {
         Row: {
           user_id: string;
@@ -111,6 +226,7 @@ export type Database = {
           classification: Json | null;
           gaps: Json | null;
           report_payload: Json | null;
+          evidence_revision: number;
           score: number | null;
           tier: string | null;
           error_message: string | null;
@@ -129,6 +245,7 @@ export type Database = {
           classification?: Json | null;
           gaps?: Json | null;
           report_payload?: Json | null;
+          evidence_revision?: number;
           score?: number | null;
           tier?: string | null;
           error_message?: string | null;
@@ -144,6 +261,7 @@ export type Database = {
           classification?: Json | null;
           gaps?: Json | null;
           report_payload?: Json | null;
+          evidence_revision?: number;
           score?: number | null;
           tier?: string | null;
           error_message?: string | null;
@@ -236,12 +354,21 @@ export type Database = {
           ai_system_id: string;
         }>;
       };
+      sync_assessment_evidence: {
+        Args: {
+          p_assessment_id: string;
+          p_evidence: Json;
+          p_expected_revision: number;
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       organization_role: OrganizationRole;
       assessment_status: AssessmentStatus;
       reasoning_stage: ReasoningStage;
       reasoning_status: ReasoningStatus;
+      evidence_status: EvidenceStatus;
     };
     CompositeTypes: { [_ in never]: never };
   };

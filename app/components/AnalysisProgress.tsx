@@ -31,8 +31,8 @@ const STEPS = [
   },
   {
     id: "synthesis",
-    label: "Synthèse de préparation",
-    description: "Calcul du score et rédaction du dossier de préparation.",
+    label: "Assemblage du dossier",
+    description: "Calcul déterministe, registre des pièces et rapport partageable.",
     icon: ShieldCheck,
   },
 ] as const;
@@ -52,7 +52,7 @@ export function AnalysisProgress({ stage }: { stage: AnalysisStage }) {
       className="pv-progress-card"
       aria-busy="true"
       aria-live="polite"
-      aria-label="Évaluation en cours"
+      aria-label="Construction du dossier en cours"
       role="status"
     >
       <div className="pv-progress-status">
@@ -73,7 +73,7 @@ export function AnalysisProgress({ stage }: { stage: AnalysisStage }) {
       <Progress.Root
         className="pv-progress-line"
         value={((activeStep + 1) / STEPS.length) * 100}
-        aria-label="Progression du pipeline d’évaluation"
+        aria-label="Progression du pipeline de construction du dossier"
       >
         <Progress.Indicator
           style={{ width: `${((activeStep + 1) / STEPS.length) * 100}%` }}

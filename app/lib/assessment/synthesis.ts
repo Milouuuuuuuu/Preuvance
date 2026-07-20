@@ -21,6 +21,10 @@ import type {
   PreuvanceAssessment,
   RiskLevel,
 } from "@/lib/pdf/assessment-payload";
+import {
+  EVIDENCE_LEDGER_LIMIT,
+  stableEvidenceId,
+} from "@/lib/evidence/evidence-ledger";
 
 const RISK_LABELS: Record<ModelClassification["riskTier"], string> = {
   prohibited: "Pratique interdite ou très probablement interdite",
@@ -59,8 +63,18 @@ export function buildAssessment(options: {
   crossCheck: CrossCheckResult;
   trace: PipelineTraceEntry[];
   models: AssessmentModels;
+  resolvedModels?: {
+    extraction: string;
+    classification: string;
+    gapAnalysis: string;
+  };
   reference: RegulatoryReference;
 }) {
+  const resolvedModels = options.resolvedModels ?? {
+    extraction: options.models.ancillary,
+    classification: options.models.reasoning,
+    gapAnalysis: options.models.reasoning,
+  };
   const obligations = hydrateObligations(options.modelClassification.obligationIds);
   const gaps = options.gapAnalysis.gaps
     .map(hydrateGap)
@@ -70,6 +84,14 @@ export function buildAssessment(options: {
     options.modelClassification,
     options.enterprise,
     options.crossCheck,
+  );
+  const evidenceRegistry = buildReportEvidence(
+    options.request,
+    options.facts,
+    gaps,
+    options.id,
+    options.generatedAt,
+    resolvedModels.gapAnalysis,
   );
   const executiveSummary = `${buildExecutiveSummary(
     options.score,
@@ -155,10 +177,16 @@ export function buildAssessment(options: {
       ].slice(0, 12),
       dueDate: gap.deadline?.slice(0, 500) ?? undefined,
     })),
-    evidence: buildReportEvidence(options.facts, gaps),
+    evidence: evidenceRegistry.items,
+    evidenceInventory: evidenceRegistry.inventory,
     methodology: {
-      model: options.models.reasoning,
+      model: resolvedModels.classification,
       version: options.score.methodVersion,
+      modelRuns: [
+        { stage: "extraction", model: resolvedModels.extraction },
+        { stage: "classification", model: resolvedModels.classification },
+        { stage: "gap_analysis", model: resolvedModels.gapAnalysis },
+      ],
     },
   };
 
@@ -201,6 +229,7 @@ export function buildAssessment(options: {
       regulatoryReferenceVerifiedAt: options.reference.metadata.verifiedAt,
       crossCheckVersion: options.crossCheck.version,
       models: options.models,
+      resolvedModels,
       llmCalls: 3,
       synthesis: "deterministic" as const,
       responseStorageRequested: false,
@@ -231,26 +260,127 @@ function reportGapPriority(severity: GapItemModel["severity"]): GapPriority {
   return GAP_PRIORITY_BY_SEVERITY[severity];
 }
 
-function buildReportEvidence(
+export function buildReportEvidence(
+  request: AssessmentRequest,
   facts: ExtractedFacts,
   gaps: readonly HydratedGap[],
-): PreuvanceAssessment["evidence"] {
-  const declared = facts.existingControls.map((control) => ({
+  assessmentId: string,
+  generatedAt: string,
+  analysisModel = "modèle de raisonnement configuré",
+): {
+  items: NonNullable<PreuvanceAssessment["evidence"]>;
+  inventory: NonNullable<PreuvanceAssessment["evidenceInventory"]>;
+} {
+  const declared = facts.existingControls.map((control, index) => ({
+    id: stableEvidenceId(assessmentId, control, index),
     control,
     // « déclaré, non vérifié » : un contrôle mentionné dans la description
     // n'est jamais présenté comme documenté tant qu'aucune pièce n'est fournie.
     status: "declared" as EvidenceStatus,
     detail: "Contrôle déclaré dans la description ; aucune pièce justificative vérifiée.",
+    sourceType: "user-declaration" as const,
+    sourceLabel: "Description initiale du système",
+    collectedAt: generatedAt,
+    updatedAt: generatedAt,
   }));
-  const findings = gaps.map((gap) => ({
-    control: gap.title,
-    status: gap.status satisfies EvidenceStatus,
-    detail:
-      gap.currentEvidence ??
-      "Aucune preuve exploitable n’a été décrite pour ce contrôle.",
+  const observedDependencies = (request.dependencyDigest?.dependencies ?? []).map(
+    (dependency, index) => {
+      const manifest = request.dependencyDigest?.manifests.find(
+        (candidate) => candidate.name === dependency.manifestName,
+      );
+      const version = dependency.version ? ` ${dependency.version}` : "";
+      return {
+        id: stableEvidenceId(
+          assessmentId,
+          `dependency:${dependency.packageName}`,
+          declared.length + index,
+        ),
+        control: `Dépendance IA détectée : ${dependency.packageName}`,
+        status: "detected" as EvidenceStatus,
+        detail: `${dependency.packageName}${version} · ${dependency.category} · ${dependency.direct ? "dépendance directe" : "dépendance transitive"}. Cette observation technique ne prouve ni la finalité métier ni le rôle juridique.`,
+        sourceType: "dependency-scan" as const,
+        sourceLabel: `${dependency.manifestName}${manifest ? ` · SHA-256 ${manifest.sha256.slice(0, 16)}…` : ""}`,
+        collectedAt: request.dependencyDigest?.scannedAt ?? generatedAt,
+        updatedAt: generatedAt,
+      };
+    },
+  );
+  const scanObservations = request.scanDigest
+    ? [
+        {
+          control: "Concordance déclaré / observé du poste",
+          status: "detected" as EvidenceStatus,
+          detail: `Verdict ${request.scanDigest.concordance} · score d’exposition ${request.scanDigest.exposureScore}/100 · ${request.scanDigest.observation.undeclaredAiEndpoints} appel(s) IA non déclaré(s). Le digest est agrégé et ne vaut pas audit certifié.`,
+          sourceType: "local-scan" as const,
+          sourceLabel: `Scan local expurgé · ${request.scanDigest.createdAt}`,
+          collectedAt: request.scanDigest.createdAt,
+          updatedAt: generatedAt,
+        },
+        ...request.scanDigest.undeclaredProviders.map((provider) => ({
+          control: `Usage IA observé sans déclaration : ${provider}`,
+          status: "detected" as EvidenceStatus,
+          detail: "Le fournisseur a été observé dans le périmètre du scan local sans figurer dans la déclaration préalable. Une revue humaine doit confirmer l’usage métier et son propriétaire.",
+          sourceType: "local-scan" as const,
+          sourceLabel: "Digest de concordance déclaré / observé",
+          collectedAt: request.scanDigest?.createdAt ?? generatedAt,
+          updatedAt: generatedAt,
+        })),
+      ].map((item, index) => ({
+        ...item,
+        id: stableEvidenceId(
+          assessmentId,
+          item.control,
+          declared.length + observedDependencies.length + index,
+        ),
+      }))
+    : [];
+  const findings = gaps.flatMap((gap) => {
+    const expectedEvidence = gap.evidenceNeeded.length
+      ? gap.evidenceNeeded
+      : [gap.title];
+    return expectedEvidence.map((control) => ({
+      control,
+      status: gap.status satisfies EvidenceStatus,
+      detail:
+        gap.currentEvidence ??
+        `Pièce attendue pour l’écart « ${gap.title} » ; aucun élément vérifiable n’a encore été fourni.`,
+      gapId: gap.id,
+      articleReferences: [
+        ...new Set(gap.references.flatMap((reference) => reference.articles)),
+      ].slice(0, 12),
+      sourceType: "model-extraction" as const,
+      sourceLabel: `Analyse structurée ${analysisModel} et contre-vérification`,
+      collectedAt: generatedAt,
+      updatedAt: generatedAt,
+    }));
+  }).map((item, index) => ({
+    ...item,
+    id: stableEvidenceId(
+      assessmentId,
+      item.control,
+      facts.existingControls.length +
+        observedDependencies.length +
+        scanObservations.length +
+        index,
+    ),
   }));
 
-  return [...declared, ...findings].slice(0, 30);
+  const allItems = [
+    ...declared,
+    ...observedDependencies,
+    ...scanObservations,
+    ...findings,
+  ];
+  const items = allItems.slice(0, EVIDENCE_LEDGER_LIMIT);
+  return {
+    items,
+    inventory: {
+      sourceItemCount: allItems.length,
+      includedItemCount: items.length,
+      truncatedItemCount: allItems.length - items.length,
+      methodVersion: "preuvance-evidence-builder-v1",
+    },
+  };
 }
 
 function hydrateGap(gap: GapItemModel): HydratedGap {

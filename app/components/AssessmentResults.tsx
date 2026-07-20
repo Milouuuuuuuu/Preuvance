@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -10,6 +10,7 @@ import {
   ClipboardCheck,
   Download,
   FileCheck2,
+  FolderOpen,
   RotateCcw,
   Scale,
   ShieldCheck,
@@ -17,6 +18,15 @@ import {
 import type { Assessment, JsonRecord } from "./assessment-types";
 import { isRecord } from "./assessment-types";
 import { ratioToPercentage, toPercentage } from "../lib/assessment/percentages";
+import {
+  normalizeEvidenceLedger,
+  toReportEvidence,
+  type EvidenceLedgerItem,
+} from "@/lib/evidence/evidence-ledger";
+import {
+  EvidenceWorkbench,
+  type EvidenceWorkbenchHandle,
+} from "./EvidenceWorkbench";
 
 type AssessmentResultsProps = {
   assessment: Assessment;
@@ -420,6 +430,23 @@ function needsJournalDisclaimer(obligation: Obligation) {
 export function AssessmentResults({ assessment, onReset }: AssessmentResultsProps) {
   const [pdfStatus, setPdfStatus] = useState<"idle" | "loading" | "error">("idle");
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const reportRecord = isRecord(assessment.report) ? assessment.report : null;
+  const assessmentId = textValue(assessment.id) ?? firstText(reportRecord, ["assessmentId"]);
+  const initialEvidence = useMemo(
+    () =>
+      normalizeEvidenceLedger(
+        firstValue(reportRecord, ["evidence"]) ?? firstValue(assessment, ["evidence"]),
+        assessmentId ?? "local-assessment",
+      ),
+    [assessment, assessmentId, reportRecord],
+  );
+  const [evidence, setEvidence] = useState<EvidenceLedgerItem[]>(initialEvidence);
+  const evidenceWorkbenchRef = useRef<EvidenceWorkbenchHandle>(null);
+
+  useEffect(() => {
+    setEvidence(initialEvidence);
+  }, [initialEvidence]);
+
   const scoreRecord = isRecord(assessment.score) ? assessment.score : null;
   const classificationRecord = isRecord(assessment.classification)
     ? assessment.classification
@@ -494,7 +521,6 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
     textValue(assessment.generatedAt) ??
       firstText(assessment, ["createdAt", "completedAt", "timestamp"]),
   );
-  const assessmentId = textValue(assessment.id);
   const persistence = isRecord(assessment.persistence)
     ? assessment.persistence
     : null;
@@ -511,10 +537,19 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
   );
   const methodVersion = firstText(scoreRecord, ["methodVersion"]);
 
-  const reportRecord = isRecord(assessment.report) ? assessment.report : null;
   const reportSummary =
     textValue(assessment.report) ??
     firstText(reportRecord, ["executiveSummary", "summary", "narrative", "overview"]);
+  const evidenceInventory = isRecord(reportRecord?.evidenceInventory)
+    ? reportRecord.evidenceInventory
+    : null;
+  const truncatedEvidenceCount = firstNumber(evidenceInventory, [
+    "truncatedItemCount",
+  ]);
+  const methodology = isRecord(reportRecord?.methodology)
+    ? reportRecord.methodology
+    : null;
+  const resolvedModel = firstText(methodology, ["model"]);
 
   const facts = isRecord(assessment.facts)
     ? Object.entries(assessment.facts)
@@ -529,10 +564,17 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
     setPdfError(null);
 
     try {
+      const evidenceSaved = await evidenceWorkbenchRef.current?.save();
+      if (evidenceSaved === false) {
+        throw new Error("Enregistrez un registre de preuves valide avant de générer le PDF.");
+      }
       const pdfPayload =
         reportRecord &&
         (typeof reportRecord.assessmentId === "string" || isRecord(reportRecord.organization))
-          ? reportRecord
+          ? {
+              ...reportRecord,
+              evidence: evidence.map(toReportEvidence),
+            }
           : assessment;
       let reportRequest: { assessmentId: string } | { localPayload: unknown };
       if (persistenceStatus === "persisted") {
@@ -593,8 +635,8 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
     <section className="pv-results" id="resultats" tabIndex={-1} aria-labelledby="results-title">
       <header className="pv-results-header">
         <div>
-          <p className="pv-kicker">Rapport de préparation IA</p>
-          <h2 id="results-title">Votre évaluation est prête</h2>
+          <p className="pv-kicker">Dossier instantané · vivant et traçable</p>
+          <h2 id="results-title">Votre dossier de maîtrise IA est prêt</h2>
           <p className="pv-results-meta">
             {generatedAt ? `Générée le ${generatedAt}` : "Évaluation générée"}
             {assessmentId ? ` · Référence ${assessmentId}` : ""}
@@ -602,9 +644,16 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
               ? ` · Référentiel vérifié le ${referenceVerifiedAt.split("-").reverse().join(".")}`
               : ""}
             {methodVersion ? ` · Méthode ${methodVersion}` : ""}
+            {resolvedModel ? ` · Analysé avec ${resolvedModel}` : ""}
           </p>
         </div>
         <div className="pv-results-actions">
+          {persistenceStatus === "persisted" && persistedAssessmentId ? (
+            <a className="pv-secondary-button" href={`/dossiers/${persistedAssessmentId}`}>
+              <FolderOpen size={16} aria-hidden="true" />
+              Ouvrir le dossier enregistré
+            </a>
+          ) : null}
           {assessmentId ? (
             <button
               className="pv-primary-button"
@@ -796,6 +845,41 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
         )}
       </article>
 
+      <article className="pv-report-card pv-full-card pv-evidence-dossier" aria-labelledby="evidence-dossier-title">
+        <div className="pv-card-heading pv-card-heading-split">
+          <div className="pv-heading-cluster">
+            <span className="pv-card-icon" aria-hidden="true">
+              <FileCheck2 size={19} />
+            </span>
+            <div>
+              <p className="pv-section-index">04</p>
+              <h3 id="evidence-dossier-title">Preuve par preuve</h3>
+            </div>
+          </div>
+          <span className="pv-audit-label">Déclaré → détecté → prouvé</span>
+        </div>
+        <p className="pv-card-copy pv-evidence-intro">
+          Chaque pièce attendue conserve sa provenance, son responsable, son empreinte et sa revue humaine. Une simple déclaration ou détection ne devient jamais automatiquement une preuve vérifiée.
+        </p>
+        {truncatedEvidenceCount && truncatedEvidenceCount > 0 ? (
+          <div className="pv-evidence-truncation" role="status">
+            <AlertTriangle size={17} aria-hidden="true" />
+            {truncatedEvidenceCount} pièce(s) attendue(s) supplémentaire(s) dépassent la capacité de ce dossier. Elles restent signalées et doivent être regroupées ou traitées dans un registre étendu.
+          </div>
+        ) : null}
+        {assessmentId ? (
+          <EvidenceWorkbench
+            ref={evidenceWorkbenchRef}
+            assessmentId={assessmentId}
+            evidence={evidence}
+            onChange={setEvidence}
+            persistenceStatus={persistenceStatus}
+          />
+        ) : (
+          <p className="pv-empty-state">Le registre ne peut pas être initialisé sans référence d’évaluation.</p>
+        )}
+      </article>
+
       <article className="pv-report-card pv-full-card" aria-labelledby="gaps-title">
         <div className="pv-card-heading pv-card-heading-split">
           <div className="pv-heading-cluster">
@@ -803,7 +887,7 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
               <ClipboardCheck size={19} />
             </span>
             <div>
-              <p className="pv-section-index">04</p>
+              <p className="pv-section-index">05</p>
               <h3 id="gaps-title">Écarts prioritaires</h3>
             </div>
           </div>
@@ -851,7 +935,7 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
               <ShieldCheck size={19} />
             </span>
             <div>
-              <p className="pv-section-index">05</p>
+              <p className="pv-section-index">06</p>
               <h3 id="decision-log-title">Journal des décisions</h3>
             </div>
           </div>
