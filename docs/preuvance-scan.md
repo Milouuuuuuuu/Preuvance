@@ -1,6 +1,6 @@
 # Scan local Preuvance
 
-Le scan local est l'**option A** de Preuvance : une analyse de conformité IA qui
+Le scan local est une **source complémentaire** du dossier Preuvance : une observation de l’exposition IA qui
 tourne entièrement sur le poste de l'utilisateur, avec son consentement, sans
 rien envoyer sur Internet. Il alimente un score d'exposition déterministe,
 indépendant de tout modèle de langage, et une **concordance déclaré / observé**

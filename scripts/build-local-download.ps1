@@ -114,7 +114,7 @@ PREUVANCE LOCAL — LANCEMENT WINDOWS
    Au premier lancement, saisissez votre cle API OpenAI lorsque Windows la demande.
    Le script installe, construit, lance Preuvance sur 127.0.0.1 et ouvre le navigateur.
 
-Scanner votre poste (option A, sans cle API) :
+Scanner votre poste (source complementaire, sans cle API) :
    Double-cliquez sur SCANNER_PREUVANCE.cmd, puis chargez le rapport preuvance-scan.json
    dans la page "Scanner en local". Le scan reste 100% local et ne copie aucun contenu.
 

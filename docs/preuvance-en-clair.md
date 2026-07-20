@@ -10,24 +10,34 @@ investisseur.
 Preuvance ne délivre ni avis juridique, ni certification, ni décision
 d'assurabilité. C'est un outil de préparation, pas un jugement final.
 
-## Deux façons de commencer
+## Un dossier principal, deux sources techniques facultatives
 
-Sur la page d'accueil, deux chemins sont proposés :
+Le parcours principal commence par une description libre du système. Preuvance
+peut ensuite enrichir le dossier avec deux sources techniques bornées :
 
-- **Option A — Scanner votre poste en local** (mise en avant, recommandée en
-  premier). Un programme tourne sur votre ordinateur, sans rien envoyer sur
-  Internet : vous déclarez d'abord les outils d'IA que vous utilisez sciemment,
-  puis le scan observe la réalité du poste et mesure la **concordance** entre
-  les deux — il révèle les outils d'IA utilisés sans être déclarés et les
-  fichiers sensibles laissés en clair.
-- **Option B — Évaluation express en ligne**. Vous décrivez votre système d'IA
-  en français courant ; Preuvance produit une classification réglementaire, un
-  score et un rapport PDF en quelques minutes.
+- des manifestes `package.json`, `package-lock.json` ou `requirements*.txt`, lus
+  dans le navigateur et réduits à un digest de dépendances IA ;
+- un rapport du scan local, réduit après consentement à des compteurs et verdicts
+  expurgés avant d'être relié à l'évaluation.
 
-Les deux peuvent se compléter : le scan révèle ce qui existe réellement sur le
-poste, l'évaluation en ligne qualifie juridiquement un système donné.
+Le résultat n'est pas une qualification juridique automatique : c'est un
+dossier de préparation avec score déterministe, écarts, PDF et registre de
+preuves distinctes — déclarées, détectées, manquantes ou attestées.
 
-## Ce que fait le scan local (Option A)
+## Le parcours principal : dossier instantané
+
+Vous décrivez votre système en français, sans jargon juridique : à qui il
+s'adresse, quelles données il traite, quelles décisions il produit. Preuvance
+enchaîne alors extraction structurée, classification à partir d'un référentiel
+daté, contre-vérification déterministe et analyse des écarts.
+
+Chaque pièce attendue devient une ligne propre du registre. Un contrôle déclaré
+reste déclaré ; un package reconnu reste détecté ; une pièce pointée devient
+documentée. Seule une revue humaine renseignant un relecteur et une date peut
+atteindre l'état « attesté ». Cette attestation enregistrée dans Preuvance n'est
+ni un audit indépendant, ni une certification.
+
+## Ce que fait le scan local complémentaire
 
 Le scan (`SCANNER_PREUVANCE.cmd`) est un programme Windows qui reste
 **entièrement sur votre machine**. Concrètement :
@@ -77,7 +87,7 @@ vérifier ce que vous faites des outils déclarés), et une absence de détectio
 ne prouve jamais une absence d'usage. Ce n'est pas un défaut caché : c'est
 écrit dans le rapport lui-même et dans la documentation technique.
 
-## Ce que fait l'évaluation en ligne (Option B)
+## Comment l'évaluation est construite
 
 Vous décrivez votre système en français, sans jargon juridique : à qui il
 s'adresse, quelles données il traite, quelles décisions il produit. Preuvance
@@ -160,7 +170,7 @@ dans le dépôt du projet : `README.md` (vue d'ensemble technique),
 
 ---
 
-Document rédigé le 15 juillet 2026 par ChatGPT Sol 5.6, à partir
-d'une connaissance directe et vérifiée du code du projet (chaîne de tests
-automatisés au vert : 60 tests unitaires et 8 tests de bout en bout au moment de
-la rédaction).
+Document initial rédigé le 15 juillet 2026 par ChatGPT Sol 5.6. Mise à jour de la
+vision « dossier instantané » et de la séparation déclaré / détecté / attesté le
+20 juillet 2026 par ChatGPT 5.6, OpenAI. À cette date, 85 tests unitaires et 10
+tests de rendu HTTP/Worker passent localement.

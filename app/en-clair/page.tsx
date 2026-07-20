@@ -6,7 +6,7 @@ import { Brand } from "../components/Brand";
 export const metadata: Metadata = {
   title: "Preuvance en clair",
   description:
-    "Ce que fait Preuvance, expliqué simplement : scan local avec concordance déclaré / observé, évaluation EU AI Act contre-vérifiée, rapport PDF pour votre courtier.",
+    "Ce que fait Preuvance, expliqué simplement : dossier instantané, preuves déclarées ou détectées, scan local complémentaire et rapport PDF de préparation.",
 };
 
 export default function EnClairPage() {
@@ -63,8 +63,40 @@ export default function EnClairPage() {
           </p>
         </section>
 
+        <section aria-labelledby="plain-dossier">
+          <h2 id="plain-dossier">Parcours principal — le dossier instantané</h2>
+          <p>
+            Vous décrivez votre système en français courant et pouvez joindre des
+            manifestes pris en charge. Leur contenu reste dans le navigateur :
+            seul un digest borné des dépendances IA rejoint l’évaluation.
+            Preuvance extrait les faits, classe le contexte à partir d’un
+            référentiel daté, contre-vérifie le résultat avec des règles
+            déterministes, puis transforme chaque pièce attendue en une ligne
+            distincte du dossier.
+          </p>
+          <p>
+            Le registre indique ce qui est <strong>déclaré</strong>, ce qui est
+            <strong> détecté</strong>, ce qui manque et ce qui a été
+            <strong> attesté</strong> avec un relecteur et une date. Une
+            déclaration ou un package détecté ne devient jamais automatiquement
+            une preuve. Le PDF reprend le score, les obligations, les écarts, le
+            journal de décision et cet inventaire documentaire.
+          </p>
+          <p>
+            Le référentiel distingue toujours le droit déjà en vigueur
+            (règlement (UE) 2024/1689) des changements votés mais pas encore
+            publiés au Journal officiel, jamais présentés comme déjà obligatoires.
+          </p>
+          <p>
+            <Link className="pv-plain-cta" href="/#evaluation">
+              Construire un dossier
+              <ArrowRight size={15} aria-hidden="true" />
+            </Link>
+          </p>
+        </section>
+
         <section aria-labelledby="plain-scan">
-          <h2 id="plain-scan">Option A — le scan local et la concordance</h2>
+          <h2 id="plain-scan">Source complémentaire — le scan local</h2>
           <p>
             Un programme tourne sur votre ordinateur, sans rien envoyer sur
             Internet. Il vous demande d’abord de <strong>déclarer</strong> les
@@ -110,27 +142,6 @@ export default function EnClairPage() {
               Ouvrir le scan local
               <ArrowRight size={15} aria-hidden="true" />
             </Link>
-          </p>
-        </section>
-
-        <section aria-labelledby="plain-eval">
-          <h2 id="plain-eval">Option B — l’évaluation en ligne et le PDF courtier</h2>
-          <p>
-            Vous décrivez votre système en français courant. Preuvance enchaîne
-            quatre étapes visibles à l’écran : extraction des faits,
-            classification contre un référentiel réglementaire daté et
-            versionné, contre-vérification déterministe indépendante de toute
-            IA, puis analyse des écarts avec un score de préparation sur 100
-            calculé par une formule fixe et documentée. Le rapport PDF final
-            contient le journal complet des décisions, le résultat de la
-            contre-vérification et la raison de chaque plafond appliqué au
-            score — rien de ce qui compte n’est laissé uniquement à l’écran.
-          </p>
-          <p>
-            Le référentiel distingue toujours le droit déjà en vigueur
-            (règlement (UE) 2024/1689) des changements votés mais pas encore
-            publiés au Journal officiel (paquet « Digital Omnibus »), jamais
-            présentés comme déjà obligatoires.
           </p>
         </section>
 
