@@ -1,4 +1,4 @@
-import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import {colors, glass} from './theme';
 
 export const OpeningProcedural = () => {
@@ -106,21 +106,125 @@ export const EvidenceProcedural = () => {
 export const BridgeProcedural = () => {
   const frame = useCurrentFrame();
   const {width, height} = useVideoConfig();
-  const pulse = 0.5 + Math.sin(frame / 7) * 0.5;
+
+  // Single point of light, constant speed, no easing on the way in — this is deliberate:
+  // no acceleration/deceleration reads as "impact". It just travels.
+  const travelStart = 22;
+  const travelEnd = 158;
+  const settleEnd = travelEnd + 26;
+
+  const travel = interpolate(frame, [travelStart, travelEnd], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  // Calm status change on arrival — a slow crossfade, not a flash.
+  const arrived = interpolate(frame, [travelEnd, settleEnd], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.inOut(Easing.ease),
+  });
+
+  const leftX = width * 0.34;
+  const rightX = width * 0.66;
+  const railY = height * 0.5;
+  const packetX = interpolate(travel, [0, 1], [leftX, rightX]);
+
+  // Very gentle brightness rise as the packet passes through the midpoint ring — no burst, no debris.
+  const ringGlow = interpolate(travel, [0.4, 0.5, 0.6], [0.28, 0.62, 0.28], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const cylinder = (x: number, accent: string, glow: number) => (
+    <div
+      style={{
+        position: 'absolute',
+        left: x,
+        top: railY,
+        transform: 'translate(-50%, -50%)',
+        width: 300,
+        height: 320,
+        borderRadius: '50% / 15%',
+        border: `3px solid ${accent}`,
+        background: 'linear-gradient(180deg, rgba(9,22,48,.55), rgba(4,12,28,.85))',
+        boxShadow: `0 0 ${70 + glow * 60}px rgba(${accent === colors.green ? '32,199,121' : '83,217,255'},${0.18 + glow * 0.3})`,
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: -3,
+          left: -3,
+          right: -3,
+          height: 78,
+          borderRadius: '50%',
+          border: `3px solid ${accent}`,
+          background: colors.navy,
+        }}
+      />
+      {[0.32, 0.6].map((p) => (
+        <div key={p} style={{position: 'absolute', left: 0, right: 0, top: `${p * 100}%`, height: 2, background: 'rgba(150,190,240,.22)'}} />
+      ))}
+    </div>
+  );
 
   return (
     <AbsoluteFill>
-      <div style={{position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: width * 0.22}}>
-        {['SQLite', 'PostgreSQL'].map((label, index) => (
-          <div key={label} style={{...glass, width: 280, height: 240, borderRadius: '50% / 18%', display: 'grid', placeItems: 'center', fontSize: 35, fontWeight: 750, color: index === 0 ? colors.cyan : colors.white, boxShadow: `0 0 70px rgba(23,92,255,${0.18 + pulse * 0.18})`}}>
-            {label}
-          </div>
-        ))}
-      </div>
-      <svg width={width} height={height} style={{position: 'absolute', inset: 0}}>
-        <path d={`M ${width * 0.36} ${height * 0.5} C ${width * 0.43} ${height * 0.34}, ${width * 0.57} ${height * 0.34}, ${width * 0.64} ${height * 0.5}`} fill="none" stroke="rgba(83,217,255,.35)" strokeWidth="7" strokeDasharray="18 16" strokeDashoffset={-frame * 3} />
-      </svg>
-      <div style={{position: 'absolute', left: '50%', top: '42%', transform: 'translate(-50%, -50%)', width: 116, height: 116, borderRadius: 999, display: 'grid', placeItems: 'center', background: colors.blue, boxShadow: `0 0 ${55 + pulse * 30}px rgba(23,92,255,.7)`, fontSize: 50}}>⌁</div>
+      {cylinder(leftX, colors.cyan, 0.4)}
+      {/* Right cylinder crossfades cyan → green as the packet settles in: a calm status change, not an explosion. */}
+      <div style={{position: 'absolute', inset: 0, opacity: 1 - arrived}}>{cylinder(rightX, colors.cyan, 0.4)}</div>
+      <div style={{position: 'absolute', inset: 0, opacity: arrived}}>{cylinder(rightX, colors.green, 0.4 + arrived * 0.5)}</div>
+
+      <div style={{position: 'absolute', left: leftX, top: railY, width: rightX - leftX, height: 2, background: 'rgba(150,190,240,.16)', transform: 'translateY(-1px)'}} />
+
+      {/* Midpoint translucent ring — the packet passes cleanly through it, no collision effect of any kind */}
+      <div
+        style={{
+          position: 'absolute',
+          left: width * 0.5,
+          top: railY,
+          transform: 'translate(-50%, -50%)',
+          width: 92,
+          height: 132,
+          borderRadius: '50%',
+          border: `2px solid rgba(83,217,255,${ringGlow})`,
+          boxShadow: `0 0 ${30 + ringGlow * 40}px rgba(83,217,255,${ringGlow * 0.6})`,
+        }}
+      />
+
+      {/* Trailing light streak behind the packet — pure motion blur, no splash or liquid */}
+      {travel > 0 && travel < 1 && (
+        <div
+          style={{
+            position: 'absolute',
+            left: leftX,
+            top: railY,
+            width: Math.max(0, packetX - leftX),
+            height: 6,
+            transform: 'translateY(-3px)',
+            background: 'linear-gradient(90deg, rgba(23,92,255,0), rgba(83,217,255,.55))',
+            filter: 'blur(1px)',
+          }}
+        />
+      )}
+
+      {/* The single point of light itself — no lightning bolt icon */}
+      {travel < 1 && (
+        <div
+          style={{
+            position: 'absolute',
+            left: packetX,
+            top: railY,
+            transform: 'translate(-50%, -50%)',
+            width: 34,
+            height: 34,
+            borderRadius: 999,
+            background: colors.cyan,
+            boxShadow: `0 0 40px ${colors.cyan}, 0 0 80px rgba(83,217,255,.5)`,
+          }}
+        />
+      )}
     </AbsoluteFill>
   );
 };
