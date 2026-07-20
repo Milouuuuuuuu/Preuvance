@@ -8,6 +8,7 @@
     "render": "remotion render src/index.tsx PreuvanceHackathon out/preuvance-hackathon.mp4 --codec h264 --crf 18 --concurrency=2",
     "render:vertical": "remotion render src/index.tsx PreuvanceHackathonVertical out/preuvance-hackathon-vertical.mp4 --codec h264 --crf 18 --concurrency=2",
     "render:higgsfield": "remotion render src/index.tsx PreuvanceHackathon out/preuvance-hackathon-higgsfield.mp4 --codec h264 --crf 18 --concurrency=2 --props=./higgsfield-enabled.json",
+    "render:higgsfield-vertical": "remotion render src/index.tsx PreuvanceHackathonVertical out/preuvance-hackathon-higgsfield-vertical.mp4 --codec h264 --crf 18 --concurrency=2 --props=./higgsfield-enabled.json",
     "frames": "npm run frame:opening && npm run frame:evidence && npm run frame:bridge",
     "frame:opening": "remotion still src/index.tsx HiggsfieldOpening public/higgsfield/input/opening.png",
     "frame:evidence": "remotion still src/index.tsx HiggsfieldEvidence public/higgsfield/input/evidence.png",
