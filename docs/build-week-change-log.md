@@ -53,7 +53,8 @@ Populate this table only from the actual Git history after the work is intention
 | `2d95a3a` | 2026-07-20 11:53:41 +0200 | Yes | Build Week package: /build-week deck, demo fixture, submission docs, deck/QA scripts | `git show --stat 2d95a3a` |
 | `5c4c1af` | 2026-07-20 11:53:41 +0200 | Yes | Remotion film refinements; Higgsfield render outputs untracked | `git show --stat 5c4c1af` |
 | `5d9307d` | 2026-07-20 11:54:50 +0200 | Yes | /scan and /en-clair pages, product docs and local launcher aligned with the instant dossier | `git show --stat 5d9307d` |
-| *(this commit)* | see `git log -1 docs/build-week-change-log.md` | Yes | BEHAVIOR.md D-071..D-082, README Build Week section, this change log | `git log --follow docs/build-week-change-log.md` |
+| `efa319b` | 2026-07-20 11:55:23 +0200 | Yes | BEHAVIOR.md D-071..D-082, README Build Week section, baseline and this change log | `git show --stat efa319b` |
+| `becf9ed` | 2026-07-20 11:57:09 +0200 | Yes | Final 8-slide PowerPoint tracked in the repository | `git show --stat becf9ed` |
 
 Earlier post-cutoff commits (2026-07-13 20:24 +0200 through 2026-07-18 20:18 +0200, `d0c6abd`..`9c429dc`) hold the hardening, local scanner, declared/observed concordance, portability and film groundwork; they are also eligible but predate this Build Week sprint's dossier workstream.
 
@@ -71,7 +72,8 @@ The cutoff uses Pacific Time. Preserve timezone information in the output or exp
 
 | Gate | Command or action | Result | Evidence |
 |---|---|---|---|
-| Unit tests | `npm.cmd run test:unit` | **PASS — 85/85** | Local run, 20 July 2026; rerun in CI on submitted commit |
+| Complete repository gate | `npm.cmd test` | **PASS — exit 0** | Run on committed HEAD `becf9ed`, 20 July 2026: lint, typecheck, 85 unit tests, production build and 10 HTTP/Worker tests |
+| Unit tests | `npm.cmd run test:unit` | **PASS — 85/85** | Reconfirmed inside the complete repository gate |
 | Rendered HTML and Worker PDF | `node --test tests/rendered-html.test.mjs` | **PASS — 10/10** | Covers homepage, scan, Build Week deck, auth failures and PDF routes |
 | Lint | `npm.cmd run lint` | **PASS** | ESLint exit 0, 20 July 2026 |
 | TypeScript | `npm.cmd run typecheck` | **PASS** | `tsc --noEmit` exit 0, 20 July 2026 |
@@ -88,7 +90,7 @@ The cutoff uses Pacific Time. Preserve timezone information in the output or exp
 
 Use only after filling the commit evidence above:
 
-> Preuvance predates OpenAI Build Week 2026. For judging, we are submitting only the additions made after July 13, 2026 at 9:00 AM PT — every commit after the pre-cutoff baseline `47874da` (see the table above; principal Build Week commits `fd61d05`, `2d95a3a`, `5c4c1af`, `5d9307d` and the documentation commit containing this file). These additions implement the instant dossier, evidence-state invariants, bounded dependency and scan digests, living evidence persistence, model provenance, focused tests, and the Build Week demo package. The pre-existing assessment and reporting foundation is disclosed as prior work.
+> Preuvance predates OpenAI Build Week 2026. For judging, we are submitting only the additions made after July 13, 2026 at 9:00 AM PT — every commit after the pre-cutoff baseline `47874da` (see the table above; principal Build Week commits `fd61d05`, `2d95a3a`, `5c4c1af`, `5d9307d`, `efa319b` and `becf9ed`). These additions implement the instant dossier, evidence-state invariants, bounded dependency and scan digests, living evidence persistence, model provenance, focused tests, and the Build Week demo package. The pre-existing assessment and reporting foundation is disclosed as prior work.
 
 ## Owner TODO
 

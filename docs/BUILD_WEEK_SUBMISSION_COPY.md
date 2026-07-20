@@ -20,7 +20,7 @@ Preuvance turns a system description, dependency manifests, and a privacy-safe l
 
 ## Short description
 
-AI governance often starts with spreadsheets and self-declarations that quickly become stale. Preuvance creates an instant, living dossier from a prompt or repository signal. GPT-5.6 structures the context and analyzes gaps, while deterministic controls preserve evidence semantics: a declaration is never silently promoted to proof, and “Proven” always requires a named human reviewer and a review date.
+AI governance often starts with spreadsheets and self-declarations that quickly become stale. Preuvance creates an instant, living dossier from a prompt and bounded project signals. GPT-5.6 structures the context and analyzes gaps, while deterministic controls preserve evidence semantics: a declaration is never silently promoted to proof, and “Proven” always requires a named human reviewer and a review date.
 
 ## Inspiration
 
@@ -137,7 +137,7 @@ Expected result: the dossier keeps Declared, Detected, Missing, and Proven state
 ## Submission links
 
 - **Live application:** `[TODO: URL]`
-- **Source repository:** `https://github.com/Milouuuuuuuu/Preuvance`
+- **Source repository:** `https://github.com/Milouuuuuuuu/Preuvance` — confirm public visibility or grant the two required private-repository accounts before submission.
 - **YouTube demo (under 3 minutes, with audio):** `[TODO: URL]`
 - **Codex Session ID:** `[TODO: exact /feedback Session ID]`
 
