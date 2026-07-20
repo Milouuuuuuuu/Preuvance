@@ -1,5 +1,8 @@
 # Preuvance
 
+[![CI](https://github.com/Milouuuuuuuu/Preuvance/actions/workflows/ci.yml/badge.svg)](https://github.com/Milouuuuuuuu/Preuvance/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-informational.svg)](LICENSE)
+
 **Décrivez votre IA. Preuvance bâtit le dossier — preuve par preuve.**
 
 Preuvance est un environnement français de préparation au règlement européen sur l’IA pour PME et small mid-caps. À partir d’une description en langage courant — enrichie facultativement par un digest de dépendances et un scan local expurgé — il construit un **dossier de maîtrise IA instantané, vivant et traçable** : faits structurés, classification, écarts, score déterministe, registre de preuves et PDF destiné à une première conversation avec un courtier ou un investisseur.
