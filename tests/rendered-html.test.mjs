@@ -22,7 +22,16 @@ test.before(async () => {
       env: {
         ...process.env,
         PORT: String(port),
-        NODE_OPTIONS: [process.env.NODE_OPTIONS, "--use-system-ca"]
+        NODE_OPTIONS: [
+          process.env.NODE_OPTIONS,
+          // --use-system-ca n'est reconnu dans NODE_OPTIONS qu'à partir de
+          // Node 22.15 ; sous une version antérieure (CI épinglée en 22.13) il est
+          // refusé et le serveur de test s'arrête au démarrage. On ne l'ajoute donc
+          // que lorsqu'il est réellement autorisé par le runtime courant.
+          process.allowedNodeEnvironmentFlags.has("--use-system-ca")
+            ? "--use-system-ca"
+            : null,
+        ]
           .filter(Boolean)
           .join(" "),
         OPENAI_API_KEY: "",
