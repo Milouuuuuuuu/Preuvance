@@ -40,7 +40,8 @@ next-env.d.ts
 *.tsbuildinfo
 /dist/
 /.wrangler/
-/outputs/
+/outputs/*
+!/outputs/preuvance-openai-build-week.pptx
 /work/
 
 # extraction locale du zip de téléchargement (jamais du source)
