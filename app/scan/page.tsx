@@ -39,7 +39,7 @@ export default function ScanPage() {
 
       <main id="contenu">
         <section className="pv-scan-hero" aria-labelledby="scan-hero-title">
-          <p className="pv-kicker">Option A — le scan local</p>
+          <p className="pv-kicker">Source complémentaire — scan local</p>
           <h1 id="scan-hero-title">Analysez votre poste, sans rien envoyer.</h1>
           <p className="pv-scan-hero-lede">
             Avant le scan, vous déclarez les outils d’IA que vous utilisez

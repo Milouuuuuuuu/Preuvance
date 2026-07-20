@@ -34,7 +34,7 @@ Sans URL ou clé publique Supabase, les helpers retournent `null`, l’écran `/
 
 ## Base de données et Auth
 
-Appliquer dans l’ordre [`supabase/migrations/202607130001_preuvance_core.sql`](../supabase/migrations/202607130001_preuvance_core.sql) puis [`supabase/migrations/202607130002_persist_assessment.sql`](../supabase/migrations/202607130002_persist_assessment.sql) avec le CLI Supabase ou depuis le SQL Editor :
+Appliquer dans l’ordre [`supabase/migrations/202607130001_preuvance_core.sql`](../supabase/migrations/202607130001_preuvance_core.sql), [`supabase/migrations/202607130002_persist_assessment.sql`](../supabase/migrations/202607130002_persist_assessment.sql), puis [`supabase/migrations/202607200001_evidence_dossier.sql`](../supabase/migrations/202607200001_evidence_dossier.sql) avec le CLI Supabase ou depuis le SQL Editor :
 
 ```bash
 supabase db push
@@ -51,9 +51,13 @@ Le trigger `auth_users_provision_preuvance` crée une organisation à chaque nou
 
 Les clés étrangères composites imposent aussi en base qu’un assessment appartienne à la même organisation que son système IA, et qu’une étape de raisonnement appartienne à la même organisation que son assessment. La RLS filtre chaque lecture et mutation selon `auth.uid()`. Les clients authentifiés ne peuvent pas modifier directement les memberships ; cette opération reste réservée au service role pour une future fonctionnalité d’invitation administrée.
 
+La migration du dossier de preuves ajoute un registre multi-tenant, un journal avant/après, un ordre canonique et `assessments.evidence_revision`. Les comptes `authenticated` n’ont qu’un accès direct en lecture aux tables concernées. La mutation du registre passe par `sync_assessment_evidence`, qui vérifie l’appartenance, les invariants, la taille, les doublons et la révision attendue. Un client obsolète reçoit un conflit HTTP 409 via l’API au lieu d’écraser une version plus récente.
+
 Lorsque Supabase est configuré, `POST /api/assessments` vérifie la session avant d’appeler le modèle. Une fois le pipeline terminé, la fonction RPC `persist_completed_assessment` met à jour le nom de l’organisation, crée ou réutilise le système IA, puis écrit l’assessment, son payload PDF et les quatre étapes de raisonnement dans une seule transaction PostgreSQL. Si la transaction échoue, l’API renvoie `PERSISTENCE_ERROR` au lieu d’annoncer à tort que le dossier a été conservé. Sans variables Supabase, le même flux reste disponible en mode démonstration avec `persistence.status = "disabled"`.
 
 Les types TypeScript correspondants sont dans [`lib/supabase/database.types.ts`](../lib/supabase/database.types.ts). Après toute évolution de la migration, les régénérer avec le CLI Supabase et remplacer ce snapshot.
+
+> État de livraison au 20 juillet 2026 : la migration est écrite et le contrat applicatif est typé, mais elle n’a pas été exécutée contre un projet Supabase de staging dans ce workspace. Ne présenter la persistance cloud comme opérationnelle qu’après `supabase db push`, test RLS avec deux organisations et test de conflit à deux onglets.
 
 ## Contrat PDF
 
@@ -130,3 +134,7 @@ Réponse de validation en erreur : `application/problem+json`, statut `400`, `41
 3. Côté navigateur, lire la réponse comme `Blob`, vérifier `response.ok`, puis créer une URL objet pour le téléchargement.
 4. En cas de middleware de rafraîchissement de session ajouté ultérieurement, réutiliser `createServerSupabaseClient` et ne pas dupliquer la logique de cookies.
 5. Si le schéma structuré partagé du pipeline évolue, adapter `validatePreuvanceAssessment` et le snapshot `Database` dans la même modification.
+
+---
+
+Mise à jour « dossier instantané », registre canonique et concurrence optimiste du 20 juillet 2026 : **ChatGPT 5.6, OpenAI**.
