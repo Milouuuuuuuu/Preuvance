@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "outputs/**",
     "public/**",
+    // remotion/ est un sous-paquet séparé (tsconfig, deps et toolchain propres) ; il se vérifie chez lui, pas par la racine.
+    "remotion/**",
     "next-env.d.ts",
     "worker-configuration.d.ts",
   ]),
