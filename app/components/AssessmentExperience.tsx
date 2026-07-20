@@ -15,6 +15,7 @@ import {
   type Assessment,
   type AssessmentRequest,
 } from "./assessment-types";
+import { scanDigestSchema, type ScanDigest } from "@/lib/scan/scan-handoff";
 
 type RequestStatus = "idle" | "loading" | "success" | "error";
 
@@ -165,9 +166,19 @@ export function AssessmentExperience() {
   const [lastRequest, setLastRequest] = useState<AssessmentRequest | null>(null);
   const [formVersion, setFormVersion] = useState(0);
   const [resultsSlot, setResultsSlot] = useState<HTMLElement | null>(null);
+  const [scanDigest, setScanDigest] = useState<ScanDigest | undefined>();
 
   useEffect(() => {
     setResultsSlot(document.getElementById("pv-results-slot"));
+    const storedDigest = window.sessionStorage.getItem("preuvance:scan-digest-v1");
+    if (storedDigest) {
+      try {
+        const validation = scanDigestSchema.safeParse(JSON.parse(storedDigest) as unknown);
+        if (validation.success) setScanDigest(validation.data);
+      } catch {
+        window.sessionStorage.removeItem("preuvance:scan-digest-v1");
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -212,6 +223,7 @@ export function AssessmentExperience() {
       );
       setAssessment(completedAssessment);
       setStatus("success");
+      window.sessionStorage.removeItem("preuvance:scan-digest-v1");
     } catch (requestError) {
       setStatus("error");
       setErrorAction(actionForAssessmentError(requestError));
@@ -229,6 +241,7 @@ export function AssessmentExperience() {
     setErrorAction(null);
     setLastRequest(null);
     setStatus("idle");
+    setScanDigest(undefined);
     setFormVersion((version) => version + 1);
     window.requestAnimationFrame(() => {
       document.getElementById("evaluation")?.scrollIntoView({ block: "start" });
@@ -254,6 +267,7 @@ export function AssessmentExperience() {
           error={error}
           errorAction={errorAction}
           initialValue={lastRequest}
+          initialScanDigest={scanDigest}
           isSubmitting={isLoading}
           onSubmit={submitAssessment}
         />

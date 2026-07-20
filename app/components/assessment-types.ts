@@ -1,3 +1,6 @@
+import type { DependencyDigest } from "@/lib/scan/dependency-contract";
+import type { ScanDigest } from "@/lib/scan/scan-handoff";
+
 export type JsonRecord = Record<string, unknown>;
 
 export type CompanyInput = {
@@ -11,6 +14,8 @@ export type AssessmentRequest = {
   systemName: string;
   description: string;
   company: CompanyInput;
+  dependencyDigest?: DependencyDigest;
+  scanDigest?: ScanDigest;
 };
 
 export type Assessment = JsonRecord & {

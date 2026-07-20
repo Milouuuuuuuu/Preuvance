@@ -102,11 +102,13 @@ test("rend la page Preuvance en français sans vestige du starter", async () => 
   assert.doesNotMatch(html, /Codex is working|Your site is taking shape|SkeletonPreview/i);
 });
 
-test("met en avant le scan local comme option A et rend la page /scan", async () => {
+test("met le dossier instantané au premier plan et conserve le scan local", async () => {
   const home = await fetch(baseUrl, { headers: { accept: "text/html" } });
   const homeHtml = await home.text();
-  assert.match(homeHtml, /Option A/i);
-  assert.match(homeHtml, /Scanner votre poste en local/i);
+  assert.match(homeHtml, /Parcours principal · dossier instantané/i);
+  assert.match(homeHtml, /Construire mon dossier/i);
+  assert.match(homeHtml, /Scanner les dépendances IA du projet/i);
+  assert.match(homeHtml, /Source complémentaire · poste local/i);
   assert.match(homeHtml, /shadow AI/i);
 
   const scan = await fetch(`${baseUrl}/scan`, { headers: { accept: "text/html" } });
@@ -114,6 +116,19 @@ test("met en avant le scan local comme option A et rend la page /scan", async ()
   const scanHtml = await scan.text();
   assert.match(scanHtml, /Analysez votre poste, sans rien envoyer/i);
   assert.match(scanHtml, /preuvance-scan\.json/i);
+});
+
+test("rend la présentation locale OpenAI Build Week", async () => {
+  const response = await fetch(`${baseUrl}/build-week`, {
+    headers: { accept: "text/html" },
+  });
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /OpenAI Build Week/i);
+  assert.match(html, /Prompt · Scan · Prove/i);
+  assert.match(html, /GPT-5\.6/i);
+  assert.match(html, /Codex/i);
+  assert.doesNotMatch(html, /Veo|watermark/i);
 });
 
 test("rend l’indisponibilité de l’authentification actionnable", async () => {

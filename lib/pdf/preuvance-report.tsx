@@ -474,19 +474,19 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
 
         {assessment.evidence?.length && evidenceIndex ? (
           <View style={styles.section} break>
-            <SectionHeader index={evidenceIndex} title="Éléments de maîtrise déclarés" />
+            <SectionHeader index={evidenceIndex} title="Registre de preuves · déclaré, détecté, prouvé" />
             <View style={styles.tableHeader} fixed>
               <Text style={styles.tableControl}>Contrôle</Text>
               <Text style={styles.tableStatus}>État</Text>
               <Text style={styles.tableDetail}>Élément observé</Text>
             </View>
             {assessment.evidence.map((item) => (
-              <View key={item.control} style={styles.tableRow} wrap={false}>
+              <View key={item.id ?? item.control} style={styles.tableRow} wrap={false}>
                 <Text style={styles.tableControl}>{item.control}</Text>
                 <Text style={[styles.tableStatus, { color: evidenceColor(item.status) }]}>
                   {evidenceLabel(item.status)}
                 </Text>
-                <Text style={styles.tableDetail}>{item.detail}</Text>
+                <Text style={styles.tableDetail}>{evidenceDetail(item)}</Text>
               </View>
             ))}
           </View>
@@ -534,6 +534,9 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
             {assessment.methodology?.model
               ? ` Modèle déclaré : ${assessment.methodology.model}${assessment.methodology.version ? ` (${assessment.methodology.version})` : ""}.`
               : ""}
+          </Text>
+          <Text style={{ marginTop: 3, fontFamily: "Helvetica-Bold" }}>
+            Analysé avec {assessment.methodology?.model ?? "un modèle OpenAI déclaré"} · sources reliées · revue humaine requise.
           </Text>
           <Text style={{ marginTop: 3 }}>
             Ce rapport constitue une aide à la préparation d’un dossier de risque. Il ne vaut ni
@@ -658,7 +661,9 @@ function priorityBadgeStyle(priority: GapPriority) {
 
 function evidenceLabel(status: EvidenceStatus) {
   return {
-    documented: "Documenté",
+    verified: "Prouvé · revu",
+    documented: "Pièce disponible",
+    detected: "Détecté",
     declared: "Déclaré · non vérifié",
     partial: "Partiel",
     missing: "Manquant",
@@ -668,11 +673,26 @@ function evidenceLabel(status: EvidenceStatus) {
 }
 
 function evidenceColor(status: EvidenceStatus) {
-  if (status === "documented") return colors.green;
-  if (status === "partial") return colors.amber;
+  if (status === "verified") return colors.green;
+  if (status === "documented" || status === "detected" || status === "partial") {
+    return colors.amber;
+  }
   if (status === "declared" || status === "unverified") return colors.blue;
   if (status === "missing") return colors.red;
   return colors.muted;
+}
+
+function evidenceDetail(
+  item: NonNullable<PreuvanceAssessment["evidence"]>[number],
+) {
+  const metadata = [
+    item.fileName ? `Pièce : ${item.fileName}` : null,
+    item.sha256 ? `SHA-256 : ${item.sha256.slice(0, 16)}…` : null,
+    item.owner ? `Responsable : ${item.owner}` : null,
+    item.reviewedBy ? `Revu par : ${item.reviewedBy}` : null,
+    item.validUntil ? `Valide jusqu’au : ${item.validUntil}` : null,
+  ].filter(Boolean);
+  return metadata.length ? `${item.detail} · ${metadata.join(" · ")}` : item.detail;
 }
 
 function formatDate(value: string) {

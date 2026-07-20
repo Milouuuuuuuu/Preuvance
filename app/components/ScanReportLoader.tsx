@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Link from "next/link";
 import {
   AlertTriangle,
   ArrowRight,
@@ -18,6 +17,7 @@ import {
   type ScanExposure,
   type ScanFindingSeverity,
 } from "@/app/lib/assessment/scan-scoring";
+import { createScanDigest } from "@/lib/scan/scan-handoff";
 
 type LoadState =
   | { status: "idle" }
@@ -59,6 +59,7 @@ function toneForConcordance(status: ScanConcordance["status"]) {
 
 export function ScanReportLoader() {
   const [state, setState] = useState<LoadState>({ status: "idle" });
+  const [handoffConsent, setHandoffConsent] = useState(false);
 
   const handleFile = useCallback(async (file: File | null) => {
     if (!file) return;
@@ -87,6 +88,7 @@ export function ScanReportLoader() {
         report: validation.data,
         exposure: computeScanExposure(validation.data),
       });
+      setHandoffConsent(false);
     } catch {
       setState({
         status: "error",
@@ -94,6 +96,13 @@ export function ScanReportLoader() {
       });
     }
   }, []);
+
+  function continueWithDigest() {
+    if (state.status !== "ready" || !handoffConsent) return;
+    const digest = createScanDigest(state.report, state.exposure);
+    window.sessionStorage.setItem("preuvance:scan-digest-v1", JSON.stringify(digest));
+    window.location.assign("/#evaluation");
+  }
 
   return (
     <section className="pv-scan" aria-labelledby="scan-title">
@@ -243,13 +252,30 @@ export function ScanReportLoader() {
             <p>
               Ce scan mesure l’exposition du poste ; il ne produit ni
               classification réglementaire, ni rapport PDF pour votre courtier.
-              C’est le rôle de l’évaluation en ligne — et votre concordance
-              déclaré / observé en renforcera la crédibilité.
+              Le dossier instantané peut reprendre un digest strictement agrégé
+              de cette concordance, jamais le rapport brut.
             </p>
-            <Link className="pv-scan-next-cta" href="/#evaluation">
-              Poursuivre avec l’évaluation réglementaire (option B)
+            <label className="pv-scan-consent">
+              <input
+                type="checkbox"
+                checked={handoffConsent}
+                onChange={(event) => setHandoffConsent(event.target.checked)}
+              />
+              <span>
+                J’autorise la transmission au dossier du score, des compteurs et
+                des fournisseurs agrégés. Aucun chemin, IP, processus, contenu
+                ou hash de fichier sensible n’est inclus.
+              </span>
+            </label>
+            <button
+              className="pv-scan-next-cta"
+              type="button"
+              disabled={!handoffConsent}
+              onClick={continueWithDigest}
+            >
+              Créer mon dossier avec ce digest
               <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            </button>
           </div>
         </div>
       ) : null}

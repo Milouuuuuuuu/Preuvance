@@ -1,4 +1,11 @@
 import { z } from "zod";
+import {
+  EVIDENCE_LEDGER_LIMIT,
+  reportEvidenceSchema,
+} from "@/lib/evidence/evidence-ledger";
+
+export { evidenceStatuses } from "@/lib/evidence/evidence-ledger";
+export type { EvidenceStatus } from "@/lib/evidence/evidence-ledger";
 
 export const PDF_REQUEST_LIMIT_BYTES = 512_000;
 
@@ -11,14 +18,6 @@ export const riskLevels = [
   "undetermined",
 ] as const;
 export const gapPriorities = ["critical", "high", "medium", "low"] as const;
-export const evidenceStatuses = [
-  "documented",
-  "declared",
-  "partial",
-  "missing",
-  "unverified",
-  "not-applicable",
-] as const;
 
 const boundedString = (max: number, min = 1) =>
   z.string().trim().min(min).max(max);
@@ -69,14 +68,6 @@ const gapSchema = z
     articleReferences: z.array(boundedString(100)).max(12),
     dueDate: boundedString(500).optional(),
     owner: boundedString(120).optional(),
-  })
-  .strict();
-
-const evidenceSchema = z
-  .object({
-    control: boundedString(500),
-    status: z.enum(evidenceStatuses),
-    detail: boundedString(1_500),
   })
   .strict();
 
@@ -159,7 +150,16 @@ export const preuvanceAssessmentSchema = z
       .strict(),
     dimensions: z.array(dimensionSchema).min(1).max(10),
     gaps: z.array(gapSchema).max(25),
-    evidence: z.array(evidenceSchema).max(30).optional(),
+    evidence: z.array(reportEvidenceSchema).max(EVIDENCE_LEDGER_LIMIT).optional(),
+    evidenceInventory: z
+      .object({
+        sourceItemCount: z.number().int().min(0).max(1_000),
+        includedItemCount: z.number().int().min(0).max(EVIDENCE_LEDGER_LIMIT),
+        truncatedItemCount: z.number().int().min(0).max(1_000),
+        methodVersion: boundedString(80),
+      })
+      .strict()
+      .optional(),
     brokerContext: z
       .object({
         requestedCoverage: boundedString(1_000).optional(),
@@ -173,6 +173,17 @@ export const preuvanceAssessmentSchema = z
       .object({
         model: boundedString(120).optional(),
         version: boundedString(120).optional(),
+        modelRuns: z
+          .array(
+            z
+              .object({
+                stage: z.enum(["extraction", "classification", "gap_analysis"]),
+                model: boundedString(120),
+              })
+              .strict(),
+          )
+          .max(3)
+          .optional(),
       })
       .strict()
       .optional(),
@@ -183,7 +194,6 @@ export type AssessmentTier = (typeof assessmentTiers)[number];
 export type PdfCrossCheckStatus = (typeof crossCheckStatuses)[number];
 export type RiskLevel = (typeof riskLevels)[number];
 export type GapPriority = (typeof gapPriorities)[number];
-export type EvidenceStatus = (typeof evidenceStatuses)[number];
 export type PreuvanceAssessment = z.infer<typeof preuvanceAssessmentSchema>;
 
 export function decisionScoreLabel(score: number | null): string {

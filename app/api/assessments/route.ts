@@ -20,7 +20,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-const MAX_REQUEST_BYTES = 16_384;
+const MAX_REQUEST_BYTES = 96_000;
 
 export async function POST(request: Request): Promise<Response> {
   const contentType = request.headers.get("content-type")?.toLowerCase() ?? "";
@@ -37,7 +37,7 @@ export async function POST(request: Request): Promise<Response> {
     return problem(
       413,
       "PAYLOAD_TOO_LARGE",
-      "La description dépasse la taille autorisée.",
+      "La description et ses digests techniques dépassent la taille autorisée.",
     );
   }
 
@@ -52,7 +52,7 @@ export async function POST(request: Request): Promise<Response> {
     return problem(
       413,
       "PAYLOAD_TOO_LARGE",
-      "La description dépasse la taille autorisée.",
+      "La description et ses digests techniques dépassent la taille autorisée.",
     );
   }
 

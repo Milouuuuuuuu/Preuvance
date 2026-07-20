@@ -1,11 +1,19 @@
 "use client";
 
-import { useId } from "react";
-import { ArrowRight, Building2, CircleAlert, FileText } from "lucide-react";
+import { useId, useState } from "react";
+import {
+  ArrowRight,
+  Building2,
+  CircleAlert,
+  FileText,
+  ScanLine,
+  X,
+} from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import type { AssessmentRequest } from "./assessment-types";
+import { DependencyManifestLoader } from "./DependencyManifestLoader";
 
 type AssessmentFormProps = {
   error: string | null;
@@ -14,6 +22,7 @@ type AssessmentFormProps = {
     label: string;
   } | null;
   initialValue?: AssessmentRequest | null;
+  initialScanDigest?: AssessmentRequest["scanDigest"];
   isSubmitting: boolean;
   onSubmit: (payload: AssessmentRequest) => void;
 };
@@ -81,9 +90,16 @@ export function AssessmentForm({
   error,
   errorAction,
   initialValue,
+  initialScanDigest,
   isSubmitting,
   onSubmit,
 }: AssessmentFormProps) {
+  const [dependencyDigest, setDependencyDigest] = useState(
+    initialValue?.dependencyDigest,
+  );
+  const [scanDigest, setScanDigest] = useState(
+    initialValue?.scanDigest ?? initialScanDigest,
+  );
   const organizationNameId = useId();
   const systemNameId = useId();
   const descriptionId = useId();
@@ -132,6 +148,8 @@ export function AssessmentForm({
         annualRevenue: Math.round(revenueInMillions * 1_000_000),
         balanceSheetTotal: Math.round(balanceInMillions * 1_000_000),
       },
+      ...(dependencyDigest ? { dependencyDigest } : {}),
+      ...(scanDigest ? { scanDigest } : {}),
     });
   }
 
@@ -142,7 +160,7 @@ export function AssessmentForm({
           <FileText size={20} />
         </div>
         <div>
-          <p className="pv-kicker">Évaluation guidée</p>
+          <p className="pv-kicker">Dossier instantané</p>
           <h2>Décrivez votre système d’IA</h2>
         </div>
       </div>
@@ -229,6 +247,27 @@ export function AssessmentForm({
           </ul>
         </details>
       </div>
+
+      <DependencyManifestLoader
+        value={dependencyDigest}
+        onChange={setDependencyDigest}
+      />
+
+      {scanDigest ? (
+        <section className="pv-scan-digest" aria-label="Digest du scan local joint">
+          <ScanLine size={20} aria-hidden="true" />
+          <div>
+            <strong>Digest du scan local joint</strong>
+            <span>
+              {scanDigest.concordance} · exposition {scanDigest.exposureScore}/100 · {scanDigest.undeclaredProviders.length} fournisseur(s) observé(s) sans déclaration
+            </span>
+            <small>{scanDigest.privacy}</small>
+          </div>
+          <button type="button" onClick={() => setScanDigest(undefined)} aria-label="Retirer le digest du scan local">
+            <X size={17} aria-hidden="true" />
+          </button>
+        </section>
+      ) : null}
 
       <fieldset className="pv-company-fields">
         <legend>
@@ -326,7 +365,7 @@ export function AssessmentForm({
       ) : null}
 
       <button className="pv-primary-button pv-submit-button" type="submit" disabled={isSubmitting}>
-        <span>{isSubmitting ? "Analyse en cours…" : "Évaluer mon système"}</span>
+        <span>{isSubmitting ? "Assemblage en cours…" : "Construire mon dossier"}</span>
         <ArrowRight size={18} aria-hidden="true" />
       </button>
 

@@ -30,6 +30,7 @@ export default function Home() {
           </a>
           <nav className="pv-main-nav" aria-label="Navigation principale">
             <a href="/scan">Scanner en local</a>
+            <a href="/build-week">Présentation</a>
             <a href="/outils/migration-sqlite-postgresql">Portabilité</a>
             <a href="#methode">Méthode</a>
             <a href="#referentiel">Référentiel</a>
@@ -50,7 +51,7 @@ export default function Home() {
               Espace
             </a>
             <a className="pv-header-action" href="#evaluation">
-              Lancer une évaluation
+              Construire un dossier
               <ArrowRight size={16} aria-hidden="true" />
             </a>
           </div>
@@ -65,55 +66,53 @@ export default function Home() {
               {`Référentiel EU AI Act vérifié le ${marketing.verifiedAtDisplay}`}
             </div>
             <h1 id="hero-title">
-              Maîtrisez votre risque IA.<br />
-              <span>Prouvez-le.</span>
+              Décrivez votre IA.<br />
+              <span>Preuvance bâtit le dossier.</span>
             </h1>
             <p className="pv-hero-lede">
-              Décrivez votre système en français courant. Preuvance transforme
-              ce contexte en classification réglementaire, plan d’action et
-              rapport de préparation partageable avec votre courtier, assureur
-              ou investisseur.
+              Un prompt et, si vous le souhaitez, les manifestes du projet
+              deviennent une classification contre-vérifiée, un plan d’action
+              et un registre vivant à consolider preuve par preuve.
             </p>
 
-            <div className="pv-path-choice" aria-label="Deux façons de commencer">
-              <a className="pv-path-card pv-path-primary" href="/scan">
-                <span className="pv-path-tag">Option A · recommandé en premier</span>
+            <div className="pv-path-choice" aria-label="Construire puis étayer le dossier">
+              <a className="pv-path-card pv-path-primary" href="#evaluation">
+                <span className="pv-path-tag">Parcours principal · dossier instantané</span>
                 <span className="pv-path-heading">
-                  <MonitorCheck size={20} aria-hidden="true" />
-                  Scanner votre poste en local
+                  <Zap size={20} aria-hidden="true" />
+                  Décrire, scanner les dépendances, assembler
                 </span>
                 <span className="pv-path-copy">
-                  100 % local, rien n’est envoyé. Vous déclarez vos outils d’IA,
-                  le scan observe la réalité du poste et mesure la concordance :
-                  une déclaration corroborée, pas sur l’honneur — et tout usage
-                  non déclaré (« shadow AI ») ressort.
+                  Décrivez le système en français et joignez facultativement ses
+                  manifestes. GPT-5.6 structure le contexte ; le moteur de règles
+                  contre-vérifie ; Preuvance assemble le dossier.
                 </span>
                 <span className="pv-path-produces">
-                  Produit : score d’exposition + concordance déclaré / observé
-                  (pas de PDF courtier — c’est l’option B).
+                  Produit : score distinct, obligations, actions, manifeste des
+                  dépendances et registre Déclaré → Détecté → Prouvé.
                 </span>
                 <span className="pv-path-cta">
-                  Ouvrir le scan local
+                  Construire mon dossier
                   <ArrowRight size={16} aria-hidden="true" />
                 </span>
               </a>
-              <a className="pv-path-card" href="#evaluation">
-                <span className="pv-path-tag">Option B · le dossier courtier</span>
+              <a className="pv-path-card" href="/scan">
+                <span className="pv-path-tag">Source complémentaire · poste local</span>
                 <span className="pv-path-heading">
-                  <Zap size={20} aria-hidden="true" />
-                  Évaluation express en ligne
+                  <MonitorCheck size={20} aria-hidden="true" />
+                  Observer les usages réels
                 </span>
                 <span className="pv-path-copy">
-                  Décrivez votre système en français : classification
-                  réglementaire contre-vérifiée, plan d’action et score en
-                  quelques minutes.
+                  Le scan local compare les outils déclarés aux appels observés
+                  sans lire le contenu de vos fichiers et fait ressortir le
+                  shadow AI.
                 </span>
                 <span className="pv-path-produces">
-                  Produit : classification EU AI Act + rapport PDF partageable
-                  avec votre courtier.
+                  Produit : un digest local de concordance qui peut étayer le
+                  dossier sans devenir une preuve juridique automatique.
                 </span>
                 <span className="pv-path-cta">
-                  Décrire mon système
+                  Ouvrir le scan local
                   <ArrowRight size={16} aria-hidden="true" />
                 </span>
               </a>
@@ -130,7 +129,7 @@ export default function Home() {
               </li>
               <li>
                 <Landmark size={17} aria-hidden="true" />
-                Rapport pensé pour le dialogue assurantiel
+                Dossier vivant, PDF et manifeste de preuves exportable
               </li>
             </ul>
 
@@ -183,15 +182,16 @@ export default function Home() {
             <p className="pv-kicker">Une preuve, pas une checklist</p>
             <h2 id="method-title">Du contexte métier à une décision traçable.</h2>
             <p>
-              Chaque conclusion reste reliée aux faits extraits, au texte
-              réglementaire applicable et à une action vérifiable.
+              Chaque conclusion reste reliée aux faits extraits, aux dépendances
+              observées, au texte applicable et aux pièces qui la confirment —
+              ou qui manquent encore.
             </p>
           </div>
           <ol className="pv-method-steps">
             <li>
               <span className="pv-method-number">01</span>
               <FileText size={22} aria-hidden="true" />
-              <h3>Décrire</h3>
+              <h3>Déclarer</h3>
               <p>
                 Votre équipe explique l’usage réel, les personnes concernées et
                 les décisions produites, sans jargon juridique.
@@ -200,20 +200,21 @@ export default function Home() {
             <li>
               <span className="pv-method-number">02</span>
               <Scale size={22} aria-hidden="true" />
-              <h3>Qualifier</h3>
+              <h3>Détecter</h3>
               <p>
-                Le système rapproche ces faits d’un référentiel daté, expose sa
-                classification, puis un moteur de règles déterministe
-                contre-vérifie chaque conclusion.
+                Les manifestes et scans reconnus ajoutent des observations
+                techniques bornées ; GPT-5.6 rapproche les faits du référentiel,
+                puis un moteur déterministe cherche les contradictions.
               </p>
             </li>
             <li>
               <span className="pv-method-number">03</span>
               <ShieldCheck size={22} aria-hidden="true" />
-              <h3>Prouver</h3>
+              <h3>Prouver, pièce par pièce</h3>
               <p>
-                Le score, les écarts prioritaires et le journal des décisions
-                forment un dossier partageable avec un tiers.
+                Chaque contrôle conserve sa source, son propriétaire, son
+                empreinte et sa revue. Seule une revue humaine datée atteint
+                l’état « Prouvé ».
               </p>
             </li>
           </ol>
