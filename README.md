@@ -119,7 +119,7 @@ Livrables :
 - copie Devpost anglaise prête à adapter : [`docs/BUILD_WEEK_SUBMISSION_COPY.md`](docs/BUILD_WEEK_SUBMISSION_COPY.md) ;
 - narration et plan de tournage de 2 min 45 s : [`docs/DEMO_SCRIPT_BUILD_WEEK.md`](docs/DEMO_SCRIPT_BUILD_WEEK.md) ;
 - séparation vérifiable entre socle antérieur et ajouts Build Week : [`docs/build-week-change-log.md`](docs/build-week-change-log.md) ;
-- deck PowerPoint : généré localement dans `outputs/preuvance-openai-build-week.pptx` (dossier non suivi) via `scripts/build-week-deck.mjs` ;
+- deck PowerPoint : [`outputs/preuvance-openai-build-week.pptx`](outputs/preuvance-openai-build-week.pptx) (régénérable via `scripts/build-week-deck.mjs`) ;
 - diaporama exécutable : `/build-week`.
 
 Échéance officielle : **mardi 21 juillet 2026 à 17:00 PT**, soit **mercredi 22 juillet 2026 à 02:00 à Paris**. Les actions qui restent nécessairement au propriétaire sont : rejoindre le Devpost, confirmer équipe/éligibilité, choisir dépôt public + licence ou partage privé, récupérer le Session ID via `/feedback`, enregistrer et publier la vidéo YouTube avec audio, puis valider la soumission finale. Aucune de ces actions externes n’est simulée par le dépôt.
