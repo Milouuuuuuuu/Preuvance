@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Preuvance transforme une declaration d'usage de l'IA en preuve verifiable : dossier de maitrise EU AI Act, contre-verifie et tracable.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Preuvance">
+<meta property="og:url" content="https://milouuuuuuuu.github.io/Preuvance/">
+<meta property="og:title" content="Preuvance - Maitrisez votre risque IA, preparez-en la preuve">
+<meta property="og:description" content="D'un prompt a un dossier de maitrise IA vivant, contre-verifie et tracable. EU AI Act.">
+<meta property="og:image" content="https://milouuuuuuuu.github.io/Preuvance/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2288%22%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<title>Preuvance — Maîtrisez votre risque IA, préparez-en la preuve</title>
+
+<style>
+  :root{
+    --bg:#0A0C10; --bg2:#0E1218; --panel:#12171F; --panel2:#161D27;
+    --line:#212B37; --line2:#31404F;
+    --ink:#D4DDE7; --ink2:#8A98A8; --ink3:#5A6775;
+    --cyan:#1FE3C2; --cyan-d:#0f7f6f;
+    --acid:#E9FF3D; --mag:#FF3B6B;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code","SF Mono","Segoe UI Mono",Consolas,monospace;
+    --maxw:1180px;
+  }
+  /* Single-theme commitment: a surveillance/HUD console. Lock the dark ground
+     regardless of the viewer theme so the identity never washes out. */
+  :root[data-theme="light"], :root[data-theme="dark"]{ color-scheme:dark; }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  ::selection{background:var(--cyan); color:#04110e;}
+  :focus-visible{outline:2px solid var(--cyan); outline-offset:3px; border-radius:2px;}
+
+  /* ---- ambient layers ---- */
+  #grid{position:fixed; inset:0; z-index:-2; opacity:.5;}
+  .veil{position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(120% 80% at 78% 8%, rgba(31,227,194,.10), transparent 60%),
+      radial-gradient(90% 70% at 6% 96%, rgba(233,255,61,.05), transparent 55%);
+  }
+  .scan{position:fixed; inset:0; z-index:9; pointer-events:none; mix-blend-mode:overlay;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);}
+  .sweep{position:fixed; left:0; right:0; height:180px; z-index:8; pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(31,227,194,.06),transparent);
+    animation:sweep 7.5s linear infinite;}
+  @keyframes sweep{0%{transform:translateY(-200px)}100%{transform:translateY(102vh)}}
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+
+  /* ---- HUD helpers ---- */
+  .kicker{font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--cyan);}
+  .brackets{position:relative;}
+  .brackets::before,.brackets::after{content:""; position:absolute; width:14px; height:14px; pointer-events:none;}
+  .brackets::before{top:-1px; left:-1px; border-top:2px solid var(--cyan); border-left:2px solid var(--cyan);}
+  .brackets::after{bottom:-1px; right:-1px; border-bottom:2px solid var(--cyan); border-right:2px solid var(--cyan);}
+
+  /* ---- top bar ---- */
+  header.top{position:sticky; top:0; z-index:20; backdrop-filter:blur(8px);
+    background:linear-gradient(180deg,rgba(10,12,16,.92),rgba(10,12,16,.62));
+    border-bottom:1px solid var(--line);}
+  .top .row{display:flex; align-items:center; gap:20px; height:62px;}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.02em; font-size:19px;}
+  .brand svg{display:block;}
+  .brand .b-sub{font-family:var(--mono); font-size:9.5px; letter-spacing:.18em; color:var(--ink3); text-transform:uppercase; margin-top:2px;}
+  .spacer{flex:1;}
+  .navlinks{display:flex; gap:4px;}
+  .navlinks a{font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink2);
+    padding:8px 12px; border:1px solid transparent; border-radius:3px;}
+  .navlinks a:hover{color:var(--ink); border-color:var(--line2); background:var(--panel);}
+  .lang{display:flex; gap:2px; border:1px solid var(--line2); border-radius:4px; padding:2px; background:var(--panel);}
+  .lang button{font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--ink2);
+    background:transparent; border:0; padding:5px 7px; cursor:pointer; border-radius:2px;}
+  .lang button[aria-pressed="true"]{background:var(--cyan); color:#04110e; font-weight:700;}
+  .lang button:hover:not([aria-pressed="true"]){color:var(--ink);}
+  .btn{display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:12px; letter-spacing:.1em;
+    text-transform:uppercase; padding:10px 16px; border-radius:4px; cursor:pointer; border:1px solid var(--line2);
+    background:var(--panel); color:var(--ink); transition:transform .12s ease, border-color .12s ease, background .12s ease;}
+  .btn:hover{transform:translateY(-1px); border-color:var(--cyan); color:#fff;}
+  .btn.solid{background:var(--cyan); color:#04110e; border-color:var(--cyan); font-weight:700;}
+  .btn.solid:hover{background:#3ff0d2; color:#04110e;}
+  .btn.acid{background:var(--acid); color:#14160a; border-color:var(--acid); font-weight:700;}
+  .btn.acid:hover{background:#f2ff6b;}
+
+  /* ---- hero ---- */
+  .hero{padding:74px 0 54px;}
+  .hero .grid2{display:grid; grid-template-columns:1.05fr .95fr; gap:52px; align-items:center;}
+  .eyebrow{display:inline-flex; align-items:center; gap:9px; margin-bottom:22px;}
+  .eyebrow .dot{width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); animation:blink 1.6s steps(1) infinite;}
+  @keyframes blink{50%{opacity:.25}}
+  h1{font-size:clamp(38px,6vw,68px); line-height:1.01; margin:0 0 20px; font-weight:800;
+    letter-spacing:-.015em; text-wrap:balance;}
+  h1 .lo{color:var(--ink3);}
+  h1 .hi{color:#fff;}
+  .lead{font-size:clamp(15px,1.6vw,18px); color:var(--ink2); max-width:52ch; margin:0 0 30px;}
+  .lead b{color:var(--ink); font-weight:600;}
+  .cta{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:26px;}
+  .ticker{display:flex; flex-wrap:wrap; gap:10px 22px; font-family:var(--mono); font-size:11px; letter-spacing:.08em;
+    color:var(--ink3); text-transform:uppercase;}
+  .ticker span{display:inline-flex; align-items:center; gap:7px;}
+  .ticker span::before{content:""; width:5px; height:5px; background:var(--cyan); transform:rotate(45deg);}
+
+  /* ---- dossier card ---- */
+  .dossier{background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line2);
+    border-radius:8px; padding:20px; position:relative; box-shadow:0 30px 80px -40px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.03);}
+  .dossier .dhead{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+    padding-bottom:12px; border-bottom:1px solid var(--line);}
+  .dossier .dhead .t{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink2);}
+  .tag{font-family:var(--mono); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; padding:3px 7px; border-radius:3px; border:1px solid var(--line2); color:var(--ink3);}
+  .drow{display:flex; align-items:flex-start; gap:12px; padding:9px 0; border-bottom:1px dashed var(--line);}
+  .drow .k{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink3); width:78px; flex:none; padding-top:2px;}
+  .drow .v{font-size:14px; color:var(--ink);}
+  .pill{display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:.06em; padding:3px 8px; border-radius:3px;}
+  .pill.high{background:rgba(233,255,61,.12); color:var(--acid); border:1px solid rgba(233,255,61,.35);}
+  .alert{display:flex; align-items:center; gap:10px; margin:12px 0 4px; padding:10px 12px; border-radius:5px;
+    background:rgba(255,59,107,.09); border:1px solid rgba(255,59,107,.4);}
+  .alert .ic{color:var(--mag); font-family:var(--mono); font-weight:700;}
+  .alert .tx{font-size:12.5px; color:#ffd7e1;}
+  .alert .tx b{color:var(--mag);}
+  .scorebox{display:flex; align-items:center; gap:16px; margin-top:14px; padding-top:14px; border-top:1px solid var(--line);}
+  .score{font-family:var(--mono); font-weight:800; font-size:46px; line-height:1; color:var(--acid); font-variant-numeric:tabular-nums;}
+  .score small{font-size:16px; color:var(--ink3);}
+  .scoremeta .cap{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mag);}
+  .scoremeta .flow{font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink3); margin-top:4px;}
+
+  /* ---- generic section ---- */
+  section.band{padding:60px 0; border-top:1px solid var(--line);}
+  .sec-head{margin-bottom:36px;}
+  .sec-head h2{font-size:clamp(24px,3.4vw,36px); margin:12px 0 0; font-weight:800; letter-spacing:-.01em; text-wrap:balance;}
+
+  /* steps (true sequence) */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .step{background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:22px; position:relative; transition:border-color .15s, transform .15s;}
+  .step:hover{border-color:var(--cyan); transform:translateY(-3px);}
+  .step .num{font-family:var(--mono); font-size:11px; letter-spacing:.16em; color:var(--cyan);}
+  .step .st{font-size:20px; font-weight:700; margin:14px 0 8px; color:#fff;}
+  .step p{margin:0; color:var(--ink2); font-size:14px;}
+  .step .arm{position:absolute; top:18px; right:18px; width:26px; height:26px; border-top:2px solid var(--line2); border-right:2px solid var(--line2);}
+  .step:hover .arm{border-color:var(--cyan);}
+
+  /* features (modules) */
+  .mods{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+  .mod{display:flex; gap:16px; background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:20px;}
+  .mod:hover{border-color:var(--line2);}
+  .mod .idx{font-family:var(--mono); font-size:11px; letter-spacing:.12em; color:var(--cyan); flex:none; padding-top:3px;}
+  .mod h3{margin:0 0 6px; font-size:16.5px; color:#fff; font-weight:700;}
+  .mod p{margin:0; color:var(--ink2); font-size:13.5px;}
+
+  /* stats readout */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:7px; overflow:hidden;}
+  .stat{background:var(--bg2); padding:22px 18px;}
+  .stat .v{font-family:var(--mono); font-weight:800; font-size:26px; color:var(--cyan); font-variant-numeric:tabular-nums; letter-spacing:-.01em;}
+  .stat .l{font-size:12px; color:var(--ink2); margin-top:6px;}
+
+  /* final cta */
+  .final{border:1px solid var(--line2); border-radius:10px; padding:44px; text-align:center;
+    background:linear-gradient(180deg,var(--panel2),var(--panel)); position:relative;}
+  .final h2{font-size:clamp(24px,3.6vw,38px); margin:0 0 10px; color:#fff; font-weight:800; text-wrap:balance;}
+  .final p{margin:0 auto 26px; color:var(--ink2); max-width:56ch;}
+  .final .cta{justify-content:center;}
+
+  /* footer */
+  footer{border-top:1px solid var(--line); padding:40px 0 60px; margin-top:60px;}
+  .disc{border:1px solid var(--line); border-left:3px solid var(--mag); border-radius:5px; padding:14px 16px; margin-bottom:26px;
+    font-size:13px; color:var(--ink2); background:rgba(255,59,107,.04);}
+  .foot{display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between;
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; color:var(--ink3); text-transform:uppercase;}
+  .foot a{color:var(--ink2);} .foot a:hover{color:var(--cyan);}
+  .foot .links{display:flex; gap:16px; flex-wrap:wrap;}
+
+  /* reveal on scroll */
+  .rev{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
+  .rev.in{opacity:1; transform:none;}
+
+  /* print one-pager (Download PDF) */
+  .print-sheet{display:none;}
+  @media print{
+    #grid,.veil,.scan,.sweep,header.top,section.band .sec-head .kicker,.rev{display:none !important;}
+    body>*:not(.print-sheet){display:none !important;}
+    body{background:#fff; color:#111;}
+    .print-sheet{display:block; padding:0;}
+    .ps-wrap{max-width:none;}
+    .ps-h{display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2px solid #111; padding-bottom:10px; margin-bottom:16px;}
+    .ps-h .n{font-size:26px; font-weight:800; letter-spacing:.02em;}
+    .ps-h .u{font-family:monospace; font-size:11px; color:#555;}
+    .ps-tag{font-family:monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#666;}
+    .print-sheet h1{font-size:22px; margin:6px 0 4px; color:#111;}
+    .print-sheet .plead{font-size:12.5px; color:#333; max-width:none; margin:0 0 16px;}
+    .ps-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 26px; margin-bottom:16px;}
+    .ps-b{break-inside:avoid;}
+    .ps-b .bt{font-family:monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#000; border-bottom:1px solid #ccc; padding-bottom:3px; margin-bottom:5px;}
+    .ps-b p{font-size:12px; color:#333; margin:0;}
+    .ps-foot{border-top:1px solid #111; padding-top:10px; margin-top:8px; font-size:10.5px; color:#555;}
+    .ps-foot .d{color:#222;}
+  }
+
+  /* responsive */
+  @media(max-width:900px){
+    .hero .grid2{grid-template-columns:1fr; gap:34px;}
+    .steps{grid-template-columns:1fr;}
+    .mods{grid-template-columns:1fr;}
+    .stats{grid-template-columns:1fr 1fr;}
+    .navlinks{display:none;}
+  }
+  @media(max-width:560px){
+    .stats{grid-template-columns:1fr;}
+    .brand .b-sub{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important;}
+    .rev{opacity:1; transform:none;}
+  }
+</style>
+</head>
+<body>
+
+
+<canvas id="grid"></canvas>
+<div class="veil"></div>
+<div class="scan"></div>
+<div class="sweep"></div>
+
+<header class="top">
+  <div class="wrap row">
+    <a class="brand" href="#top" aria-label="Preuvance">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="4" fill="none" stroke="#1FE3C2" stroke-width="1.5"/>
+        <rect x="8" y="7.5" width="11" height="2.4" fill="#1FE3C2"/>
+        <rect x="8" y="11.8" width="8" height="2.4" fill="#E9FF3D"/>
+        <rect x="8" y="16.1" width="11" height="2.4" fill="#1FE3C2"/>
+      </svg>
+      <span>
+        <span style="display:block">PR<span style="color:var(--cyan)">≡</span>UVANCE</span>
+        <span class="b-sub" data-i18n="brand_sub">Dossier de maîtrise IA</span>
+      </span>
+    </a>
+    <div class="spacer"></div>
+    <nav class="navlinks" aria-label="primary">
+      <a href="https://youtu.be/T8e0u6iMdeA" target="_blank" rel="noopener" data-i18n="nav_demo">Démo</a>
+      <a href="https://github.com/Milouuuuuuuu/Preuvance" target="_blank" rel="noopener" data-i18n="nav_code">Code</a>
+      <a href="https://devpost.com/software/preuvance-instant-ai-assurance-evidence-by-evidence" target="_blank" rel="noopener">Devpost</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-lang="fr" aria-pressed="true">FR</button>
+      <button data-lang="en" aria-pressed="false">EN</button>
+      <button data-lang="es" aria-pressed="false">ES</button>
+      <button data-lang="de" aria-pressed="false">DE</button>
+      <button data-lang="it" aria-pressed="false">IT</button>
+    </div>
+    <button class="btn acid" id="pdfBtn" data-i18n="nav_pdf" style="margin-left:2px">PDF</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap grid2">
+      <div>
+        <span class="eyebrow"><span class="dot"></span><span class="kicker" data-i18n="eyebrow">Référentiel EU AI Act · Scan local · Dossier vérifiable</span></span>
+        <h1><span class="lo" data-i18n="h1a">Décrivez votre IA.</span><br><span class="hi" data-i18n="h1b">Preuvance bâtit le dossier.</span></h1>
+        <p class="lead" data-i18n="lead">D’un prompt — et, si vous le voulez, d’un scan local — à un <b>dossier de maîtrise IA</b> vivant, contre-vérifié et traçable, prêt pour un courtier ou un investisseur.</p>
+        <div class="cta">
+          <a class="btn solid" href="https://youtu.be/T8e0u6iMdeA" target="_blank" rel="noopener" data-i18n="cta_demo">▶ Voir la démo</a>
+          <a class="btn" href="https://github.com/Milouuuuuuuu/Preuvance" target="_blank" rel="noopener" data-i18n="cta_code">Code source</a>
+        </div>
+        <div class="ticker">
+          <span data-i18n="tick1">Contre-vérification déterministe</span>
+          <span data-i18n="tick2">Scan 100% local</span>
+          <span data-i18n="tick3">Aucun faux résultat</span>
+        </div>
+      </div>
+
+      <div class="dossier brackets" aria-hidden="true">
+        <div class="dhead">
+          <span class="t" data-i18n="d_head">Dossier // Scan en cours</span>
+          <span class="tag" data-i18n="d_sample">Exemple</span>
+        </div>
+        <div class="drow"><span class="k" data-i18n="d_subj">Sujet</span><span class="v" id="fSubj"></span></div>
+        <div class="drow"><span class="k" data-i18n="d_sys">Système</span><span class="v" id="fSys"></span></div>
+        <div class="drow"><span class="k" data-i18n="d_risk">Risque</span><span class="v"><span class="pill high" data-i18n="d_risk_v">Haut risque · Annexe III</span></span></div>
+        <div class="alert">
+          <span class="ic">⚠</span>
+          <span class="tx" data-i18n-html="d_alert"><b>Shadow AI détecté</b> — appel Anthropic non déclaré</span>
+        </div>
+        <div class="scorebox">
+          <div class="score"><span id="scoreN">0</span><small>/100</small></div>
+          <div class="scoremeta">
+            <div class="cap" data-i18n="d_cap">Plafonné · revue humaine</div>
+            <div class="flow" data-i18n="d_flow">Déclaré → Détecté → Prouvé</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head rev">
+        <span class="kicker" data-i18n="steps_k">Le parcours</span>
+        <h2 data-i18n="steps_h">Prompt · Scan · Prove</h2>
+      </div>
+      <div class="steps">
+        <div class="step brackets rev"><span class="arm"></span><div class="num">01 / PROMPT</div><div class="st" data-i18n="s1t">Décrire</div><p data-i18n="s1d">Décrivez votre système d’IA en langage courant. GPT-5.6 structure les faits ; rien n’est inventé.</p></div>
+        <div class="step brackets rev"><span class="arm"></span><div class="num">02 / SCAN</div><div class="st" data-i18n="s2t">Scanner</div><p data-i18n="s2d">Un scan local, sur votre poste, confronte l’usage déclaré à l’usage observé — sans rien envoyer sur Internet.</p></div>
+        <div class="step brackets rev"><span class="arm"></span><div class="num">03 / PROVE</div><div class="st" data-i18n="s3t">Prouver</div><p data-i18n="s3d">Un registre de preuves contre-vérifié et un PDF de préparation courtier : chaque affirmation Déclaré → Détecté → Prouvé.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head rev">
+        <span class="kicker" data-i18n="mods_k">Ce qui le rend crédible</span>
+        <h2 data-i18n="mods_h">Le modèle ne décide jamais seul</h2>
+      </div>
+      <div class="mods">
+        <div class="mod rev"><span class="idx">/01</span><div><h3 data-i18n="m1t">Contre-vérification déterministe</h3><p data-i18n="m1d">Un moteur de règles relit chaque classification du LLM. Toute contradiction plafonne le score et exige une revue humaine.</p></div></div>
+        <div class="mod rev"><span class="idx">/02</span><div><h3 data-i18n="m2t">Concordance déclaré / observé</h3><p data-i18n="m2d">Le scan local détecte le « shadow AI » par nom d’hôte et corrobore — ou contredit — la déclaration d’usage.</p></div></div>
+        <div class="mod rev"><span class="idx">/03</span><div><h3 data-i18n="m3t">Dossier PDF courtier</h3><p data-i18n="m3d">Preuves, écarts, questions et limites assemblés en un dossier de pré-souscription — jamais un certificat.</p></div></div>
+        <div class="mod rev"><span class="idx">/04</span><div><h3 data-i18n="m4t">Référentiel EU AI Act daté</h3><p data-i18n="m4d">Droit contraignant et scénarios annoncés séparés et versionnés ; la référence, pas la mémoire du modèle, décide.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="stats rev">
+        <div class="stat"><div class="v">70+</div><div class="l" data-i18n="st1">Décisions notées /100</div></div>
+        <div class="stat"><div class="v">100%</div><div class="l" data-i18n="st2">Scan local, sans upload</div></div>
+        <div class="stat"><div class="v">0</div><div class="l" data-i18n="st3">Résultat fabriqué</div></div>
+        <div class="stat"><div class="v">02·08·26</div><div class="l" data-i18n="st4">Art. 50 applicable</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="final brackets rev">
+        <h2 data-i18n="fin_h">Une déclaration devient une preuve.</h2>
+        <p data-i18n="fin_p">Essayez Preuvance en local, ou regardez la démo de trois minutes.</p>
+        <div class="cta">
+          <a class="btn solid" href="https://youtu.be/T8e0u6iMdeA" target="_blank" rel="noopener" data-i18n="cta_demo2">▶ Voir la démo</a>
+          <a class="btn" href="https://github.com/Milouuuuuuuu/Preuvance" target="_blank" rel="noopener" data-i18n="cta_code2">Cloner le code</a>
+          <button class="btn acid" onclick="window.print()" data-i18n="cta_pdf2">Télécharger le PDF</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="disc" data-i18n="disc">Preuvance ne délivre ni avis juridique, ni certification, ni décision d’assurabilité. Il prépare un dossier de pré-souscription ; seul un courtier ou un assureur décide d’une couverture.</div>
+    <div class="foot">
+      <span>© 2026 Amilcar Ayat · <span data-i18n="lic">Licence MIT</span></span>
+      <span class="links">
+        <a href="https://github.com/Milouuuuuuuu/Preuvance" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://youtu.be/T8e0u6iMdeA" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://devpost.com/software/preuvance-instant-ai-assurance-evidence-by-evidence" target="_blank" rel="noopener">Devpost</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- clean one-pager for Download PDF (follows selected language) -->
+<div class="print-sheet">
+  <div class="ps-wrap">
+    <div class="ps-h">
+      <div class="n">PR≡UVANCE</div>
+      <div style="text-align:right"><div class="u">github.com/Milouuuuuuuu/Preuvance</div><div class="ps-tag" data-i18n="d_sample">Exemple</div></div>
+    </div>
+    <h1 data-i18n="h1b">Preuvance bâtit le dossier.</h1>
+    <p class="plead" data-i18n="lead">D’un prompt à un dossier de maîtrise IA vivant, contre-vérifié et traçable.</p>
+    <div class="ps-grid">
+      <div class="ps-b"><div class="bt" data-i18n="s1t">Décrire</div><p data-i18n="s1d"></p></div>
+      <div class="ps-b"><div class="bt" data-i18n="s2t">Scanner</div><p data-i18n="s2d"></p></div>
+      <div class="ps-b"><div class="bt" data-i18n="s3t">Prouver</div><p data-i18n="s3d"></p></div>
+      <div class="ps-b"><div class="bt" data-i18n="m1t">Contre-vérification</div><p data-i18n="m1d"></p></div>
+      <div class="ps-b"><div class="bt" data-i18n="m2t">Concordance</div><p data-i18n="m2d"></p></div>
+      <div class="ps-b"><div class="bt" data-i18n="m3t">Dossier courtier</div><p data-i18n="m3d"></p></div>
+    </div>
+    <div class="ps-foot"><span class="d" data-i18n="disc"></span></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var I18N={
+    fr:{brand_sub:"Dossier de maîtrise IA",nav_demo:"Démo",nav_code:"Code",nav_pdf:"PDF",
+      eyebrow:"Référentiel EU AI Act · Scan local · Dossier vérifiable",
+      h1a:"Décrivez votre IA.",h1b:"Preuvance bâtit le dossier.",
+      lead:"D’un prompt — et, si vous le voulez, d’un scan local — à un <b>dossier de maîtrise IA</b> vivant, contre-vérifié et traçable, prêt pour un courtier ou un investisseur.",
+      cta_demo:"▶ Voir la démo",cta_code:"Code source",tick1:"Contre-vérification déterministe",tick2:"Scan 100% local",tick3:"Aucun faux résultat",
+      d_head:"Dossier // Scan en cours",d_sample:"Exemple",d_subj:"Sujet",d_sys:"Système",d_risk:"Risque",d_risk_v:"Haut risque · Annexe III",
+      d_alert:"<b>Shadow AI détecté</b> — appel Anthropic non déclaré",d_cap:"Plafonné · revue humaine",d_flow:"Déclaré → Détecté → Prouvé",
+      subj:"ACME SAS",sys:"Triage de CV — IA",
+      steps_k:"Le parcours",steps_h:"Prompt · Scan · Prove",
+      s1t:"Décrire",s1d:"Décrivez votre système d’IA en langage courant. GPT-5.6 structure les faits ; rien n’est inventé.",
+      s2t:"Scanner",s2d:"Un scan local, sur votre poste, confronte l’usage déclaré à l’usage observé — sans rien envoyer sur Internet.",
+      s3t:"Prouver",s3d:"Un registre de preuves contre-vérifié et un PDF de préparation courtier : chaque affirmation Déclaré → Détecté → Prouvé.",
+      mods_k:"Ce qui le rend crédible",mods_h:"Le modèle ne décide jamais seul",
+      m1t:"Contre-vérification déterministe",m1d:"Un moteur de règles relit chaque classification du LLM. Toute contradiction plafonne le score et exige une revue humaine.",
+      m2t:"Concordance déclaré / observé",m2d:"Le scan local détecte le « shadow AI » par nom d’hôte et corrobore — ou contredit — la déclaration d’usage.",
+      m3t:"Dossier PDF courtier",m3d:"Preuves, écarts, questions et limites assemblés en un dossier de pré-souscription — jamais un certificat.",
+      m4t:"Référentiel EU AI Act daté",m4d:"Droit contraignant et scénarios annoncés séparés et versionnés ; la référence, pas la mémoire du modèle, décide.",
+      st1:"Décisions notées /100",st2:"Scan local, sans upload",st3:"Résultat fabriqué",st4:"Art. 50 applicable",
+      fin_h:"Une déclaration devient une preuve.",fin_p:"Essayez Preuvance en local, ou regardez la démo de trois minutes.",
+      cta_demo2:"▶ Voir la démo",cta_code2:"Cloner le code",cta_pdf2:"Télécharger le PDF",
+      disc:"Preuvance ne délivre ni avis juridique, ni certification, ni décision d’assurabilité. Il prépare un dossier de pré-souscription ; seul un courtier ou un assureur décide d’une couverture.",lic:"Licence MIT"},
+    en:{brand_sub:"AI assurance dossier",nav_demo:"Demo",nav_code:"Code",nav_pdf:"PDF",
+      eyebrow:"EU AI Act reference · Local scan · Verifiable dossier",
+      h1a:"Describe your AI.",h1b:"Preuvance builds the dossier.",
+      lead:"From a prompt — and, if you want, a local scan — to a living, cross-checked and traceable <b>AI assurance dossier</b>, ready for a broker or an investor.",
+      cta_demo:"▶ Watch the demo",cta_code:"Source code",tick1:"Deterministic cross-check",tick2:"100% local scan",tick3:"No fabricated results",
+      d_head:"Dossier // Scanning",d_sample:"Sample",d_subj:"Subject",d_sys:"System",d_risk:"Risk",d_risk_v:"High-risk · Annex III",
+      d_alert:"<b>Shadow AI detected</b> — undeclared Anthropic call",d_cap:"Capped · human review",d_flow:"Declared → Detected → Proven",
+      subj:"ACME Ltd",sys:"CV screening — AI",
+      steps_k:"The workflow",steps_h:"Prompt · Scan · Prove",
+      s1t:"Describe",s1d:"Describe your AI system in plain language. GPT-5.6 structures the facts; nothing is invented.",
+      s2t:"Scan",s2d:"A local scan, on your machine, checks declared usage against observed usage — sending nothing over the internet.",
+      s3t:"Prove",s3d:"A cross-checked evidence register and a broker-ready PDF: every claim Declared → Detected → Proven.",
+      mods_k:"What makes it credible",mods_h:"The model never decides alone",
+      m1t:"Deterministic cross-check",m1d:"A rules engine re-reads every LLM classification. Any contradiction caps the score and requires human review.",
+      m2t:"Declared / observed concordance",m2d:"The local scan detects shadow AI by hostname and corroborates — or contradicts — the declared usage.",
+      m3t:"Broker PDF dossier",m3d:"Evidence, gaps, questions and limits assembled into a pre-underwriting dossier — never a certificate.",
+      m4t:"Dated EU AI Act reference",m4d:"Binding law and announced scenarios kept separate and versioned; the reference, not the model’s memory, decides.",
+      st1:"Decisions scored /100",st2:"Local scan, no upload",st3:"Fabricated result",st4:"Art. 50 applicable",
+      fin_h:"A declaration becomes proof.",fin_p:"Try Preuvance locally, or watch the three-minute demo.",
+      cta_demo2:"▶ Watch the demo",cta_code2:"Clone the code",cta_pdf2:"Download the PDF",
+      disc:"Preuvance provides no legal advice, no certification, and no insurability decision. It prepares a pre-underwriting dossier; only a broker or insurer decides on cover.",lic:"MIT License"},
+    es:{brand_sub:"Expediente de garantía de IA",nav_demo:"Demo",nav_code:"Código",nav_pdf:"PDF",
+      eyebrow:"Referencia EU AI Act · Escaneo local · Expediente verificable",
+      h1a:"Describe tu IA.",h1b:"Preuvance construye el expediente.",
+      lead:"De un prompt — y, si quieres, de un escaneo local — a un <b>expediente de control de IA</b> vivo, contrastado y trazable, listo para un corredor o un inversor.",
+      cta_demo:"▶ Ver la demo",cta_code:"Código fuente",tick1:"Contraverificación determinista",tick2:"Escaneo 100% local",tick3:"Sin resultados falsos",
+      d_head:"Expediente // Escaneando",d_sample:"Ejemplo",d_subj:"Sujeto",d_sys:"Sistema",d_risk:"Riesgo",d_risk_v:"Alto riesgo · Anexo III",
+      d_alert:"<b>Shadow AI detectada</b> — llamada a Anthropic no declarada",d_cap:"Limitado · revisión humana",d_flow:"Declarado → Detectado → Probado",
+      subj:"ACME S.A.",sys:"Cribado de CV — IA",
+      steps_k:"El recorrido",steps_h:"Prompt · Scan · Prove",
+      s1t:"Describir",s1d:"Describe tu sistema de IA en lenguaje corriente. GPT-5.6 estructura los hechos; nada se inventa.",
+      s2t:"Escanear",s2d:"Un escaneo local, en tu equipo, contrasta el uso declarado con el observado — sin enviar nada a internet.",
+      s3t:"Probar",s3d:"Un registro de pruebas contrastado y un PDF listo para el corredor: cada afirmación Declarado → Detectado → Probado.",
+      mods_k:"Lo que lo hace creíble",mods_h:"El modelo nunca decide solo",
+      m1t:"Contraverificación determinista",m1d:"Un motor de reglas relee cada clasificación del LLM. Toda contradicción limita la puntuación y exige revisión humana.",
+      m2t:"Concordancia declarado / observado",m2d:"El escaneo local detecta la shadow AI por nombre de host y corrobora — o contradice — el uso declarado.",
+      m3t:"Expediente PDF para corredor",m3d:"Pruebas, brechas, preguntas y límites reunidos en un expediente de presuscripción — nunca un certificado.",
+      m4t:"Referencia EU AI Act fechada",m4d:"Derecho vinculante y escenarios anunciados separados y versionados; decide la referencia, no la memoria del modelo.",
+      st1:"Decisiones puntuadas /100",st2:"Escaneo local, sin subida",st3:"Resultado fabricado",st4:"Art. 50 aplicable",
+      fin_h:"Una declaración se convierte en prueba.",fin_p:"Prueba Preuvance en local, o mira la demo de tres minutos.",
+      cta_demo2:"▶ Ver la demo",cta_code2:"Clonar el código",cta_pdf2:"Descargar el PDF",
+      disc:"Preuvance no ofrece asesoramiento jurídico, ni certificación, ni decisión de asegurabilidad. Prepara un expediente de presuscripción; solo un corredor o asegurador decide la cobertura.",lic:"Licencia MIT"},
+    de:{brand_sub:"KI-Nachweisdossier",nav_demo:"Demo",nav_code:"Code",nav_pdf:"PDF",
+      eyebrow:"EU-KI-Verordnung · Lokaler Scan · Prüfbares Dossier",
+      h1a:"Beschreiben Sie Ihre KI.",h1b:"Preuvance erstellt das Dossier.",
+      lead:"Von einem Prompt — und, wenn Sie möchten, einem lokalen Scan — zu einem lebendigen, gegengeprüften und nachvollziehbaren <b>KI-Nachweisdossier</b>, bereit für Makler oder Investor.",
+      cta_demo:"▶ Demo ansehen",cta_code:"Quellcode",tick1:"Deterministische Gegenprüfung",tick2:"100% lokaler Scan",tick3:"Keine erfundenen Ergebnisse",
+      d_head:"Dossier // Scan läuft",d_sample:"Beispiel",d_subj:"Subjekt",d_sys:"System",d_risk:"Risiko",d_risk_v:"Hochrisiko · Anhang III",
+      d_alert:"<b>Shadow-KI erkannt</b> — nicht deklarierter Anthropic-Aufruf",d_cap:"Gedeckelt · menschliche Prüfung",d_flow:"Deklariert → Erkannt → Bewiesen",
+      subj:"ACME GmbH",sys:"Lebenslauf-Screening — KI",
+      steps_k:"Der Ablauf",steps_h:"Prompt · Scan · Prove",
+      s1t:"Beschreiben",s1d:"Beschreiben Sie Ihr KI-System in einfacher Sprache. GPT-5.6 strukturiert die Fakten; nichts wird erfunden.",
+      s2t:"Scannen",s2d:"Ein lokaler Scan auf Ihrem Gerät gleicht die deklarierte mit der beobachteten Nutzung ab — ohne etwas ins Internet zu senden.",
+      s3t:"Beweisen",s3d:"Ein gegengeprüftes Nachweisregister und ein maklerfertiges PDF: jede Aussage Deklariert → Erkannt → Bewiesen.",
+      mods_k:"Was es glaubwürdig macht",mods_h:"Das Modell entscheidet nie allein",
+      m1t:"Deterministische Gegenprüfung",m1d:"Eine Regel-Engine liest jede LLM-Klassifikation erneut. Jeder Widerspruch deckelt die Bewertung und erfordert menschliche Prüfung.",
+      m2t:"Deklariert / beobachtet",m2d:"Der lokale Scan erkennt Shadow-KI per Hostname und bestätigt — oder widerlegt — die deklarierte Nutzung.",
+      m3t:"Makler-PDF-Dossier",m3d:"Nachweise, Lücken, Fragen und Grenzen in einem Pre-Underwriting-Dossier — nie ein Zertifikat.",
+      m4t:"Datierte EU-KI-Referenz",m4d:"Verbindliches Recht und angekündigte Szenarien getrennt und versioniert; die Referenz entscheidet, nicht das Gedächtnis des Modells.",
+      st1:"Entscheidungen bewertet /100",st2:"Lokaler Scan, kein Upload",st3:"Erfundenes Ergebnis",st4:"Art. 50 anwendbar",
+      fin_h:"Eine Erklärung wird zum Beweis.",fin_p:"Testen Sie Preuvance lokal oder sehen Sie die dreiminütige Demo.",
+      cta_demo2:"▶ Demo ansehen",cta_code2:"Code klonen",cta_pdf2:"PDF herunterladen",
+      disc:"Preuvance bietet keine Rechtsberatung, keine Zertifizierung und keine Versicherbarkeitsentscheidung. Es erstellt ein Pre-Underwriting-Dossier; nur ein Makler oder Versicherer entscheidet über den Schutz.",lic:"MIT-Lizenz"},
+    it:{brand_sub:"Dossier di garanzia IA",nav_demo:"Demo",nav_code:"Codice",nav_pdf:"PDF",
+      eyebrow:"Riferimento EU AI Act · Scansione locale · Dossier verificabile",
+      h1a:"Descrivi la tua IA.",h1b:"Preuvance costruisce il dossier.",
+      lead:"Da un prompt — e, se vuoi, da una scansione locale — a un <b>dossier di controllo IA</b> vivo, verificato e tracciabile, pronto per un broker o un investitore.",
+      cta_demo:"▶ Guarda la demo",cta_code:"Codice sorgente",tick1:"Controverifica deterministica",tick2:"Scansione 100% locale",tick3:"Nessun risultato falso",
+      d_head:"Dossier // Scansione",d_sample:"Esempio",d_subj:"Soggetto",d_sys:"Sistema",d_risk:"Rischio",d_risk_v:"Alto rischio · Allegato III",
+      d_alert:"<b>Shadow AI rilevata</b> — chiamata Anthropic non dichiarata",d_cap:"Limitato · revisione umana",d_flow:"Dichiarato → Rilevato → Provato",
+      subj:"ACME S.r.l.",sys:"Screening CV — IA",
+      steps_k:"Il percorso",steps_h:"Prompt · Scan · Prove",
+      s1t:"Descrivere",s1d:"Descrivi il tuo sistema di IA in linguaggio comune. GPT-5.6 struttura i fatti; nulla è inventato.",
+      s2t:"Scansionare",s2d:"Una scansione locale, sul tuo dispositivo, confronta l’uso dichiarato con quello osservato — senza inviare nulla in rete.",
+      s3t:"Provare",s3d:"Un registro delle prove verificato e un PDF pronto per il broker: ogni affermazione Dichiarato → Rilevato → Provato.",
+      mods_k:"Ciò che lo rende credibile",mods_h:"Il modello non decide mai da solo",
+      m1t:"Controverifica deterministica",m1d:"Un motore di regole rilegge ogni classificazione del LLM. Ogni contraddizione limita il punteggio e richiede revisione umana.",
+      m2t:"Concordanza dichiarato / osservato",m2d:"La scansione locale rileva la shadow AI per hostname e conferma — o contraddice — l’uso dichiarato.",
+      m3t:"Dossier PDF per broker",m3d:"Prove, lacune, domande e limiti raccolti in un dossier di pre-sottoscrizione — mai un certificato.",
+      m4t:"Riferimento EU AI Act datato",m4d:"Diritto vincolante e scenari annunciati separati e versionati; decide il riferimento, non la memoria del modello.",
+      st1:"Decisioni valutate /100",st2:"Scansione locale, senza upload",st3:"Risultato fabbricato",st4:"Art. 50 applicabile",
+      fin_h:"Una dichiarazione diventa prova.",fin_p:"Prova Preuvance in locale, o guarda la demo di tre minuti.",
+      cta_demo2:"▶ Guarda la demo",cta_code2:"Clona il codice",cta_pdf2:"Scarica il PDF",
+      disc:"Preuvance non fornisce consulenza legale, né certificazione, né decisione di assicurabilità. Prepara un dossier di pre-sottoscrizione; solo un broker o assicuratore decide la copertura.",lic:"Licenza MIT"}
+  };
+
+  var reduce = matchMedia("(prefers-reduced-motion:reduce)").matches;
+  var cur="fr";
+
+  function apply(lang){
+    var d=I18N[lang]||I18N.fr; cur=lang;
+    document.documentElement.lang=lang;
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var k=el.getAttribute("data-i18n"); if(d[k]!=null) el.textContent=d[k];
+    });
+    document.querySelectorAll("[data-i18n-html]").forEach(function(el){
+      var k=el.getAttribute("data-i18n-html"); if(d[k]!=null) el.innerHTML=d[k];
+    });
+    // lead + print one-pager lead render inline bold
+    document.querySelectorAll('.lead, .plead').forEach(function(el){ if(d.lead) el.innerHTML=d.lead; });
+    document.querySelectorAll('.lang button').forEach(function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-lang")===lang ? "true":"false");
+    });
+    // dossier dynamic fields
+    setField("fSubj", d.subj); setField("fSys", d.sys);
+  }
+  function setField(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+
+  document.querySelectorAll('.lang button').forEach(function(b){
+    b.addEventListener("click", function(){ apply(b.getAttribute("data-lang")); });
+  });
+
+  // score count-up (capped at 59 — real product behaviour on divergence)
+  function countUp(){
+    var el=document.getElementById("scoreN"); if(!el) return;
+    if(reduce){ el.textContent="59"; return; }
+    var n=0, t=setInterval(function(){ n+=3; if(n>=59){n=59; clearInterval(t);} el.textContent=n; }, 26);
+  }
+
+  // reveal on scroll
+  if("IntersectionObserver" in window && !reduce){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+    },{threshold:.14});
+    document.querySelectorAll(".rev").forEach(function(el){ io.observe(el); });
+  } else { document.querySelectorAll(".rev").forEach(function(el){ el.classList.add("in"); }); }
+
+  // ambient ctOS-style grid + scan dots on canvas
+  (function(){
+    var c=document.getElementById("grid"); if(!c) return; var x=c.getContext("2d");
+    var w,h,dpr,pts;
+    function size(){
+      dpr=Math.min(devicePixelRatio||1,2); w=c.width=innerWidth*dpr; h=c.height=innerHeight*dpr;
+      c.style.width=innerWidth+"px"; c.style.height=innerHeight+"px";
+    }
+    function build(){
+      pts=[]; var gap=46*dpr;
+      for(var yy=gap; yy<h; yy+=gap){ for(var xx=gap; xx<w; xx+=gap){ pts.push({x:xx,y:yy,p:Math.random()*6.28}); } }
+    }
+    function frame(t){
+      x.clearRect(0,0,w,h);
+      x.strokeStyle="rgba(49,64,79,.20)"; x.lineWidth=1*dpr;
+      var gap=46*dpr, i;
+      for(i=gap;i<w;i+=gap){ x.beginPath(); x.moveTo(i,0); x.lineTo(i,h); x.stroke(); }
+      for(i=gap;i<h;i+=gap){ x.beginPath(); x.moveTo(0,i); x.lineTo(w,i); x.stroke(); }
+      for(i=0;i<pts.length;i++){
+        var pt=pts[i], a=(Math.sin(t/900+pt.p)+1)/2;
+        if(a>0.72){ x.fillStyle="rgba(31,227,194,"+((a-0.72)*1.4)+")"; x.fillRect(pt.x-1.5*dpr,pt.y-1.5*dpr,3*dpr,3*dpr); }
+      }
+      requestAnimationFrame(frame);
+    }
+    size(); build();
+    if(reduce){ // static grid only
+      x.strokeStyle="rgba(49,64,79,.18)"; x.lineWidth=1*dpr; var g=46*dpr,j;
+      for(j=g;j<w;j+=g){ x.beginPath(); x.moveTo(j,0); x.lineTo(j,h); x.stroke(); }
+      for(j=g;j<h;j+=g){ x.beginPath(); x.moveTo(0,j); x.lineTo(w,j); x.stroke(); }
+    } else { requestAnimationFrame(frame); }
+    addEventListener("resize", function(){ size(); build(); }, {passive:true});
+  })();
+
+  apply("fr");
+  countUp();
+})();
+</script>
+
+</body>
+</html>
