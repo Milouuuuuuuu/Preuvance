@@ -5,6 +5,8 @@
 
 **Décrivez votre IA. Preuvance bâtit le dossier — preuve par preuve.**
 
+> **L’article 50 de l’EU AI Act devient applicable le 2 août 2026.** Preuvance transforme chaque déclaration d’usage de l’IA en **preuve révisable** — et repère le « shadow AI » que vous avez oublié de déclarer. Là où les outils GRC déclarent sans vérifier et les scanners observent sans cadre déclaratif (Armilla, Munich Re, Insured AI souscrivent encore sur simple déclaration), Preuvance **mesure l’écart entre le déclaré et l’observé** — une déclaration corroborée, pas une déclaration sur l’honneur.
+
 Preuvance est un environnement français de préparation au règlement européen sur l’IA pour PME et small mid-caps. À partir d’une description en langage courant — enrichie facultativement par un digest de dépendances et un scan local expurgé — il construit un **dossier de maîtrise IA instantané, vivant et traçable** : faits structurés, classification, écarts, score déterministe, registre de preuves et PDF destiné à une première conversation avec un courtier ou un investisseur.
 
 Preuvance ne délivre ni avis juridique, ni certification, ni décision d’assurabilité.
@@ -109,6 +111,16 @@ Cette brique reste volontairement distincte du cœur réglementaire de Preuvance
 elle ne déduit ni le sens métier, ni les permissions, ni les politiques RLS et
 n’importe jamais automatiquement une base arbitraire dans Supabase. Code source :
 [`sqlite-postgres-bridge`](https://github.com/Milouuuuuuuu/sqlite-postgres-bridge).
+
+## Construit avec Codex & GPT-5.6
+
+Preuvance combine un raisonnement génératif borné et des garde-fous déterministes ; les deux technologies imposées par la Build Week ont un rôle réel et distinct.
+
+**GPT-5.6 (runtime de l’évaluation).** Chaque évaluation appelle l’API Responses d’OpenAI avec un JSON Schema strict (`strict: true`, généré depuis Zod) pour l’extraction factuelle, la classification et l’analyse des écarts. Les modèles utilisés sont `gpt-5.6-sol` (raisonnement, décisions réglementaires) et `gpt-5.6-luna` (tâches économiques), sans substitution silencieuse. Le modèle **réellement retourné** est enregistré par étape dans la méthodologie du rapport (`resolvedModels`) — l’interface n’affiche jamais un simple libellé codé en dur. Le LLM ne rend jamais seul le verdict : un moteur de règles déterministe (`app/lib/assessment/rules.ts`) contre-vérifie chaque classification et plafonne le score en cas de contradiction.
+
+**Codex (environnement d’ingénierie de la Build Week).** Le workstream « dossier instantané » a été construit et vérifié dans Codex : audit de l’architecture existante, implémentation du registre de preuves vivant et de ses invariants d’intégrité (`lib/evidence/`), scan borné des manifestes de dépendances et handoff de scan expurgé (`lib/scan/`), persistance canonique sous RLS (`supabase/migrations/202607200001_evidence_dossier.sql`), tests ciblés, documentation et préparation de la candidature. L’intégration de la portabilité SQLite/PostgreSQL (décisions **D-069** et **D-070** du registre, rédigées via Codex/GPT-5) et la branche `codex/hackathon-remotion` en font partie ; les conventions d’agents sont dans [`AGENTS.md`](AGENTS.md).
+
+**Codex Session ID** (thread principal, via `/feedback`) : `019f7c5f-4963-7413-8675-dd19e35c25fd`. La séparation vérifiable entre le socle antérieur et les ajouts Build Week est dans [`docs/build-week-change-log.md`](docs/build-week-change-log.md).
 
 ## OpenAI Build Week 2026
 
