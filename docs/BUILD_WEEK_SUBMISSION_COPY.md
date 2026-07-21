@@ -1,6 +1,6 @@
 # OpenAI Build Week 2026 — ready-to-paste submission copy
 
-> The copy below is written in English for Devpost. Replace every remaining `[TODO: ...]` placeholder. The local code gate passes as of July 20, 2026, but do not submit until a complete deployed demo run records GPT-5.6 as the model actually returned and every described feature is available to judges.
+> English copy for Devpost. As of July 21, 2026 the project is **submitted** (Devpost keeps it editable until the deadline). The links and the Codex Session ID below are the real, final values. The one remaining owner step is to show a real run recording **GPT-5.6** in the demo video.
 
 ## Project title
 
@@ -71,7 +71,7 @@ Codex served as the hands-on engineering environment for the Build Week work. It
 - inspect animation candidates and choose a watermark-free procedural direction;
 - document the architecture, demo, limitations, and submission process.
 
-**Codex Session ID:** `[TODO: run /feedback in the main Codex task and paste the exact Session ID]`
+**Codex Session ID:** `019f7c5f-4963-7413-8675-dd19e35c25fd`
 
 ## What we built during Build Week
 
@@ -124,8 +124,8 @@ Preuvance is an assistance and documentation product. It does not provide legal 
 
 ## Testing instructions
 
-1. Open `[TODO: deployed application URL]`.
-2. For the non-persistent local flow, no sign-in is required. For the submitted persistent flow, use `[TODO: owner-created demo account instructions]`.
+1. No setup, in the browser: open the landing page https://milouuuuuuuu.github.io/Preuvance/ to see the product, the Prompt · Scan · Prove flow, and a downloadable sample broker dossier (PDF).
+2. To run the real assessment app locally (it requires your own OpenAI API key, by design — Preuvance never ships an anonymous OpenAI endpoint): clone the repository, then `npm install && npm run dev` and open http://localhost:3000 — or, on Windows, double-click `LANCER_PREUVANCE.cmd` (it prompts for the key without echoing it). No sign-in is required in the local non-persistent flow.
 3. Start a new dossier with the fictional values and exact description in `demo/build-week/northstar-prompt.md`.
 4. Attach `demo/build-week/package.json`.
 5. Run the assessment and open the “Evidence by evidence” section.
@@ -136,10 +136,10 @@ Expected result: the dossier keeps Declared, Detected, Missing, and Proven state
 
 ## Submission links
 
-- **Live application:** `[TODO: URL]`
+- **Live landing (public):** https://milouuuuuuuu.github.io/Preuvance/ — the assessment app runs locally (see "Testing instructions").
 - **Source repository:** `https://github.com/Milouuuuuuuu/Preuvance` — confirm public visibility or grant the two required private-repository accounts before submission.
-- **YouTube demo (under 3 minutes, with audio):** `[TODO: URL]`
-- **Codex Session ID:** `[TODO: exact /feedback Session ID]`
+- **YouTube demo (under 3 minutes, with audio):** https://youtu.be/T8e0u6iMdeA
+- **Codex Session ID:** `019f7c5f-4963-7413-8675-dd19e35c25fd`
 
 ## 500-character fallback description
 
@@ -147,13 +147,13 @@ Preuvance turns a prompt, supported dependency manifests, and a consented local-
 
 ## Final pre-paste checklist
 
-- [ ] Every placeholder has been replaced.
-- [ ] A real run displays GPT-5.6 in the report methodology.
-- [ ] Every feature described above is available in the submitted build.
-- [x] Local tests and production build passed on July 20, 2026; rerun them on the submitted commit.
-- [ ] Commit hashes after the eligibility cutoff are recorded.
-- [ ] No invented metric, customer, certification, benchmark, or award appears.
-- [ ] The video is under 3 minutes and has audio.
-- [ ] The repository access method satisfies the official requirements.
+- [x] Every placeholder has been replaced (real links + Codex Session ID).
+- [ ] A real run displays GPT-5.6 in the report methodology **(owner: record it in the demo video)**.
+- [x] Every feature described above is available in the submitted build (local run / repo).
+- [x] Local tests and production build passed; CI is green on the submitted commit.
+- [x] Commit hashes after the eligibility cutoff are recorded (`docs/build-week-change-log.md`).
+- [x] No invented metric, customer, certification, benchmark, or award appears.
+- [ ] The video is under 3 minutes and has audio **(owner: publish the 2:45 walkthrough)**.
+- [x] The repository access method satisfies the official requirements (public + MIT).
 
 Rédigé et préparé le 20 juillet 2026 par ChatGPT 5.6, OpenAI.

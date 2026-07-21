@@ -80,11 +80,11 @@ The cutoff uses Pacific Time. Preserve timezone information in the output or exp
 | Production build | `npm.cmd run build` | **PASS** | Vinext production build exit 0; dossier/evidence routes included |
 | PowerPoint layout | bundled `slides_test.py` | **PASS — 8 slides** | Final PPTX reimported, all slides visually inspected, no overflow detected |
 | Supabase migration | Apply on demo project and exercise RLS | **OWNER ACTION — not executed** | Apply all 3 migrations; test two tenants and a revision conflict |
-| Real model provenance | Complete run shows GPT-5.6 returned in methodology | **OWNER ACTION — not executed** | `[TODO: safe screenshot/run ID]` |
+| Real model provenance | Complete run shows GPT-5.6 returned in methodology | **OWNER ACTION** | Record one real assessment showing `gpt-5.6-*` in the report methodology; capture it in the demo video and/or commit a redacted report JSON. |
 | Browser flow | Prompt → manifest → dossier → review → save/reopen/export | **PARTIAL** | Manifest fixture and deck verified; real model + cloud save/reopen need configured services |
-| Video | YouTube, audio present, duration under 3 minutes | **OWNER ACTION** | `[TODO: URL]` |
-| Repository access | Public + licence, or both official test accounts granted | **OWNER ACTION** | `[TODO: access decision]` |
-| Codex evidence | `/feedback` from the main task | **OWNER ACTION** | `[TODO: Session ID]` |
+| Video | YouTube, audio present, duration under 3 minutes | **PARTIAL — replace teaser with 2:45 walkthrough** | https://youtu.be/T8e0u6iMdeA |
+| Repository access | Public + licence, or both official test accounts granted | **DONE** | Public + MIT — github.com/Milouuuuuuuu/Preuvance |
+| Codex evidence | `/feedback` from the main task | **DONE** | Session ID `019f7c5f-4963-7413-8675-dd19e35c25fd` |
 
 ## Final eligible-diff statement template
 
@@ -99,7 +99,8 @@ Use only after filling the commit evidence above:
 - [x] Insert all eligible commit hashes in this file; copy them into Devpost.
 - [x] Record local test/build results; rerun and attach CI evidence on the submitted commit.
 - [ ] Confirm that the deployed app corresponds exactly to the submitted commit or tag.
-- [ ] Decide repository visibility and licensing.
-- [ ] Supply the real `/feedback` Session ID and final URLs.
+- [x] Decide repository visibility and licensing (public + MIT).
+- [x] Supply the real `/feedback` Session ID (`019f7c5f-4963-7413-8675-dd19e35c25fd`) and final URLs (YouTube, landing).
+- [ ] **Owner, before the deadline:** publish the 2:45 narrated walkthrough (script: `docs/DEMO_SCRIPT_BUILD_WEEK.md`) recording a real GPT-5.6 run, and paste its URL into Devpost in place of the teaser.
 
 Rédigé et préparé le 20 juillet 2026 par ChatGPT 5.6, OpenAI.
