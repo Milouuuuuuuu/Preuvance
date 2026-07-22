@@ -1,6 +1,6 @@
 # OpenAI Build Week 2026 — ready-to-paste submission copy
 
-> English copy for Devpost. As of July 21, 2026 the project is **submitted** (Devpost keeps it editable until the deadline). The links and the Codex Session ID below are the real, final values. The one remaining owner step is to show a real run recording **GPT-5.6** in the demo video.
+> Historical English copy for the submitted Devpost entry. The July 21, 2026 5:00 PM PT deadline has passed. The links below describe the locked submission; the post-deadline `/demo` route and 154-second walkthrough may replace them only with organizer approval. The new walkthrough explains the GPT-5.6 architecture but does not misrepresent its fictional fixture as a real model run.
 
 ## Project title
 
@@ -124,7 +124,7 @@ Preuvance is an assistance and documentation product. It does not provide legal 
 
 ## Testing instructions
 
-1. No setup, in the browser: open the landing page https://milouuuuuuuu.github.io/Preuvance/ to see the product, the Prompt · Scan · Prove flow, and a downloadable sample broker dossier (PDF).
+1. No setup, in the browser: open `/demo` on the deployed application to explore the fictional Northstar dossier and download its sample broker PDF. This bounded fixture makes no model-provenance claim and triggers no API call.
 2. To run the real assessment app locally (it requires your own OpenAI API key, by design — Preuvance never ships an anonymous OpenAI endpoint): clone the repository, then `npm install && npm run dev` and open http://localhost:3000 — or, on Windows, double-click `LANCER_PREUVANCE.cmd` (it prompts for the key without echoing it). No sign-in is required in the local non-persistent flow.
 3. Start a new dossier with the fictional values and exact description in `demo/build-week/northstar-prompt.md`.
 4. Attach `demo/build-week/package.json`.
@@ -148,12 +148,12 @@ Preuvance turns a prompt, supported dependency manifests, and a consented local-
 ## Final pre-paste checklist
 
 - [x] Every placeholder has been replaced (real links + Codex Session ID).
-- [ ] A real run displays GPT-5.6 in the report methodology **(owner: record it in the demo video)**.
+- [ ] A real configured run displays GPT-5.6 in the report methodology; the post-deadline walkthrough deliberately does not claim that its fixture is such a run.
 - [x] Every feature described above is available in the submitted build (local run / repo).
 - [x] Local tests and production build passed; CI is green on the submitted commit.
 - [x] Commit hashes after the eligibility cutoff are recorded (`docs/build-week-change-log.md`).
 - [x] No invented metric, customer, certification, benchmark, or award appears.
-- [ ] The video is under 3 minutes and has audio **(owner: publish the 2:45 walkthrough)**.
+- [x] A replacement walkthrough is rendered locally under 3 minutes with audio (154.1 s); publication remains an external, post-deadline action requiring approval.
 - [x] The repository access method satisfies the official requirements (public + MIT).
 
 Rédigé et préparé le 20 juillet 2026 par ChatGPT 5.6, OpenAI.

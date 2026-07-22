@@ -1,5 +1,7 @@
 # Script vidéo Build Week — Preuvance en 2 min 45 s
 
+> **État au 22 juillet 2026, après la clôture :** une nouvelle version de 154,1 secondes a été rendue localement dans `remotion/out/preuvance-build-week-submission.mp4`. Elle contient une voix anglaise, des sous-titres et des captures du build réel. Le dossier Northstar y est explicitement présenté comme une fixture fictive sans appel modèle ; l’architecture GPT-5.6 est expliquée séparément, sans prétendre montrer un run absent. Toute publication ou modification Devpost postérieure à la clôture nécessite l’accord des organisateurs.
+
 ## Objectif de la vidéo
 
 En moins de trois minutes, un juge doit comprendre le problème, voir un parcours réellement fonctionnel et retenir une différence : Preuvance ne confond jamais une déclaration, une détection technique et une preuve revue par un humain.
@@ -105,23 +107,24 @@ Si l’API est instable pendant l’enregistrement :
 
 ## Vérification avant YouTube
 
-- [ ] Durée finale inférieure à 3:00 ; cible maintenue à 2:45.
-- [ ] Audio présent sur toute la narration.
-- [ ] Sous-titres relus, notamment « Declared », « Detected » et « Proven ».
-- [ ] Aucune donnée privée visible image par image.
+- [x] Durée finale inférieure à 3:00 : 154,1 secondes.
+- [x] Audio AAC stéréo présent et normalisé.
+- [x] Sous-titres anglais incrustés et relus sur la planche de contrôle.
+- [x] Aucune donnée privée visible dans les captures utilisées.
 - [ ] Aucun watermark Veo ou média dont les droits sont incertains.
-- [ ] Le modèle visible est celui réellement retourné.
-- [ ] Les interactions montrées existent dans l’application fournie aux juges.
-- [ ] L’URL finale reste affichée assez longtemps pour être lue.
+- [x] Aucun modèle n’est attribué à la fixture ; la provenance réelle reste décrite comme dépendante d’un run configuré.
+- [x] Les écrans montrés existent dans le build vérifié.
+- [x] La route `/demo` reste affichée dans la conclusion.
 - [ ] La vidéo YouTube est accessible depuis une fenêtre privée.
 
 ## TODO propriétaire
 
-- [ ] Valider le prompt et le fixture Northstar.
-- [ ] Choisir et enregistrer la voix finale.
+- [x] Valider le prompt et le fixture Northstar.
+- [x] Choisir et enregistrer la voix finale.
 - [ ] Approuver les droits de tous les éléments sonores et visuels.
-- [ ] Enregistrer les prises réelles après le build de validation.
-- [ ] Monter et téléverser la vidéo YouTube.
+- [x] Enregistrer les prises réelles après le build de validation.
+- [x] Monter la vidéo locale.
+- [ ] Obtenir l’accord des organisateurs avant tout remplacement post-deadline, puis téléverser la vidéo YouTube.
 - [ ] Coller l’URL publique ou non répertoriée acceptée par Devpost dans la candidature.
 
 Rédigé et préparé le 20 juillet 2026 par ChatGPT 5.6, OpenAI.

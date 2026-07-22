@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "studio": "remotion studio src/index.tsx",
+    "narration": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-narration.ps1",
+    "render:demo": "remotion render src/index.tsx PreuvanceBuildWeekDemo out/preuvance-build-week-demo.mp4 --codec h264 --crf 18 --concurrency=2",
     "render": "remotion render src/index.tsx PreuvanceHackathon out/preuvance-hackathon.mp4 --codec h264 --crf 18 --concurrency=2",
     "render:vertical": "remotion render src/index.tsx PreuvanceHackathonVertical out/preuvance-hackathon-vertical.mp4 --codec h264 --crf 18 --concurrency=2",
     "render:higgsfield": "remotion render src/index.tsx PreuvanceHackathon out/preuvance-hackathon-higgsfield.mp4 --codec h264 --crf 18 --concurrency=2 --props=./higgsfield-enabled.json",

@@ -3,3 +3,4 @@ out/
 .remotion/
 
 public/higgsfield/output/*.mp4
+public/audio/

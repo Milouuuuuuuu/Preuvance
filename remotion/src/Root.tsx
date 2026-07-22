@@ -5,6 +5,10 @@ import {
   EvidenceFrame,
   OpeningFrame,
 } from './higgsfield/HiggsfieldFrames';
+import {
+  BUILD_WEEK_DEMO_FRAMES,
+  PreuvanceBuildWeekDemo,
+} from './demo/PreuvanceBuildWeekDemo';
 
 const defaultProps: PreuvanceFilmProps = {
   useHiggsfield: false,
@@ -12,6 +16,14 @@ const defaultProps: PreuvanceFilmProps = {
 
 export const RemotionRoot = () => (
   <>
+    <Composition
+      id="PreuvanceBuildWeekDemo"
+      component={PreuvanceBuildWeekDemo}
+      durationInFrames={BUILD_WEEK_DEMO_FRAMES}
+      fps={30}
+      width={1920}
+      height={1080}
+    />
     <Composition
       id="PreuvanceHackathon"
       component={PreuvanceFilm}
