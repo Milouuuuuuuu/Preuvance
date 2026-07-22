@@ -6,6 +6,27 @@ This file separates the pre-existing Preuvance product from the work prepared fo
 
 The event allows a pre-existing project, but only additions made after **July 13, 2026 at 9:00 AM PT** are judged. Before submission, every item claimed as Build Week work must be tied to a real commit whose timestamp and diff support the claim. No commit should be backdated.
 
+## Post-deadline hardening — July 22, 2026
+
+The submission deadline passed on July 21 at 5:00 PM PT. The following work is intentionally separated from the eligible submitted state and must not be presented as if it existed before the deadline:
+
+- a public `/demo` route with a strict, frozen, fictional Northstar dossier and downloadable PDF;
+- a scoped Node WASM loader that makes the Vinext production server start without changing the Cloudflare Worker artifact;
+- production-start and public-demo regression tests;
+- a 154.1-second 1080p narrated walkthrough with explicit fixture/model disclosures;
+- a generated social-card visual with no score, model claim or certification language.
+
+These changes live on `codex/post-build-week-demo`. They may be shared as post-deadline improvements only if the organizers allow updates; the submitted commit history below remains the source of truth for judging eligibility.
+
+Post-deadline verification on July 22, 2026:
+
+| Gate | Result |
+|---|---|
+| Complete repository gate | PASS — lint, typecheck, 89 unit tests, production build, 2 Node-start tests, 11 HTTP/Worker tests |
+| Remotion typecheck | PASS |
+| Replacement video | PASS — 154.1 s, 1920×1080, H.264 video, AAC stereo at 48 kHz |
+| Public sample PDF | PASS — strict contract and material `%PDF-` artifact test |
+
 ## Pre-existing baseline — do not claim as new
 
 The repository already contained the broader Preuvance concept and application before this Build Week workstream, including an AI assessment flow, control/gap analysis, report generation, a local scanner, authentication/persistence foundations, and Remotion-based pitch assets.

@@ -115,6 +115,7 @@ test("met le dossier instantané au premier plan et conserve le scan local", asy
   const home = await fetch(baseUrl, { headers: { accept: "text/html" } });
   const homeHtml = await home.text();
   assert.match(homeHtml, /Parcours principal · dossier instantané/i);
+  assert.match(homeHtml, /href="\/demo"[^>]*>Démo sans compte</i);
   assert.match(homeHtml, /Construire mon dossier/i);
   assert.match(homeHtml, /Scanner les dépendances IA du projet/i);
   assert.match(homeHtml, /Source complémentaire · poste local/i);
@@ -125,6 +126,20 @@ test("met le dossier instantané au premier plan et conserve le scan local", asy
   const scanHtml = await scan.text();
   assert.match(scanHtml, /Analysez votre poste, sans rien envoyer/i);
   assert.match(scanHtml, /preuvance-scan\.json/i);
+});
+
+test("rend le dossier Northstar public sans provenance modèle inventée", async () => {
+  const response = await fetch(`${baseUrl}/demo`, {
+    headers: { accept: "text/html" },
+  });
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Démo publique · données fictives/i);
+  assert.match(html, /Northstar Support Copilot/i);
+  assert.match(html, /sans compte ni clé API/i);
+  assert.match(html, /ne déclenche aucun appel modèle/i);
+  assert.match(html, /preuvance-northstar-demo\.pdf/i);
+  assert.doesNotMatch(html, /Analysé avec GPT-5\.6/i);
 });
 
 test("rend la présentation locale OpenAI Build Week", async () => {

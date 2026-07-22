@@ -31,6 +31,7 @@ import {
 type AssessmentResultsProps = {
   assessment: Assessment;
   onReset: () => void;
+  staticPdfHref?: string;
 };
 
 type Dimension = {
@@ -427,7 +428,11 @@ function needsJournalDisclaimer(obligation: Obligation) {
   );
 }
 
-export function AssessmentResults({ assessment, onReset }: AssessmentResultsProps) {
+export function AssessmentResults({
+  assessment,
+  onReset,
+  staticPdfHref,
+}: AssessmentResultsProps) {
   const [pdfStatus, setPdfStatus] = useState<"idle" | "loading" | "error">("idle");
   const [pdfError, setPdfError] = useState<string | null>(null);
   const reportRecord = isRecord(assessment.report) ? assessment.report : null;
@@ -654,7 +659,12 @@ export function AssessmentResults({ assessment, onReset }: AssessmentResultsProp
               Ouvrir le dossier enregistré
             </a>
           ) : null}
-          {assessmentId ? (
+          {staticPdfHref ? (
+            <a className="pv-primary-button" href={staticPdfHref} download>
+              <Download size={17} aria-hidden="true" />
+              Télécharger le dossier d’exemple PDF
+            </a>
+          ) : assessmentId ? (
             <button
               className="pv-primary-button"
               type="button"

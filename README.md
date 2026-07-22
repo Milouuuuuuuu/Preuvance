@@ -62,8 +62,11 @@ Supabase est activé lorsque `NEXT_PUBLIC_SUPABASE_URL` et une clé publique (`N
 Après `npm run dev` :
 
 - `http://localhost:3000/` — produit complet ;
+- `http://localhost:3000/demo` — dossier Northstar fictif, sans compte, clé API ni appel modèle ;
 - `http://localhost:3000/build-week` — diaporama interactif 16:9, navigable au clavier avec `←`, `→`, `Home` et `End` ;
 - `http://localhost:3000/scan` — lecture locale d’un rapport de scan et handoff expurgé vers le dossier.
+
+La route `/demo` sert aussi un [dossier PDF Northstar](public/downloads/preuvance-northstar-demo.pdf) généré depuis le même contrat strict. Cette démonstration est explicitement fictive : elle illustre les états du registre sans prétendre à un nouvel appel GPT-5.6 ni à une provenance modèle absente.
 
 Le mode présentation utilise le film procédural propre dans `public/media/preuvance-proof-film.mp4`. Les clips Veo trouvés dans les téléchargements sont volontairement exclus : ils portent un filigrane visible et des artefacts textuels incompatibles avec une soumission crédible. Voir [`docs/animation-review.md`](docs/animation-review.md).
 

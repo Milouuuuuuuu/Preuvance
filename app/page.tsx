@@ -29,6 +29,7 @@ export default function Home() {
             <Brand />
           </a>
           <nav className="pv-main-nav" aria-label="Navigation principale">
+            <a href="/demo">Démo sans compte</a>
             <a href="/scan">Scanner en local</a>
             <a href="/build-week">Présentation</a>
             <a href="/outils/migration-sqlite-postgresql">Portabilité</a>
