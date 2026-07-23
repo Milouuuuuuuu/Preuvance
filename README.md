@@ -57,6 +57,10 @@ En développement, renseigner au minimum `OPENAI_API_KEY`. Sans cette clé, l’
 
 Supabase est activé lorsque `NEXT_PUBLIC_SUPABASE_URL` et une clé publique (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, ou l’ancienne `NEXT_PUBLIC_SUPABASE_ANON_KEY`) sont présentes. Dans ce mode, une session est requise et l’évaluation, son rapport et son journal de raisonnement sont enregistrés ensemble. Les secrets ne doivent jamais être commités.
 
+L’analyse produit (PostHog) est optionnelle et suit la même règle : sans `NEXT_PUBLIC_POSTHOG_KEY`, aucun script n’est chargé et aucun événement n’est envoyé. Lorsqu’elle est activée, seuls des événements nommés et des métadonnées agrégées (score, palier, nombre de manifestes ou de pièces vérifiées) sont transmis — jamais la description du système, le nom de l’organisation ni le contenu d’une preuve ; `autocapture` et l’enregistrement de session restent désactivés (voir D-087 dans [`BEHAVIOR.md`](BEHAVIOR.md)). Le catalogue des événements, les funnels et le provisionnement des tableaux de bord (`npm run analytics:setup`) sont documentés dans [`docs/analytics.md`](docs/analytics.md).
+
+Le référencement technique est servi par l’application elle-même : `robots.txt` et `sitemap.xml` dynamiques, canonique et description par page publique, JSON-LD strictement factuel — sans note, avis ni décompte inventés (D-089). Les procédures récurrentes du projet sont encodées en skills versionnés dans [`.claude/skills/`](.claude/skills/) : `goal`, `posthog-analytics`, `seo-audit`, `supabase-local-verify`, aux côtés de `fable-gate`.
+
 ### Démonstration locale
 
 Après `npm run dev` :

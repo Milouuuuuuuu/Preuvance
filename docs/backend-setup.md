@@ -57,7 +57,7 @@ Lorsque Supabase est configuré, `POST /api/assessments` vérifie la session ava
 
 Les types TypeScript correspondants sont dans [`lib/supabase/database.types.ts`](../lib/supabase/database.types.ts). Après toute évolution de la migration, les régénérer avec le CLI Supabase et remplacer ce snapshot.
 
-> État de livraison au 20 juillet 2026 : la migration est écrite et le contrat applicatif est typé, mais elle n’a pas été exécutée contre un projet Supabase de staging dans ce workspace. Ne présenter la persistance cloud comme opérationnelle qu’après `supabase db push`, test RLS avec deux organisations et test de conflit à deux onglets.
+> État de livraison au 23 juillet 2026 : la migration est écrite, le contrat applicatif est typé, et les 4 migrations ont été rejouées avec succès contre une instance Supabase CLI locale et jetable (Docker), avec un scénario à deux organisations qui confirme l’isolation RLS (un tenant ne voit ni ne peut agir sur l’assessment de l’autre) et le conflit de révision optimiste (`errcode 40001` sur une révision périmée) — voir D-088 dans [`BEHAVIOR.md`](../BEHAVIOR.md). Cela reste une vérification mécanique locale, **pas** une exécution contre le projet Supabase de staging réel de l’équipe : ne présenter la persistance cloud comme opérationnelle en production qu’après `supabase db push` sur ce projet et un nouveau test RLS/conflit contre lui. `supabase/config.toml` est versionné pour reproduire la vérification locale avec `supabase start`.
 
 ## Contrat PDF
 

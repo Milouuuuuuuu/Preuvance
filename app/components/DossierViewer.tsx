@@ -16,6 +16,7 @@ export function DossierViewer({
     <AssessmentResults
       assessment={assessment}
       staticPdfHref={staticPdfHref}
+      trackCompletion={false}
       onReset={() => {
         window.location.assign(resetHref);
       }}

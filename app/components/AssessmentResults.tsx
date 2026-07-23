@@ -27,11 +27,15 @@ import {
   EvidenceWorkbench,
   type EvidenceWorkbenchHandle,
 } from "./EvidenceWorkbench";
+import { trackEvent } from "@/lib/analytics/posthog";
 
 type AssessmentResultsProps = {
   assessment: Assessment;
   onReset: () => void;
   staticPdfHref?: string;
+  // false pour les relectures (démo Northstar, réouverture d'un dossier) :
+  // seul un run terminé en direct doit compter comme assessment_completed.
+  trackCompletion?: boolean;
 };
 
 type Dimension = {
@@ -432,6 +436,7 @@ export function AssessmentResults({
   assessment,
   onReset,
   staticPdfHref,
+  trackCompletion = true,
 }: AssessmentResultsProps) {
   const [pdfStatus, setPdfStatus] = useState<"idle" | "loading" | "error">("idle");
   const [pdfError, setPdfError] = useState<string | null>(null);
@@ -447,6 +452,21 @@ export function AssessmentResults({
   );
   const [evidence, setEvidence] = useState<EvidenceLedgerItem[]>(initialEvidence);
   const evidenceWorkbenchRef = useRef<EvidenceWorkbenchHandle>(null);
+
+  const lastLedgerCountsRef = useRef<string | null>(null);
+  function handleEvidenceChange(next: EvidenceLedgerItem[]) {
+    setEvidence(next);
+    const verifiedCount = next.filter((item) => item.status === "verified").length;
+    // Les propriétés suivies sont des compteurs : ne tracer que lorsqu'ils
+    // changent, pas à chaque frappe dans un champ texte du registre.
+    const counts = `${next.length}:${verifiedCount}`;
+    if (lastLedgerCountsRef.current === counts) return;
+    lastLedgerCountsRef.current = counts;
+    trackEvent("evidence_ledger_updated", {
+      itemCount: next.length,
+      verifiedCount,
+    });
+  }
 
   useEffect(() => {
     setEvidence(initialEvidence);
@@ -495,6 +515,19 @@ export function AssessmentResults({
   const confidence = toPercentage(
     firstNumber(classificationRecord, ["confidence", "confidenceScore"]),
   );
+
+  const trackedAssessmentIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!trackCompletion) return;
+    if (!assessmentId || trackedAssessmentIdRef.current === assessmentId) return;
+    trackedAssessmentIdRef.current = assessmentId;
+    trackEvent("assessment_completed", {
+      score,
+      tier: tier ?? null,
+      confidence,
+      evidenceCount: initialEvidence.length,
+    });
+  }, [trackCompletion, assessmentId, score, tier, confidence, initialEvidence.length]);
   const smcStatus = readableValue(
     firstValue(classificationRecord, [
       "smcEligibility",
@@ -626,6 +659,9 @@ export function AssessmentResults({
       link.remove();
       window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 1_000);
       setPdfStatus("idle");
+      trackEvent("report_pdf_downloaded", {
+        persistenceStatus,
+      });
     } catch (downloadError) {
       setPdfStatus("error");
       setPdfError(
@@ -633,6 +669,10 @@ export function AssessmentResults({
           ? downloadError.message
           : "Le téléchargement du rapport a échoué.",
       );
+      // D-087 : jamais le message d'erreur, uniquement le statut de persistance.
+      trackEvent("report_pdf_failed", {
+        persistenceStatus,
+      });
     }
   }
 
@@ -882,7 +922,7 @@ export function AssessmentResults({
             ref={evidenceWorkbenchRef}
             assessmentId={assessmentId}
             evidence={evidence}
-            onChange={setEvidence}
+            onChange={handleEvidenceChange}
             persistenceStatus={persistenceStatus}
           />
         ) : (
