@@ -115,6 +115,7 @@ test("met le dossier instantané au premier plan et conserve le scan local", asy
   const home = await fetch(baseUrl, { headers: { accept: "text/html" } });
   const homeHtml = await home.text();
   assert.match(homeHtml, /Parcours principal · dossier instantané/i);
+  assert.match(homeHtml, /href="\/demo"[^>]*>Démo sans compte</i);
   assert.match(homeHtml, /Construire mon dossier/i);
   assert.match(homeHtml, /Scanner les dépendances IA du projet/i);
   assert.match(homeHtml, /Source complémentaire · poste local/i);
@@ -125,6 +126,20 @@ test("met le dossier instantané au premier plan et conserve le scan local", asy
   const scanHtml = await scan.text();
   assert.match(scanHtml, /Analysez votre poste, sans rien envoyer/i);
   assert.match(scanHtml, /preuvance-scan\.json/i);
+});
+
+test("rend le dossier Northstar public sans provenance modèle inventée", async () => {
+  const response = await fetch(`${baseUrl}/demo`, {
+    headers: { accept: "text/html" },
+  });
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Démo publique · données fictives/i);
+  assert.match(html, /Northstar Support Copilot/i);
+  assert.match(html, /sans compte ni clé API/i);
+  assert.match(html, /ne déclenche aucun appel modèle/i);
+  assert.match(html, /preuvance-northstar-demo\.pdf/i);
+  assert.doesNotMatch(html, /Analysé avec GPT-5\.6/i);
 });
 
 test("rend la présentation locale OpenAI Build Week", async () => {
@@ -398,4 +413,33 @@ test("présente le bridge comme outil de portabilité séparé", async () => {
   assert.match(html, /PostgreSQL 14 et 18/i);
   assert.match(html, /ne lance jamais automatiquement un dump arbitraire/i);
   assert.match(html, /sqlite-postgres-bridge-v0\.1\.0\.zip/i);
+});
+
+test("expose un robots.txt qui exclut les zones privées et pointe le sitemap", async () => {
+  const response = await fetch(`${baseUrl}/robots.txt`);
+  assert.equal(response.status, 200);
+  const body = await response.text();
+  assert.match(body, /^User-agent: \*$/m);
+  assert.match(body, /^Disallow: \/api\/$/m);
+  assert.match(body, /^Disallow: \/auth\/$/m);
+  assert.match(body, /^Disallow: \/dossiers\/$/m);
+  assert.match(body, /^Sitemap: https?:\/\/\S+\/sitemap\.xml$/m);
+});
+
+test("expose un sitemap.xml des pages publiques sans la démo noindex", async () => {
+  const response = await fetch(`${baseUrl}/sitemap.xml`);
+  assert.equal(response.status, 200);
+  assert.match(
+    response.headers.get("content-type") ?? "",
+    /^application\/xml\b/i,
+  );
+  const body = await response.text();
+  assert.match(
+    body,
+    /<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/,
+  );
+  assert.match(body, /<loc>https?:\/\/[^<]+\/<\/loc>/);
+  assert.match(body, /<loc>https?:\/\/[^<]+\/scan<\/loc>/);
+  assert.doesNotMatch(body, /\/demo/);
+  assert.doesNotMatch(body, /\/build-week/);
 });

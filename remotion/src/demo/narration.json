@@ -1,0 +1,42 @@
+[
+  {
+    "id": "opening",
+    "title": "Prompt. Scan. Prove.",
+    "text": "AI governance should not begin with another stale spreadsheet. Preuvance turns a plain-language description and bounded repository signals into a reviewable AI assurance dossier: prompt, scan, prove."
+  },
+  {
+    "id": "workflow",
+    "title": "The real assessment path",
+    "text": "The real workflow starts here. A team describes the organization, the AI system, its users, data, purpose, and human controls. Supported dependency manifests are parsed in the browser. Only a bounded digest of recognized tools and integrity hashes joins the assessment; raw manifest content is not sent by this workflow."
+  },
+  {
+    "id": "gpt",
+    "title": "GPT-5.6, bounded by rules",
+    "text": "In a configured assessment, GPT-5.6 structures the supplied facts through OpenAI's Responses API and a strict JSON schema. Deterministic rules then cross-check risk signals, obligations, and score caps. The methodology records the model actually returned for each stage. If the service is not configured, Preuvance fails closed instead of inventing a result."
+  },
+  {
+    "id": "public-demo",
+    "title": "A judge-ready public route",
+    "text": "For reliable judging, this public Northstar route needs no account or API key. It is a frozen, fictional fixture rendered through the same strict result contract and dossier interface. It deliberately makes no model call and shows no model provenance. The distinction is visible at the top of the page."
+  },
+  {
+    "id": "score",
+    "title": "Score and obligations stay distinct",
+    "text": "Northstar scores seventy-three out of one hundred in this fictional scenario. Governance, transparency, data, and human oversight remain separate dimensions. Applicable obligations point to their legal basis and deadline, while the report warns that professional confirmation is still required."
+  },
+  {
+    "id": "evidence",
+    "title": "Evidence by evidence",
+    "text": "The core difference is the evidence ledger. Declared, technically detected, documented, missing, and human-attested are separate states. A declaration never silently becomes proof. Even the green item is clearly labeled as a fictional reviewer persona. A file hash protects integrity, but it does not prove that the document is true."
+  },
+  {
+    "id": "gaps",
+    "title": "Every gap becomes an action",
+    "text": "Missing evidence becomes an ordered action: approve the review procedure, keep the knowledge-base version history, and sample outputs periodically. The decision journal exposes the deterministic cross-check, and the downloadable PDF is generated from the same validated dossier contract."
+  },
+  {
+    "id": "close",
+    "title": "From inventory to assurance dossier",
+    "text": "Preuvance does not certify compliance. It makes claims reviewable, gaps actionable, and evidence traceable. The repository includes production-start regression coverage, strict-schema tests, privacy checks, and real PDF generation. Open the demo, inspect the dossier, and follow every conclusion back to its evidence."
+  }
+]

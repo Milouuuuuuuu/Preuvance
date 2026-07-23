@@ -21,6 +21,7 @@ import {
   DEPENDENCY_MANIFEST_MAX_BYTES,
   scanDependencyManifest,
 } from "@/lib/scan/dependency-scanner";
+import { trackEvent } from "@/lib/analytics/posthog";
 
 type DependencyManifestLoaderProps = {
   value?: DependencyDigest;
@@ -83,6 +84,10 @@ export function DependencyManifestLoader({
         },
       };
       onChange(dependencyDigestSchema.parse(digest));
+      trackEvent("dependency_manifest_attached", {
+        manifestCount: manifests.length,
+        aiPackageCount: digest.dependencies.length,
+      });
     } catch (scanError) {
       setError(
         scanError instanceof Error

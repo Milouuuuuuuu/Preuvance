@@ -18,6 +18,7 @@ import {
   type ScanFindingSeverity,
 } from "@/app/lib/assessment/scan-scoring";
 import { createScanDigest } from "@/lib/scan/scan-handoff";
+import { trackEvent } from "@/lib/analytics/posthog";
 
 type LoadState =
   | { status: "idle" }
@@ -83,12 +84,16 @@ export function ScanReportLoader() {
         });
         return;
       }
+      const exposure = computeScanExposure(validation.data);
       setState({
         status: "ready",
         report: validation.data,
-        exposure: computeScanExposure(validation.data),
+        exposure,
       });
       setHandoffConsent(false);
+      trackEvent("scan_report_loaded", {
+        exposureScore: exposure.exposureScore,
+      });
     } catch {
       setState({
         status: "error",
@@ -101,6 +106,9 @@ export function ScanReportLoader() {
     if (state.status !== "ready" || !handoffConsent) return;
     const digest = createScanDigest(state.report, state.exposure);
     window.sessionStorage.setItem("preuvance:scan-digest-v1", JSON.stringify(digest));
+    trackEvent("scan_digest_handoff", {
+      exposureScore: state.exposure.exposureScore,
+    });
     window.location.assign("/#evaluation");
   }
 

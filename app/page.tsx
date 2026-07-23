@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   ArrowRight,
   CalendarDays,
@@ -12,7 +13,12 @@ import {
 } from "lucide-react";
 import { AssessmentExperience } from "./components/AssessmentExperience";
 import { Brand } from "./components/Brand";
+import { TrackedLink } from "./components/TrackedLink";
 import { getMarketingReference } from "./lib/marketing";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function Home() {
   const marketing = getMarketingReference();
@@ -29,6 +35,7 @@ export default function Home() {
             <Brand />
           </a>
           <nav className="pv-main-nav" aria-label="Navigation principale">
+            <a href="/demo">Démo sans compte</a>
             <a href="/scan">Scanner en local</a>
             <a href="/build-week">Présentation</a>
             <a href="/outils/migration-sqlite-postgresql">Portabilité</a>
@@ -38,7 +45,8 @@ export default function Home() {
             <a href="/auth/sign-in">Espace</a>
           </nav>
           <div className="pv-header-actions">
-            <a
+            <TrackedLink
+              eventName="local_zip_download_clicked"
               className="pv-local-download-action"
               href="/downloads/preuvance-local.zip"
               download
@@ -46,7 +54,7 @@ export default function Home() {
             >
               <Download size={15} aria-hidden="true" />
               <span>Télécharger la version locale</span>
-            </a>
+            </TrackedLink>
             <a className="pv-mobile-auth-action" href="/auth/sign-in">
               Espace
             </a>
@@ -315,9 +323,13 @@ export default function Home() {
             ordinateur ; Node.js 22.13 ou supérieur et une clé API OpenAI sont
             requis.
           </p>
-          <a href="/downloads/preuvance-local.zip" download>
+          <TrackedLink
+            eventName="local_zip_download_clicked"
+            href="/downloads/preuvance-local.zip"
+            download
+          >
             Télécharger le fichier .zip
-          </a>
+          </TrackedLink>
         </div>
         <section
           className="pv-footer-privacy"

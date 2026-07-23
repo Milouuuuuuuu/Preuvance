@@ -31,6 +31,7 @@ import {
   type EvidenceSourceType,
   type EvidenceStatus,
 } from "@/lib/evidence/evidence-ledger";
+import { trackEvent } from "@/lib/analytics/posthog";
 
 type EvidenceWorkbenchProps = {
   assessmentId: string;
@@ -192,6 +193,15 @@ export const EvidenceWorkbench = forwardRef<
       } else {
         window.localStorage.setItem(storageKey, JSON.stringify(validation.data));
       }
+
+      // D-087 : uniquement des compteurs et un booléen, jamais le contenu.
+      trackEvent("evidence_saved", {
+        itemCount: validation.data.length,
+        verifiedCount: validation.data.filter(
+          (item) => item.status === "verified",
+        ).length,
+        persisted: persistenceStatus === "persisted",
+      });
 
       setSaveState("saved");
       setMessage(

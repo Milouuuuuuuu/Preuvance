@@ -9,9 +9,11 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
-    "start": "vinext start",
-    "test": "npm run lint && npm run typecheck && npm run test:unit && npm run build && node --test tests/rendered-html.test.mjs",
-    "test:unit": "node --import tsx --test tests/assessment-core.test.ts tests/assessment-form.test.ts tests/assessment-quota.test.ts tests/dependency-scanner.test.ts tests/evidence-dossier.test.ts tests/evidence-ledger.test.ts tests/local-download.test.ts tests/score-display.test.ts tests/assessment-rules.test.ts tests/marketing-reference.test.ts tests/assessment-results-render.test.tsx tests/scan-scoring.test.ts tests/scan-fixture.test.ts tests/scan-handoff.test.ts tests/scan-script.test.ts",
+    "start": "node --no-warnings=ExperimentalWarning --experimental-loader ./scripts/node-wasm-module-loader.mjs ./node_modules/vinext/dist/cli.js start",
+    "test": "npm run lint && npm run typecheck && npm run test:unit && npm run build && node --test tests/production-start.test.mjs && node --test tests/rendered-html.test.mjs",
+    "test:unit": "node --import tsx --test tests/assessment-core.test.ts tests/assessment-form.test.ts tests/assessment-quota.test.ts tests/demo-assessment.test.ts tests/dependency-scanner.test.ts tests/evidence-dossier.test.ts tests/evidence-ledger.test.ts tests/local-download.test.ts tests/score-display.test.ts tests/assessment-rules.test.ts tests/marketing-reference.test.ts tests/assessment-results-render.test.tsx tests/scan-scoring.test.ts tests/scan-fixture.test.ts tests/scan-handoff.test.ts tests/scan-script.test.ts",
+    "demo:pdf": "node --import tsx scripts/build-northstar-demo-pdf.ts",
+    "analytics:setup": "node --env-file=.env.local scripts/posthog-setup.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },
@@ -27,6 +29,7 @@
     "clsx": "2.1.1",
     "lucide-react": "1.24.0",
     "next": "15.5.20",
+    "posthog-js": "1.407.1",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-hook-form": "7.81.0",
@@ -35,8 +38,8 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "3.3.5",
     "@cloudflare/vite-plugin": "1.37.1",
+    "@eslint/eslintrc": "3.3.5",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
