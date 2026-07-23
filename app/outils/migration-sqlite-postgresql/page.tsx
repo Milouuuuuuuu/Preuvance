@@ -20,7 +20,8 @@ const downloadUrl = `${repositoryUrl}/releases/latest/download/sqlite-postgres-b
 export const metadata: Metadata = {
   title: "Portabilité SQLite et PostgreSQL",
   description:
-    "Traduisez localement SQL et bases SQLite vers PostgreSQL, sans upload ni télémétrie.",
+    "Traduisez du SQL dans les deux sens et convertissez une base SQLite en dump PostgreSQL : outil open source hors ligne, sans upload ni télémétrie, dry-run.",
+  alternates: { canonical: "/outils/migration-sqlite-postgresql" },
 };
 
 export default function DataPortabilityPage() {

@@ -3,11 +3,13 @@ import Link from "next/link";
 import { ArrowLeft, Download, Terminal } from "lucide-react";
 import { Brand } from "../components/Brand";
 import { ScanReportLoader } from "../components/ScanReportLoader";
+import { TrackedLink } from "../components/TrackedLink";
 
 export const metadata: Metadata = {
   title: "Scanner en local",
   description:
-    "Analysez votre poste en local : appels d’IA non déclarés et fichiers sensibles, sans rien envoyer sur Internet.",
+    "Analysez votre poste en local : appels d’IA non déclarés, fichiers sensibles et concordance déclaré / observé. Rien n’est envoyé, scripts lisibles en clair.",
+  alternates: { canonical: "/scan" },
 };
 
 export default function ScanPage() {
@@ -58,9 +60,13 @@ export default function ScanPage() {
               <h3>Télécharger</h3>
               <p>
                 Récupérez la version locale puis extrayez l’archive.
-                <a href="/downloads/preuvance-local.zip" download>
+                <TrackedLink
+                  eventName="local_zip_download_clicked"
+                  href="/downloads/preuvance-local.zip"
+                  download
+                >
                   Télécharger le .zip
-                </a>
+                </TrackedLink>
               </p>
             </li>
             <li>

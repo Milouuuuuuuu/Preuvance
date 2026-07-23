@@ -414,3 +414,32 @@ test("présente le bridge comme outil de portabilité séparé", async () => {
   assert.match(html, /ne lance jamais automatiquement un dump arbitraire/i);
   assert.match(html, /sqlite-postgres-bridge-v0\.1\.0\.zip/i);
 });
+
+test("expose un robots.txt qui exclut les zones privées et pointe le sitemap", async () => {
+  const response = await fetch(`${baseUrl}/robots.txt`);
+  assert.equal(response.status, 200);
+  const body = await response.text();
+  assert.match(body, /^User-agent: \*$/m);
+  assert.match(body, /^Disallow: \/api\/$/m);
+  assert.match(body, /^Disallow: \/auth\/$/m);
+  assert.match(body, /^Disallow: \/dossiers\/$/m);
+  assert.match(body, /^Sitemap: https?:\/\/\S+\/sitemap\.xml$/m);
+});
+
+test("expose un sitemap.xml des pages publiques sans la démo noindex", async () => {
+  const response = await fetch(`${baseUrl}/sitemap.xml`);
+  assert.equal(response.status, 200);
+  assert.match(
+    response.headers.get("content-type") ?? "",
+    /^application\/xml\b/i,
+  );
+  const body = await response.text();
+  assert.match(
+    body,
+    /<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/,
+  );
+  assert.match(body, /<loc>https?:\/\/[^<]+\/<\/loc>/);
+  assert.match(body, /<loc>https?:\/\/[^<]+\/scan<\/loc>/);
+  assert.doesNotMatch(body, /\/demo/);
+  assert.doesNotMatch(body, /\/build-week/);
+});

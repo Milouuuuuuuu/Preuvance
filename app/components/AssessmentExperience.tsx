@@ -16,6 +16,7 @@ import {
   type AssessmentRequest,
 } from "./assessment-types";
 import { scanDigestSchema, type ScanDigest } from "@/lib/scan/scan-handoff";
+import { trackEvent } from "@/lib/analytics/posthog";
 
 type RequestStatus = "idle" | "loading" | "success" | "error";
 
@@ -73,6 +74,12 @@ function actionForAssessmentError(error: unknown): ErrorAction | null {
     return {
       href: `/auth/sign-in?error=configuration&next=${next}`,
       label: "Voir l’état de l’authentification",
+    };
+  }
+  if (error.code === "CONFIGURATION_ERROR" || error.status === 503) {
+    return {
+      href: "/demo",
+      label: "Voir un dossier de démonstration sans clé API",
     };
   }
   return null;
@@ -207,6 +214,12 @@ export function AssessmentExperience() {
     setAnalysisStage("extraction");
     setLastRequest(payload);
 
+    trackEvent("assessment_started", {
+      hasDependencyDigest: Boolean(payload.dependencyDigest),
+      hasScanDigest: Boolean(payload.scanDigest),
+      descriptionLength: payload.description.length,
+    });
+
     try {
       const response = await fetch("/api/assessments", {
         method: "POST",
@@ -219,7 +232,10 @@ export function AssessmentExperience() {
 
       const completedAssessment = await readAssessmentResponse(
         response,
-        setAnalysisStage,
+        (stage) => {
+          trackEvent("assessment_stage_reached", { stage });
+          setAnalysisStage(stage);
+        },
       );
       setAssessment(completedAssessment);
       setStatus("success");
@@ -232,6 +248,16 @@ export function AssessmentExperience() {
           ? requestError.message
           : "Une erreur inattendue a interrompu l’évaluation.",
       );
+      trackEvent("assessment_failed", {
+        code:
+          requestError instanceof AssessmentResponseError
+            ? requestError.code
+            : null,
+        status:
+          requestError instanceof AssessmentResponseError
+            ? requestError.status
+            : null,
+      });
     }
   }
 

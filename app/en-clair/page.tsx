@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Preuvance en clair",
   description:
     "Ce que fait Preuvance, expliqué simplement : dossier instantané, preuves déclarées ou détectées, scan local complémentaire et rapport PDF de préparation.",
+  alternates: { canonical: "/en-clair" },
 };
 
 export default function EnClairPage() {

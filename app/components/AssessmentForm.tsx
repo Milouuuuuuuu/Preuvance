@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import {
   ArrowRight,
   Building2,
@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import type { AssessmentRequest } from "./assessment-types";
 import { DependencyManifestLoader } from "./DependencyManifestLoader";
+import { trackEvent } from "@/lib/analytics/posthog";
 
 type AssessmentFormProps = {
   error: string | null;
@@ -135,6 +136,14 @@ export function AssessmentForm({
     },
   });
   const description = watch("description") ?? "";
+  const formStartedRef = useRef(false);
+
+  // Une seule émission par montage du formulaire, à la première interaction.
+  function markFormStarted() {
+    if (formStartedRef.current) return;
+    formStartedRef.current = true;
+    trackEvent("assessment_form_started");
+  }
 
   function submit(values: AssessmentFormValues) {
     const revenueInMillions = parseMillionsInput(values.annualRevenue) ?? 0;
@@ -154,7 +163,13 @@ export function AssessmentForm({
   }
 
   return (
-    <form className="pv-assessment-form" onSubmit={handleSubmit(submit)} noValidate>
+    <form
+      className="pv-assessment-form"
+      onSubmit={handleSubmit(submit)}
+      onFocus={markFormStarted}
+      onChange={markFormStarted}
+      noValidate
+    >
       <div className="pv-form-heading">
         <div className="pv-form-icon" aria-hidden="true">
           <FileText size={20} />
