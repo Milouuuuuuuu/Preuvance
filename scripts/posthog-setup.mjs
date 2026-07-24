@@ -13,29 +13,41 @@ const API_HOST = (
 ).replace(/\/+$/, "");
 const API_KEY = process.env.POSTHOG_PERSONAL_API_KEY;
 
+// L'API refuse désormais les insights au format `filters` hérité
+// (« legacy filters is not available for this user ») : chaque insight est
+// décrit par un `query` InsightVizNode.
 function trendSeries(eventId, math, extra = {}) {
-  return { id: eventId, name: eventId, type: "events", math, ...extra };
+  return { kind: "EventsNode", event: eventId, name: eventId, math, ...extra };
 }
 
-function trendsFilters(series, extra = {}) {
+function trendsQuery(series, extra = {}) {
   return {
-    insight: "TRENDS",
-    display: "ActionsLineGraph",
-    interval: "day",
-    date_from: "-30d",
-    events: series,
-    ...extra,
+    kind: "InsightVizNode",
+    source: {
+      kind: "TrendsQuery",
+      series,
+      interval: "day",
+      dateRange: { date_from: "-30d" },
+      filterTestAccounts: true,
+      ...extra,
+    },
   };
 }
 
-function funnelFilters(steps, windowDays) {
+function funnelQuery(steps, windowDays) {
   return {
-    insight: "FUNNELS",
-    funnel_viz_type: "steps",
-    funnel_window_interval: windowDays,
-    funnel_window_interval_unit: "day",
-    date_from: "-30d",
-    events: steps.map((id, order) => ({ id, name: id, type: "events", order })),
+    kind: "InsightVizNode",
+    source: {
+      kind: "FunnelsQuery",
+      series: steps.map((id) => ({ kind: "EventsNode", event: id, name: id })),
+      dateRange: { date_from: "-30d" },
+      filterTestAccounts: true,
+      funnelsFilter: {
+        funnelVizType: "steps",
+        funnelWindowInterval: windowDays,
+        funnelWindowIntervalUnit: "day",
+      },
+    },
   };
 }
 
@@ -46,19 +58,19 @@ const DASHBOARDS = [
     insights: [
       {
         name: "Preuvance — Visiteurs uniques",
-        filters: trendsFilters([trendSeries("$pageview", "dau")]),
+        query: trendsQuery([trendSeries("$pageview", "dau")]),
       },
       {
         name: "Preuvance — Évaluations lancées",
-        filters: trendsFilters([trendSeries("assessment_started", "total")]),
+        query: trendsQuery([trendSeries("assessment_started", "total")]),
       },
       {
         name: "Preuvance — Évaluations terminées",
-        filters: trendsFilters([trendSeries("assessment_completed", "total")]),
+        query: trendsQuery([trendSeries("assessment_completed", "total")]),
       },
       {
         name: "Preuvance — PDF téléchargés",
-        filters: trendsFilters([trendSeries("report_pdf_downloaded", "total")]),
+        query: trendsQuery([trendSeries("report_pdf_downloaded", "total")]),
       },
     ],
   },
@@ -68,7 +80,7 @@ const DASHBOARDS = [
     insights: [
       {
         name: "Preuvance — Funnel visite → PDF",
-        filters: funnelFilters(
+        query: funnelQuery(
           [
             "$pageview",
             "assessment_form_started",
@@ -87,7 +99,7 @@ const DASHBOARDS = [
     insights: [
       {
         name: "Preuvance — Funnel scan local → évaluation",
-        filters: funnelFilters(
+        query: funnelQuery(
           [
             "scan_report_loaded",
             "scan_digest_handoff",
@@ -105,28 +117,25 @@ const DASHBOARDS = [
     insights: [
       {
         name: "Preuvance — Échecs par code",
-        filters: trendsFilters([trendSeries("assessment_failed", "total")], {
-          breakdown: "code",
-          breakdown_type: "event",
+        query: trendsQuery([trendSeries("assessment_failed", "total")], {
+          breakdownFilter: { breakdown: "code", breakdown_type: "event" },
         }),
       },
       {
         name: "Preuvance — Étapes atteintes",
-        filters: trendsFilters(
-          [trendSeries("assessment_stage_reached", "total")],
-          { breakdown: "stage", breakdown_type: "event" },
-        ),
+        query: trendsQuery([trendSeries("assessment_stage_reached", "total")], {
+          breakdownFilter: { breakdown: "stage", breakdown_type: "event" },
+        }),
       },
       {
         name: "Preuvance — Répartition par palier",
-        filters: trendsFilters([trendSeries("assessment_completed", "total")], {
-          breakdown: "tier",
-          breakdown_type: "event",
+        query: trendsQuery([trendSeries("assessment_completed", "total")], {
+          breakdownFilter: { breakdown: "tier", breakdown_type: "event" },
         }),
       },
       {
         name: "Preuvance — Score moyen",
-        filters: trendsFilters([
+        query: trendsQuery([
           trendSeries("assessment_completed", "avg", {
             math_property: "score",
           }),
@@ -198,7 +207,7 @@ async function ensureInsight(projectId, dashboardId, definition) {
   if (!existing) {
     await request("POST", basePath, {
       name: definition.name,
-      filters: definition.filters,
+      query: definition.query,
       dashboards: [dashboardId],
     });
     console.log(`  Insight créé : ${definition.name}`);
