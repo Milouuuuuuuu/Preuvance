@@ -1,0 +1,56 @@
+{
+  "entity": {
+    "profileVersion": "preuvance-admin-profile-v1",
+    "legalName": "Exemple Conseil (profil de démonstration)",
+    "form": "micro_entreprise_fr",
+    "country": "FR",
+    "registrationLabel": "SIRET",
+    "registrationValue": "000 000 000 00000",
+    "vatRegime": "franchise_en_base_fr",
+    "address": {
+      "line1": "1 rue de l'Exemple",
+      "postalCode": "79000",
+      "city": "Niort",
+      "country": "France"
+    },
+    "email": "contact@exemple.test",
+    "representative": "Prénom Nom",
+    "currency": "EUR",
+    "paymentTermsDays": 30,
+    "footerNote": "Profil de démonstration : aucune donnée réelle."
+  },
+  "client": {
+    "legalName": "Société de démonstration (fictive)",
+    "isBusiness": true,
+    "address": {
+      "line1": "2 avenue du Test",
+      "postalCode": "75000",
+      "city": "Paris",
+      "country": "France"
+    },
+    "country": "FR",
+    "contactName": "Direction générale"
+  },
+  "engagement": {
+    "reference": "PVD-DEMO-001",
+    "subject": "Diagnostic complet des sources de données et des dépendances IA",
+    "issuedOn": "2026-07-25T09:00:00.000Z",
+    "workingDays": 10,
+    "lines": [
+      {
+        "label": "Diagnostic complet — inventaire, cartographie des flux, plan de transition",
+        "quantity": 1,
+        "unit": "forfait",
+        "unitPriceCents": 450000
+      }
+    ],
+    "scope": [
+      "ERP Dolibarr (base PostgreSQL, lecture seule)",
+      "Exports commerciaux du dossier partagé"
+    ],
+    "exclusions": [
+      "Aucune intervention corrective sur les systèmes du client pendant la mission."
+    ],
+    "depositCents": 0
+  }
+}

@@ -32,8 +32,13 @@ export type DocumentModel = {
   footer?: string;
 };
 
+/**
+ * Une cellule peut contenir plusieurs lignes (bloc d'identité, cartouche de
+ * signature). Markdown n'admet pas de saut de ligne dans un tableau : les
+ * lignes sont séparées par un point médian, et par un `<br />` en HTML.
+ */
 function escapeMarkdownCell(value: string): string {
-  return value.replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
+  return value.replace(/\|/g, "\\|").replace(/\r?\n/g, " · ");
 }
 
 export function renderDocumentMarkdown(model: DocumentModel): string {
@@ -135,7 +140,12 @@ export function renderDocumentHtml(model: DocumentModel): string {
       } else if (block.kind === "table") {
         const head = block.head.map((cell) => `<th scope="col">${escapeHtml(cell)}</th>`).join("");
         const rows = block.rows
-          .map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`)
+          .map(
+            (row) =>
+              `<tr>${row
+                .map((cell) => `<td>${escapeHtml(cell).replace(/\r?\n/g, "<br />")}</td>`)
+                .join("")}</tr>`,
+          )
           .join("");
         body.push(`<table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`);
       } else if (block.kind === "code") {

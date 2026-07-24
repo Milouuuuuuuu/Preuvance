@@ -149,6 +149,36 @@ d’accès client (comptes de lecture seule, DPA, réversibilité) :
 [`docs/pack-acces.md`](docs/pack-acces.md). Runbook des équipes terrain :
 [`docs/operateur-diagnostic.md`](docs/operateur-diagnostic.md).
 
+## Environnement administratif d’une mission
+
+Une mission produit six documents : lettre de mission, checklist du pack
+d’accès, contrat de sous-traitance (art. 28 RGPD), registre des traitements
+(art. 30.2), facture et attestation de fin de mission. Ils sont **dérivés du
+même profil administratif et du même fichier de mission**, donc ils ne peuvent
+pas se contredire.
+
+- Les mentions fiscales viennent d’un tableau de règles sourcé, indexé par le
+  couple (régime de TVA de l’émetteur, pays du client) : franchise en base,
+  régime réel français, TVA suisse. Chaque règle cite son article et son lien ;
+  une combinaison non couverte rend un avertissement bloquant au lieu d’un taux
+  deviné.
+- Les montants sont tenus en centimes entiers : le devis et la facture ne
+  peuvent pas diverger d’un centime.
+- Le pack d’accès et le registre reprennent les sources réelles du fichier de
+  mission ; l’attestation reprend les empreintes SHA-256 du journal de purge et
+  la liste des accès à révoquer.
+- Chaque document sort en Markdown et en HTML autonome imprimable en PDF, sans
+  script ni ressource distante.
+
+```bash
+npm run admin:demo                                             # profil et mission fictifs
+npm run admin -- --profil profil.json --mission mission.json   # les six documents
+npm run admin -- --profil profil.json --emettre facture --numero PV-2026-0007
+```
+
+Détail des documents, du profil et du moteur de mentions :
+[`docs/admin-mission.md`](docs/admin-mission.md).
+
 ## Boîte à outils de portabilité des données
 
 La page **« Portabilité »** présente `sqlite-postgres-bridge`, un outil MIT séparé
@@ -207,6 +237,7 @@ npm test
 - scan navigateur borné des dépendances IA et handoff local expurgé ;
 - agent local d’inventaire (`lib/inventory/`) : plans de requêtes en lecture seule pilotés par un exécuteur injectable, connecteurs fichiers et API sans dépendance ajoutée, catalogue client sous contrat strict ;
 - moteur de diagnostic déterministe à six axes, avec plafonds de score quand la collecte est incomplète ;
+- documents administratifs de mission dérivés d’un profil unique, avec moteur de mentions fiscales sourcé (`lib/admin/`) ;
 - moteur de règles déterministe (`preuvance-crosscheck-v1`) en contre-vérification de chaque classification ;
 - score et tiers calculés de façon déterministe ;
 - PDF serveur via `@react-pdf/renderer` ;
