@@ -46,3 +46,7 @@ next-env.d.ts
 
 # extraction locale du zip de téléchargement (jamais du source)
 /public/downloads/preuvance-local/
+
+# sorties de mission de démonstration (jamais versionnées)
+/demo/diagnostic/sortie/
+/preuvance-mission/

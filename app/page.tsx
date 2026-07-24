@@ -37,6 +37,7 @@ export default function Home() {
           <nav className="pv-main-nav" aria-label="Navigation principale">
             <a href="/demo">Démo sans compte</a>
             <a href="/scan">Scanner en local</a>
+            <a href="/diagnostic">Diagnostic complet</a>
             <a href="/build-week">Présentation</a>
             <a href="/outils/migration-sqlite-postgresql">Portabilité</a>
             <a href="#methode">Méthode</a>
@@ -121,6 +122,26 @@ export default function Home() {
                 </span>
                 <span className="pv-path-cta">
                   Ouvrir le scan local
+                  <ArrowRight size={16} aria-hidden="true" />
+                </span>
+              </a>
+              <a className="pv-path-card" href="/diagnostic">
+                <span className="pv-path-tag">Mission accompagnée · 10 jours ouvrés</span>
+                <span className="pv-path-heading">
+                  <MonitorCheck size={20} aria-hidden="true" />
+                  Inventorier les sources de données
+                </span>
+                <span className="pv-path-copy">
+                  L’agent local lit les métadonnées des bases, exports et outils
+                  métier en lecture seule — structures, volumétries, dates —
+                  jamais une valeur métier.
+                </span>
+                <span className="pv-path-produces">
+                  Produit : un catalogue par client, une cartographie des flux et
+                  un plan de transition chiffré en jours.
+                </span>
+                <span className="pv-path-cta">
+                  Voir le diagnostic complet
                   <ArrowRight size={16} aria-hidden="true" />
                 </span>
               </a>

@@ -106,6 +106,49 @@ Le scan local (`scripts/preuvance-scan.ps1`) tourne entièrement sur le poste, a
 
 Le rapport `preuvance-scan.json` se charge dans la page **« Scanner en local »**, lue dans le navigateur (aucun upload), qui affiche le verdict de concordance et un **score d’exposition déterministe**. Les fonctions pures du script sont couvertes par des autotests (`-SelfTest`) intégrés à la chaîne de tests, avec un garde-fou qui interdit toute dérive entre le catalogue PowerShell et `lib/scan/scan-contract.ts`. Détail et limites dans [`docs/preuvance-scan.md`](docs/preuvance-scan.md).
 
+## Diagnostic complet des sources de données (v2)
+
+Le scan répond à « quels outils d’IA tournent sur les postes ». Le **diagnostic
+complet** répond à la question d’avant : *quelles données existent, dans quels
+systèmes, avec quels champs sensibles, et par quels flux elles sortent*. C’est
+l’inventaire manuel — des semaines d’allers-retours — remplacé par une collecte
+machine, pour tenir une restitution en **10 jours ouvrés**.
+
+- **Agent local** (`scripts/preuvance-inventory.ts`) : connecteurs en lecture
+  seule vers SQL générique (PostgreSQL, MySQL, SQL Server), fichiers CSV/XLSX,
+  Dolibarr et Salesforce. Métadonnées seulement — structures, volumétries,
+  dates — **jamais une valeur métier**.
+- **Mode « remise au DBA »** : `--dry-run` imprime les requêtes de lecture seule
+  et le script de compte à créer. L’équipe du client les exécute, rend des CSV,
+  et le diagnostic se produit **sans qu’aucun accès direct ne soit ouvert**.
+- **Catalogue unique par client** (`preuvance-catalogue-v1`) : contrat strict,
+  unicité et intégrité référentielle vérifiées, mention de confidentialité
+  littérale.
+- **Diagnostic déterministe** : six axes pondérés, constats gradués rattachés à
+  un fondement (RGPD, AI Act), et des **plafonds de score** quand la collecte est
+  incomplète ou qu’un constat critique existe — une absence d’observation n’est
+  jamais convertie en bonne nouvelle.
+- **Cartographie des flux** en Mermaid, où le trait plein (observé) ne se
+  confond jamais avec le pointillé (déclaré en entretien).
+- **Restitution** : rapport Markdown et page HTML autonome imprimable en PDF,
+  rendus depuis un modèle unique, générés dans le navigateur sur la page
+  [`/diagnostic`](app/diagnostic/page.tsx) — aucun envoi.
+- **Fin de mission** : `--purge` calcule l’empreinte SHA-256 de chaque artefact
+  avant suppression et remet un journal vérifiable par le client.
+
+```bash
+npm run inventaire:demo                                        # mission fictive versionnée
+npm run inventaire -- --mission mission.json --dry-run         # pack de requêtes
+npm run inventaire -- --mission mission.json --out sortie      # collecte et diagnostic
+npm run inventaire -- --mission mission.json --out sortie --purge
+```
+
+Architecture et matrice des connecteurs :
+[`docs/preuvance-v2-diagnostic.md`](docs/preuvance-v2-diagnostic.md). Pack
+d’accès client (comptes de lecture seule, DPA, réversibilité) :
+[`docs/pack-acces.md`](docs/pack-acces.md). Runbook des équipes terrain :
+[`docs/operateur-diagnostic.md`](docs/operateur-diagnostic.md).
+
 ## Boîte à outils de portabilité des données
 
 La page **« Portabilité »** présente `sqlite-postgres-bridge`, un outil MIT séparé
@@ -162,6 +205,8 @@ npm test
 - API Responses OpenAI avec JSON Schema strict ;
 - registre de preuves partagé entre UI, rapport PDF et persistance ;
 - scan navigateur borné des dépendances IA et handoff local expurgé ;
+- agent local d’inventaire (`lib/inventory/`) : plans de requêtes en lecture seule pilotés par un exécuteur injectable, connecteurs fichiers et API sans dépendance ajoutée, catalogue client sous contrat strict ;
+- moteur de diagnostic déterministe à six axes, avec plafonds de score quand la collecte est incomplète ;
 - moteur de règles déterministe (`preuvance-crosscheck-v1`) en contre-vérification de chaque classification ;
 - score et tiers calculés de façon déterministe ;
 - PDF serveur via `@react-pdf/renderer` ;

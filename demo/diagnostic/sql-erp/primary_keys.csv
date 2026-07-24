@@ -1,0 +1,8 @@
+table_schema,table_name,column_name
+public,llx_societe,rowid
+public,llx_socpeople,rowid
+public,llx_facture,rowid
+public,llx_facturedet,rowid
+public,llx_user,rowid
+public,llx_product,rowid
+public,llx_expensereport,rowid

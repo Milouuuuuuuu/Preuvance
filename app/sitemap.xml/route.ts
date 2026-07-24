@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 const publicPaths = [
   "/",
   "/scan",
+  "/diagnostic",
   "/en-clair",
   "/outils/migration-sqlite-postgresql",
 ];

@@ -1,0 +1,81 @@
+{
+  "configVersion": "preuvance-mission-v1",
+  "mission": {
+    "client": "Société de démonstration (fictive)",
+    "reference": "PVD-DEMO-001",
+    "operator": "Équipe terrain",
+    "mode": "metadata_only",
+    "scope": [
+      "ERP Dolibarr (base PostgreSQL, lecture seule)",
+      "Exports commerciaux du dossier partagé"
+    ],
+    "dpaReference": "DPA-DEMO-2026"
+  },
+  "sources": [
+    {
+      "id": "erp-dolibarr",
+      "kind": "sql",
+      "system": "postgresql",
+      "dialect": "postgresql",
+      "label": "ERP Dolibarr (PostgreSQL)",
+      "location": "srv-erp.interne:5432/dolibarr",
+      "readOnlyAccount": "preuvance_ro",
+      "executor": {
+        "type": "results",
+        "directory": "sql-erp",
+        "format": "csv"
+      }
+    },
+    {
+      "id": "exports-commerciaux",
+      "kind": "file",
+      "system": "csv",
+      "label": "Exports commerciaux (dossier partagé)",
+      "directory": "exports",
+      "extensions": [".csv", ".xlsx"]
+    }
+  ],
+  "tools": [
+    {
+      "id": "assistant-redaction",
+      "name": "Assistant de rédaction commerciale",
+      "category": "ia",
+      "hosting": "cloud",
+      "aiProviders": ["openai"],
+      "sourceIds": ["exports-commerciaux"],
+      "evidence": "declared"
+    },
+    {
+      "id": "tableur-equipe",
+      "name": "Tableur d’équipe",
+      "category": "bureautique",
+      "hosting": "cloud",
+      "sourceIds": ["exports-commerciaux"],
+      "evidence": "declared"
+    }
+  ],
+  "flows": [
+    {
+      "id": "flux-erp-vers-export",
+      "from": { "kind": "source", "ref": "erp-dolibarr" },
+      "to": { "kind": "source", "ref": "exports-commerciaux" },
+      "medium": "export_fichier",
+      "frequency": "hebdomadaire",
+      "personalData": "yes",
+      "transfersOutsideEu": "no",
+      "evidence": "declared",
+      "label": "export hebdomadaire du portefeuille clients"
+    },
+    {
+      "id": "flux-export-vers-ia",
+      "from": { "kind": "source", "ref": "exports-commerciaux" },
+      "to": { "kind": "tool", "ref": "assistant-redaction" },
+      "medium": "saisie_manuelle",
+      "frequency": "quotidien",
+      "personalData": "yes",
+      "transfersOutsideEu": "yes",
+      "evidence": "declared",
+      "label": "copier-coller de fiches clients dans l’assistant"
+    }
+  ]
+}

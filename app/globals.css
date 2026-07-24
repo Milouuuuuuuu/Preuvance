@@ -4947,3 +4947,125 @@ button.pv-scan-next-cta {
   .pv-bw-slide { transition: none; }
   .pv-bw-opening.is-active .pv-bw-orbit-ring.is-inner { animation: none; }
 }
+
+/* --- Diagnostic complet (catalogue de sources, v2) --- */
+
+.pv-diag-axes,
+.pv-diag-caps,
+.pv-diag-table-wrap {
+  padding: 18px 20px;
+  border: 1px solid var(--pv-line);
+  border-radius: var(--pv-radius);
+  background: var(--pv-white);
+}
+
+.pv-diag-axes h3,
+.pv-diag-caps h3,
+.pv-diag-table-wrap h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+
+.pv-diag-axes ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.pv-diag-axes li {
+  display: grid;
+  grid-template-columns: minmax(9rem, 14rem) 1fr auto;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+}
+
+.pv-diag-axis-label {
+  font-weight: 600;
+  color: var(--pv-ink-soft);
+}
+
+.pv-diag-axis-bar {
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--pv-line);
+  overflow: hidden;
+}
+
+.pv-diag-axis-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--pv-blue);
+}
+
+.pv-diag-axis-score {
+  color: var(--pv-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pv-diag-caps {
+  border-color: #efb4b4;
+  background: var(--pv-risk-pale);
+}
+
+.pv-diag-caps p {
+  margin: 0 0 10px;
+  color: var(--pv-ink-soft);
+  font-size: 0.88rem;
+}
+
+.pv-diag-caps ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+.pv-diag-reco {
+  margin: 8px 0 0;
+  font-size: 0.86rem;
+  color: var(--pv-ink-soft);
+}
+
+.pv-diag-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.pv-diag-table th,
+.pv-diag-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--pv-line);
+  vertical-align: top;
+}
+
+.pv-diag-table th {
+  background: var(--pv-paper);
+  font-weight: 600;
+}
+
+.pv-diag-table td:not(:first-child) {
+  font-variant-numeric: tabular-nums;
+}
+
+.pv-diag-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+@media (max-width: 640px) {
+  .pv-diag-axes li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

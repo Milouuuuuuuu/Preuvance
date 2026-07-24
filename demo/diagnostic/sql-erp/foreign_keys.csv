@@ -1,0 +1,5 @@
+table_schema,table_name,column_name,foreign_table_schema,foreign_table_name,foreign_column_name
+public,llx_socpeople,fk_soc,public,llx_societe,rowid
+public,llx_facture,fk_soc,public,llx_societe,rowid
+public,llx_facturedet,fk_facture,public,llx_facture,rowid
+public,llx_expensereport,fk_user_author,public,llx_user,rowid

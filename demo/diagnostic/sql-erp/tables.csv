@@ -1,0 +1,9 @@
+table_schema,table_name,object_kind,approx_rows,size_bytes
+public,llx_societe,table,4213,8388608
+public,llx_socpeople,table,6820,5242880
+public,llx_facture,table,18422,20971520
+public,llx_facturedet,table,71340,52428800
+public,llx_user,table,37,262144
+public,llx_product,table,0,16384
+public,llx_expensereport,table,912,1048576
+public,v_ca_mensuel,view,,
