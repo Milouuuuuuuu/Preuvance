@@ -18,6 +18,10 @@
   --pv-caution-pale: #fff4df;
   --pv-risk: #c62828;
   --pv-risk-pale: #fff0f0;
+  --pv-risk-deep: #991b1b;
+  --pv-risk-line: #efb4b4;
+  --pv-caution-line: #efca91;
+  --pv-panel-dark: #0b1220;
   --pv-radius-sm: 6px;
   --pv-radius: 10px;
   --pv-radius-lg: 16px;
@@ -90,7 +94,7 @@ a {
   z-index: 100;
   padding: 10px 14px;
   border-radius: var(--pv-radius-sm);
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   color: var(--pv-white);
   font-size: 0.86rem;
   font-weight: 700;
@@ -417,7 +421,7 @@ a {
   justify-content: space-between;
   min-height: 45px;
   padding: 0 24px;
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   color: #dbe2ee;
   font-family: var(--font-geist-mono), monospace;
   font-size: 0.66rem;
@@ -550,7 +554,7 @@ a {
 
 .pv-field-error {
   margin: -2px 0 0;
-  color: #991b1b;
+  color: var(--pv-risk-deep);
   font-size: 0.7rem;
   font-weight: 620;
   line-height: 1.4;
@@ -615,7 +619,7 @@ a {
   border: 1px solid #efb4b4;
   border-radius: var(--pv-radius-sm);
   background: var(--pv-risk-pale);
-  color: #991b1b;
+  color: var(--pv-risk-deep);
   font-size: 0.8rem;
   line-height: 1.45;
 }
@@ -1041,7 +1045,7 @@ a {
   border: 1px solid #efb4b4;
   border-radius: var(--pv-radius-sm);
   background: var(--pv-risk-pale);
-  color: #991b1b;
+  color: var(--pv-risk-deep);
   font-size: 0.79rem;
   line-height: 1.45;
 }
@@ -1075,7 +1079,7 @@ a {
 .pv-crosscheck-banner.is-risk {
   border: 1px solid #efb4b4;
   background: var(--pv-risk-pale);
-  color: #991b1b;
+  color: var(--pv-risk-deep);
 }
 
 .pv-crosscheck-banner.is-caution {
@@ -1123,8 +1127,8 @@ a {
 }
 
 .pv-path-primary {
-  border-color: var(--pv-ink);
-  background: var(--pv-ink);
+  border-color: var(--pv-panel-dark);
+  background: var(--pv-panel-dark);
   color: #fff;
   box-shadow: 0 12px 34px rgba(11, 18, 32, 0.16);
 }
@@ -1284,7 +1288,7 @@ a {
   border: 1px solid #efb4b4;
   border-radius: var(--pv-radius-sm);
   background: var(--pv-risk-pale);
-  color: #991b1b;
+  color: var(--pv-risk-deep);
   font-size: 0.85rem;
 }
 
@@ -1410,7 +1414,7 @@ a {
 
 .pv-scan-badge.is-risk {
   background: var(--pv-risk-pale);
-  color: #991b1b;
+  color: var(--pv-risk-deep);
 }
 .pv-scan-badge.is-caution {
   background: var(--pv-caution-pale);
@@ -1616,7 +1620,7 @@ a {
   padding: clamp(32px, 5vw, 62px);
   border-top: 5px solid var(--pv-score-tone);
   border-radius: var(--pv-radius-lg);
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   color: var(--pv-white);
 }
 
@@ -2037,13 +2041,13 @@ a {
 }
 
 .pv-priority-badge.is-risk {
-  border-color: #efb4b4;
+  border-color: var(--pv-risk-line);
   background: var(--pv-risk-pale);
   color: var(--pv-risk);
 }
 
 .pv-priority-badge.is-caution {
-  border-color: #efca91;
+  border-color: var(--pv-caution-line);
   background: var(--pv-caution-pale);
   color: var(--pv-caution);
 }
@@ -2218,7 +2222,7 @@ a {
   margin: 112px auto 0;
   padding: clamp(42px, 6vw, 72px);
   border-radius: var(--pv-radius-lg);
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   color: var(--pv-white);
 }
 
@@ -2335,7 +2339,7 @@ a {
   margin: 0;
   border: 1px solid #2c3850;
   border-radius: var(--pv-radius);
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   box-shadow: 0 24px 52px rgba(11, 18, 32, 0.16);
   overflow: hidden;
 }
@@ -2369,7 +2373,7 @@ a {
   padding: 30px 34px;
   border: 1px solid #2c3850;
   border-radius: var(--pv-radius-lg);
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   color: var(--pv-white);
 }
 
@@ -2667,7 +2671,7 @@ a {
 .pv-portability-boundary {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 18px;
-  border-color: #e5c48a;
+  border-color: var(--pv-caution-line);
   background: var(--pv-caution-pale);
 }
 
@@ -2689,7 +2693,7 @@ a {
   align-items: center;
   margin-top: 88px;
   border-color: #2c3850;
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   color: var(--pv-white);
 }
 
@@ -3569,7 +3573,7 @@ a {
   gap: 8px;
   padding: 22px;
   border-radius: 12px;
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   color: var(--pv-white);
 }
 
@@ -3873,7 +3877,7 @@ a {
   padding: 9px 14px;
   border: 0;
   border-radius: 7px;
-  background: var(--pv-ink);
+  background: var(--pv-panel-dark);
   color: var(--pv-white);
   font-weight: 750;
   cursor: pointer;
@@ -5009,7 +5013,7 @@ button.pv-scan-next-cta {
 }
 
 .pv-diag-caps {
-  border-color: #efb4b4;
+  border-color: var(--pv-risk-line);
   background: var(--pv-risk-pale);
 }
 
@@ -5068,4 +5072,389 @@ button.pv-scan-next-cta {
     grid-template-columns: 1fr;
     gap: 4px;
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * Thème nuit public — discret et clean (D-105).
+ *
+ * Activé uniquement par la bascule (opt-in, persisté en localStorage), jamais
+ * imposé. Les tokens surfaces/texte sont inversés ; les panneaux sombres
+ * restent sombres via --pv-panel-dark, donc aucun texte clair codé en dur ne
+ * casse. Contrastes vérifiés AA sur fond #05080f.
+ * ------------------------------------------------------------------------ */
+:root[data-theme="nuit"] {
+  --pv-paper: #05080f;
+  --pv-white: #0d1320;
+  --pv-ink: #e9edf5;
+  --pv-ink-soft: #c3cbda;
+  --pv-muted: #95a1b5;
+  --pv-line: #1d2636;
+  --pv-line-strong: #36425c;
+  --pv-blue: #7c9aff;
+  --pv-blue-dark: #a9bdff;
+  --pv-blue-pale: #101a30;
+  --pv-pass: #57c979;
+  --pv-pass-pale: #0b2214;
+  --pv-caution: #f3a34a;
+  --pv-caution-pale: #271a08;
+  --pv-caution-line: #6d4a1c;
+  --pv-risk: #ff7d7d;
+  --pv-risk-pale: #2a0f0f;
+  --pv-risk-deep: #ffa1a1;
+  --pv-risk-line: #6d2626;
+  --pv-panel-dark: #0e1626;
+  --background: var(--pv-paper);
+  --foreground: var(--pv-ink);
+  color-scheme: dark;
+}
+
+:root[data-theme="nuit"] ::selection {
+  background: var(--pv-blue);
+  color: #05080f;
+}
+
+/* Transition fond noir : cross-fade des couleurs pendant la bascule.
+ * La classe est posée par la bascule et retirée 600 ms plus tard. */
+@media (prefers-reduced-motion: no-preference) {
+  html.pv-theme-anim,
+  html.pv-theme-anim body,
+  html.pv-theme-anim * {
+    transition:
+      background-color 450ms ease,
+      color 450ms ease,
+      border-color 450ms ease,
+      box-shadow 450ms ease !important;
+  }
+}
+
+/* Animation « construction » : un balayage fin descend sur la page pendant la
+ * bascule, comme un tracé de plan qui assemble l'écran. Purement décoratif. */
+.pv-theme-sweep {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pv-theme-sweep {
+    display: block;
+    background:
+      linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(124, 154, 255, 0.16) 49.6%,
+        rgba(124, 154, 255, 0.55) 50%,
+        rgba(124, 154, 255, 0.16) 50.4%,
+        transparent 100%
+      )
+      no-repeat;
+    background-size: 100% 34%;
+    background-position-y: -40%;
+    animation: pv-sweep-down 620ms ease-in-out both;
+  }
+}
+
+@keyframes pv-sweep-down {
+  from {
+    background-position-y: -40%;
+    opacity: 1;
+  }
+
+  to {
+    background-position-y: 140%;
+    opacity: 0;
+  }
+}
+
+/* Bascule de thème : pastille fixe, discrète, accessible clavier. */
+.pv-theme-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--pv-line-strong);
+  border-radius: 999px;
+  background: var(--pv-white);
+  color: var(--pv-ink-soft);
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(11, 18, 32, 0.14);
+}
+
+.pv-theme-toggle:hover {
+  color: var(--pv-blue-dark);
+  border-color: var(--pv-blue);
+}
+
+:root[data-theme="nuit"] .pv-theme-toggle {
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.5);
+}
+
+/* La console interne a son propre thème : la bascule publique n'y a pas cours. */
+body:has(.ops-shell) .pv-theme-toggle {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+ * Console interne /ops (D-106) — esthétique inspirée des interfaces de
+ * hacking de fiction (néon sur noir, scanlines, monospace). Réservée à
+ * l'équipe : la page n'existe que si PREUVANCE_OPS=1, noindex, hors sitemap.
+ * Aucun glitch permanent : les animations respectent prefers-reduced-motion.
+ * ------------------------------------------------------------------------ */
+.ops-shell {
+  --ops-bg: #04060a;
+  --ops-panel: #090d16;
+  --ops-line: #16324a;
+  --ops-neon: #35f5cf;
+  --ops-neon-soft: #9af7e6;
+  --ops-pink: #ff5fa2;
+  --ops-text: #d7e3ea;
+  --ops-muted: #8aa0ad;
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  background: var(--ops-bg);
+  color: var(--ops-text);
+  font-family: var(--font-geist-mono), Consolas, monospace;
+  position: relative;
+  overflow: clip;
+}
+
+.ops-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.025) 0,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.ops-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(53, 245, 207, 0.06),
+    transparent 55%
+  );
+}
+
+.ops-inner {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1080px);
+  margin: 0 auto;
+  display: grid;
+  gap: 26px;
+}
+
+.ops-topline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ops-muted);
+}
+
+.ops-topline .ops-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ops-neon);
+  box-shadow: 0 0 12px var(--ops-neon);
+}
+
+.ops-title {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.05;
+  color: #f2fbf8;
+  text-shadow:
+    0 0 18px rgba(53, 245, 207, 0.35),
+    2px 0 0 rgba(255, 95, 162, 0.35),
+    -2px 0 0 rgba(53, 245, 207, 0.35);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ops-title {
+    animation: ops-flicker 9s steps(1, end) infinite;
+  }
+}
+
+@keyframes ops-flicker {
+  0%,
+  92.8%,
+  93.6%,
+  100% {
+    opacity: 1;
+  }
+
+  93%,
+  93.4% {
+    opacity: 0.72;
+  }
+}
+
+.ops-tagline {
+  margin: 6px 0 0;
+  color: var(--ops-neon-soft);
+  font-size: 0.95rem;
+}
+
+.ops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.ops-panel {
+  border: 1px solid var(--ops-line);
+  border-radius: 10px;
+  background: var(--ops-panel);
+  padding: 20px 22px;
+  box-shadow: inset 0 0 0 1px rgba(53, 245, 207, 0.04);
+}
+
+.ops-panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ops-neon);
+}
+
+.ops-panel h2::before {
+  content: ">";
+  color: var(--ops-pink);
+}
+
+.ops-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86rem;
+}
+
+.ops-list li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.ops-env {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.82rem;
+}
+
+.ops-env li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px dashed rgba(138, 160, 173, 0.25);
+  padding-bottom: 6px;
+}
+
+.ops-env code {
+  color: var(--ops-text);
+  word-break: break-all;
+}
+
+.ops-badge {
+  flex: none;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+}
+
+.ops-badge.is-on {
+  color: var(--ops-neon);
+  text-shadow: 0 0 10px rgba(53, 245, 207, 0.6);
+}
+
+.ops-badge.is-off {
+  color: var(--ops-pink);
+}
+
+.ops-cmd {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--ops-line);
+  background: #050910;
+  color: var(--ops-neon-soft);
+  font-size: 0.8rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.ops-note {
+  margin: 10px 0 0;
+  color: var(--ops-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.ops-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ops-links a {
+  border: 1px solid var(--ops-line);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  color: var(--ops-neon-soft);
+}
+
+.ops-links a:hover,
+.ops-links a:focus-visible {
+  border-color: var(--ops-neon);
+  color: var(--ops-neon);
+  box-shadow: 0 0 16px rgba(53, 245, 207, 0.25);
+}
+
+.ops-shell :focus-visible {
+  outline: 2px solid var(--ops-neon);
+  outline-offset: 3px;
+}
+
+.ops-step-window {
+  flex: none;
+  color: var(--ops-pink);
+  font-weight: 700;
 }

@@ -108,7 +108,26 @@ test("rend la page Preuvance en français sans vestige du starter", async () => 
   assert.match(html, /id="confidentialite"/i);
   assert.match(html, /Marquage machine · 50\(2\)/i);
   assert.match(html, /Contenu synthétique · 50\(4\)/i);
+  assert.match(html, /localStorage\.getItem\("pv-theme"\)/);
   assert.doesNotMatch(html, /Codex is working|Your site is taking shape|SkeletonPreview/i);
+});
+
+test("la console interne /ops n’existe pas sans PREUVANCE_OPS", async (t) => {
+  const response = await fetch(`${baseUrl}/ops`, {
+    headers: { accept: "text/html" },
+  });
+  // Le serveur de test lit les fichiers .env du dépôt, pas l'environnement du
+  // processus : sur un poste d'équipe où .env.local active la console, on
+  // vérifie alors le noindex — la garantie 404 est falsifiée en CI, qui n'a
+  // aucun .env.local (D-106).
+  if (response.status === 200) {
+    const html = await response.text();
+    assert.match(html, /noindex/i);
+    assert.match(html, /PRVNC\/\/OPS/);
+    t.diagnostic("PREUVANCE_OPS actif sur ce poste : noindex vérifié, garde 404 couverte en CI");
+    return;
+  }
+  assert.equal(response.status, 404);
 });
 
 test("met le dossier instantané au premier plan et conserve le scan local", async () => {
@@ -423,6 +442,7 @@ test("expose un robots.txt qui exclut les zones privées et pointe le sitemap", 
   assert.match(body, /^Disallow: \/api\/$/m);
   assert.match(body, /^Disallow: \/auth\/$/m);
   assert.match(body, /^Disallow: \/dossiers\/$/m);
+  assert.match(body, /^Disallow: \/ops$/m);
   assert.match(body, /^Sitemap: https?:\/\/\S+\/sitemap\.xml$/m);
 });
 
@@ -442,4 +462,5 @@ test("expose un sitemap.xml des pages publiques sans la démo noindex", async ()
   assert.match(body, /<loc>https?:\/\/[^<]+\/scan<\/loc>/);
   assert.doesNotMatch(body, /\/demo/);
   assert.doesNotMatch(body, /\/build-week/);
+  assert.doesNotMatch(body, /\/ops/);
 });

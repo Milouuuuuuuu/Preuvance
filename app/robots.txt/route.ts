@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     "Disallow: /api/",
     "Disallow: /auth/",
     "Disallow: /dossiers/",
+    "Disallow: /ops",
     "",
     `Sitemap: ${sitemapUrl}`,
     "",

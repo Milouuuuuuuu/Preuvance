@@ -2,7 +2,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import { PostHogProvider } from "./components/PostHogProvider";
+import { ThemeToggle } from "./components/ThemeToggle";
 import "./globals.css";
+
+// Pose data-theme avant la première peinture pour éviter le flash clair quand
+// le visiteur a choisi le mode nuit (D-105). Aucune entrée utilisateur n'est
+// interprétée : seule la valeur exacte « nuit » est honorée.
+const themeInitScript =
+  'try{if(localStorage.getItem("pv-theme")==="nuit"){document.documentElement.dataset.theme="nuit"}}catch(e){}';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -121,7 +128,9 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <PostHogProvider>{children}</PostHogProvider>
+        <ThemeToggle />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

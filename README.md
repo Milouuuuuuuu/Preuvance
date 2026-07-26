@@ -50,8 +50,16 @@ Prérequis : Node.js 22.13 ou plus récent.
 ```bash
 cp .env.example .env.local
 npm install
+npm run poste:verifier   # état du poste : versions, clés présentes/absentes, pièges connus
 npm run dev
 ```
+
+L’onboarding complet par rôle (fondateur, opérateur, développeur) est dans
+[`docs/onboarding-equipe.md`](docs/onboarding-equipe.md). L’équipe dispose d’une
+console interne `/ops` (état du poste, runbook mission, programmes) qui n’existe
+que si `PREUVANCE_OPS=1` est posée sur le poste — 404 sinon, noindex et exclue
+du sitemap (D-106). Un thème nuit public, discret et opt-in, est disponible via
+la pastille en bas de page (D-105).
 
 En développement, renseigner au minimum `OPENAI_API_KEY`. Sans cette clé, l’interface reste accessible mais refuse explicitement de produire une évaluation ; aucun résultat fictif n’est généré. En production, Supabase doit aussi être configuré afin d’éviter un endpoint OpenAI anonyme.
 

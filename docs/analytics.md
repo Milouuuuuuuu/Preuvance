@@ -36,7 +36,8 @@ La configuration du client renforce ce contrat : `autocapture` désactivé (aucu
 | `local_zip_download_clicked` | — | Clic sur le téléchargement du `.zip` Preuvance Local (en-tête et pied de l'accueil, étape 01 du scan) | `app/page.tsx`, `app/scan/page.tsx` |
 | `catalogue_loaded` | `score`, `sources`, `datasets` | Chargement d'un catalogue de diagnostic valide dans le navigateur | `app/components/CatalogueLoader.tsx` |
 | `diagnostic_export` | `format` (`markdown` ou `html`) | Export local du rapport de diagnostic, généré côté navigateur | `app/components/CatalogueLoader.tsx` |
-| `demo_pdf_download_clicked` | — | Clic sur le dossier d'exemple (démo) | `app/demo/page.tsx` |
+| `demo_pdf_download_clicked` | — | Clic sur le dossier d’exemple (démo) | `app/demo/page.tsx` |
+| `theme_toggled` | `theme` (`nuit` ou `jour`) | Clic sur la bascule du thème nuit | `app/components/ThemeToggle.tsx` |
 
 Toute nouvelle propriété doit passer le filtre D-087 : nombre, booléen, ou valeur issue d'une énumération contrôlée par le code — jamais une chaîne construite à partir d'une saisie utilisateur.
 
