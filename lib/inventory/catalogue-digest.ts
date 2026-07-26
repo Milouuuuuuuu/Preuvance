@@ -93,6 +93,7 @@ function ruleIdOf(findingId: string): string {
   const known = [
     "inventaire-source-injoignable",
     "inventaire-source-partielle",
+    "reversibilite-sortie-non-documentee",
   ];
   const prefix = known.find((candidate) => findingId.startsWith(candidate));
   return prefix ?? findingId;

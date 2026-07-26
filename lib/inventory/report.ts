@@ -14,6 +14,7 @@ import {
   type DiagnosticFinding,
 } from "./diagnostic";
 import { buildFlowGraph, toMermaid } from "./flow-map";
+import { REVERSIBILITY_VERSION } from "./reversibility-playbooks";
 import { SENSITIVE_CATEGORY_LABELS } from "./sensitive-fields";
 
 /**
@@ -248,9 +249,56 @@ export function buildReportModel(catalogue: Catalogue, diagnostic: Diagnostic): 
     ],
   });
 
+  const sheeted = diagnostic.reversibility.filter((entry) => entry.sheet !== null);
+  const unsheeted = diagnostic.reversibility.filter((entry) => entry.sheet === null);
+  const reversibilityBlocks: ReportBlock[] = [];
+  if (diagnostic.reversibility.length === 0) {
+    reversibilityBlocks.push({
+      kind: "paragraph",
+      text: "Aucun outil hébergé en ligne n’a été repéré au catalogue. La réversibilité repose alors sur les sauvegardes des bases internes — à tester comme n’importe quelle restauration.",
+    });
+  } else {
+    reversibilityBlocks.push({
+      kind: "paragraph",
+      text: "Pour chaque outil en ligne du catalogue, la fiche ci-dessous cite la sortie documentée par l’éditeur : comment exporter les données, comment les faire supprimer, comment les remettre en local. Une fiche n’est pas un test : l’export doit être exécuté et chronométré avant d’être promis.",
+    });
+    if (sheeted.length > 0) {
+      reversibilityBlocks.push({
+        kind: "table",
+        head: ["Outil", "Export documenté", "Suppression chez l’éditeur", "Mise en local", "Charge"],
+        rows: sheeted.map((entry) => [
+          entry.label,
+          `${entry.sheet!.exportMethod}. Restitution : ${entry.sheet!.exportFormat}.`,
+          entry.sheet!.deletion,
+          entry.sheet!.localMigration,
+          `${entry.sheet!.effortDays} j`,
+        ]),
+      });
+    }
+    if (unsheeted.length > 0) {
+      reversibilityBlocks.push({
+        kind: "paragraph",
+        text: `Sans fiche au registre ${REVERSIBILITY_VERSION} : ${unsheeted
+          .map((entry) => entry.label)
+          .join(", ")}. Aucune procédure n’est supposée à leur place : la méthode d’export complet et la clause de restitution et de suppression sont à établir avec chaque éditeur (art. 28-3-g RGPD).`,
+      });
+    }
+    reversibilityBlocks.push({
+      kind: "callout",
+      tone: "info",
+      title: "Fondements et portée des fiches",
+      text: "Art. 20 RGPD (portabilité), art. 17 (effacement), art. 28-3-g (restitution et suppression en fin de sous-traitance). Les fiches citent les mécanismes d’export documentés publiquement par les éditeurs à la date du registre ; le contrat signé avec chaque éditeur prévaut.",
+    });
+  }
+  sections.push({
+    id: "reversibilite",
+    title: "7. Réversibilité par outil",
+    blocks: reversibilityBlocks,
+  });
+
   sections.push({
     id: "limites",
-    title: "7. Portée et limites",
+    title: "8. Portée et limites",
     blocks: [
       { kind: "list", items: diagnostic.limits },
       { kind: "paragraph", text: catalogue.privacy },

@@ -130,6 +130,12 @@ machine, pour tenir une restitution en **10 jours ouvrés**.
   jamais convertie en bonne nouvelle.
 - **Cartographie des flux** en Mermaid, où le trait plein (observé) ne se
   confond jamais avec le pointillé (déclaré en entretien).
+- **Fiches de réversibilité par outil** (`preuvance-reversibility-v1`) : pour
+  Salesforce, Dolibarr, HubSpot, Google Workspace, Microsoft 365 et Notion, le
+  rapport cite le mécanisme d’export documenté par l’éditeur, la procédure de
+  suppression en fin de contrat (art. 28-3-g RGPD) et le chemin de remise en
+  local. Un outil sans fiche produit un constat « à établir avec l’éditeur » —
+  jamais une procédure supposée.
 - **Restitution** : rapport Markdown et page HTML autonome imprimable en PDF,
   rendus depuis un modèle unique, générés dans le navigateur sur la page
   [`/diagnostic`](app/diagnostic/page.tsx) — aucun envoi.

@@ -41,6 +41,7 @@ n'existe parce qu'un modèle l'a supposé.
         │
         ├── classification des champs sensibles   lib/inventory/sensitive-fields.ts
         ├── moteur de diagnostic déterministe     lib/inventory/diagnostic.ts
+        ├── fiches de réversibilité par outil     lib/inventory/reversibility-playbooks.ts
         ├── cartographie des flux (Mermaid)       lib/inventory/flow-map.ts
         └── digest agrégé pour un modèle          lib/inventory/catalogue-digest.ts
         │
@@ -179,7 +180,39 @@ décident de la fenêtre (mise en sécurité S+0 à S+2, conformité documentair
 S+2 à S+6, transition et réversibilité S+6 à S+13). Les charges sont exprimées
 en jours de travail, jamais en euros — le prix reste une décision commerciale.
 
-## 8. Restitution
+## 8. Fiches de réversibilité par outil
+
+[`lib/inventory/reversibility-playbooks.ts`](../lib/inventory/reversibility-playbooks.ts) —
+version `preuvance-reversibility-v1`.
+
+Le diagnostic sait dire « la donnée dépend d'un éditeur » ; le registre des
+fiches dit **quoi faire, outil par outil** : le mécanisme d'export documenté
+publiquement par l'éditeur, la procédure de suppression en fin de contrat
+(art. 28-3-g RGPD) et le chemin de remise en local en formats relisibles.
+Première version du registre : Salesforce, Dolibarr, HubSpot, Google Workspace,
+Microsoft 365, Notion — les outils les plus fréquents en PME.
+
+Trois règles, héritées du reste du produit :
+
+- **une fiche ne cite que des mécanismes documentés par l'éditeur** — jamais
+  une procédure supposée (même discipline que D-081) ;
+- **la reconnaissance préfère la sous-couverture au faux positif** : un nom
+  ambigu (`SharePoint Server 2019`, `Tableur d'équipe`) ne matche pas et
+  produit un constat « procédure à établir avec l'éditeur » plutôt qu'une
+  fiche fausse ;
+- **une fiche est de la donnée, pas du code** : ajouter un outil au registre
+  n'ouvre aucun accès et ne code aucun connecteur (la discipline D-100 reste
+  entière).
+
+Dans le diagnostic, une fiche reconnue produit un constat **à pénalité
+nulle** — une sortie documentée n'est pas un défaut — dont la recommandation
+est nominative : exécuter un export réel, chronométrer la restauration locale,
+exiger la confirmation écrite de suppression. Un outil en ligne sans fiche
+produit un constat pénalisé (art. 28-3-g) : l'absence de procédure de sortie
+établie est, elle, un vrai risque. Le tout entre mécaniquement au plan de
+transition et dans la section « Réversibilité par outil » des rapports.
+
+## 9. Restitution
 
 - `diagnostic-preuvance.md` : rapport Markdown, cartographie Mermaid incluse.
 - `diagnostic-preuvance.html` : page autonome, sans script ni ressource externe,
@@ -194,7 +227,7 @@ en jours de travail, jamais en euros — le prix reste une décision commerciale
 Markdown et HTML sont rendus depuis un **modèle de rapport unique** : la version
 commerciale ne peut pas diverger de la version technique.
 
-## 9. Fin de mission
+## 10. Fin de mission
 
 `--purge` calcule l'empreinte SHA-256 de chaque artefact **avant** de le
 supprimer, puis écrit `journal-suppression.txt` et `journal-suppression.json`.
@@ -202,7 +235,7 @@ Le client peut ainsi vérifier ce qui a été produit, ce qui a été supprimé,
 qu'aucune copie ne subsiste ailleurs — une promesse de réversibilité qui se
 vérifie plutôt qu'une promesse qui se répète.
 
-## 10. Commandes
+## 11. Commandes
 
 ```bash
 npm run inventaire -- --mission chemin/mission.json --out chemin/sortie

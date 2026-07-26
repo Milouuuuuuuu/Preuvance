@@ -4,6 +4,11 @@ import type {
   SensitiveCategory,
 } from "./catalogue-contract";
 import {
+  resolveReversibility,
+  REVERSIBILITY_LIMIT_NOTE,
+  type ReversibilityEntry,
+} from "./reversibility-playbooks";
+import {
   SENSITIVITY_LIMIT_NOTE,
   summariseSensitivity,
   type SensitivitySummary,
@@ -125,6 +130,8 @@ export type Diagnostic = {
   findings: DiagnosticFinding[];
   coverage: DiagnosticCoverage;
   sensitivity: SensitivitySummary;
+  /** Fiches de réversibilité résolues : une par outil en ligne du catalogue. */
+  reversibility: ReversibilityEntry[];
   plan: TransitionPhase[];
   limits: string[];
 };
@@ -639,8 +646,50 @@ function aiFindings(catalogue: Catalogue): DiagnosticFinding[] {
   return findings;
 }
 
-function reversibilityFindings(catalogue: Catalogue): DiagnosticFinding[] {
+function reversibilityFindings(
+  catalogue: Catalogue,
+  entries: readonly ReversibilityEntry[],
+): DiagnosticFinding[] {
   const findings: DiagnosticFinding[] = [];
+
+  for (const entry of entries) {
+    if (entry.sheet) {
+      // Fiche reconnue : la sortie est documentée par l'éditeur, elle ne pénalise
+      // pas le score — mais elle n'est un acquis qu'une fois testée en réel.
+      findings.push(
+        finding({
+          id: `reversibilite-sortie-a-tester-${entry.sheet.id}`,
+          axis: "reversibilite",
+          severity: "minor",
+          penalty: 0,
+          title: `${entry.sheet.label} : procédure de sortie documentée, à tester en réel`,
+          detail: `La sortie de ${entry.sheet.label} est documentée par l’éditeur — export : ${entry.sheet.exportMethod}. Restitution : ${entry.sheet.exportFormat}. Une procédure documentée n’est pas une procédure testée.`,
+          recommendation: `Exécuter un export complet réel, chronométrer la restauration locale (${entry.sheet.localMigration}) et exiger la confirmation écrite de suppression en fin de contrat.`,
+          basis: entry.sheet.basis,
+          evidence: "declared",
+          effortDays: entry.sheet.effortDays,
+        }),
+      );
+    } else {
+      const toolId = entry.toolIds[0] ?? "outil";
+      findings.push(
+        finding({
+          id: `reversibilite-sortie-non-documentee-${toolId}`,
+          axis: "reversibilite",
+          severity: "minor",
+          title: `Outil « ${entry.label} » : procédure de sortie non documentée`,
+          detail:
+            "Cet outil hébergé en ligne ne correspond à aucune fiche du registre de réversibilité : la méthode d’export complet, le format de restitution et la procédure de suppression restent à établir. Aucune procédure n’est supposée à sa place.",
+          recommendation:
+            "Obtenir de l’éditeur la procédure d’export complet et la clause de restitution et de suppression de fin de contrat, les tester, puis les consigner dans la fiche outil.",
+          basis: "Art. 28-3-g RGPD (restitution et suppression en fin de sous-traitance)",
+          evidence: "absence_of_observation",
+          effortDays: 1,
+        }),
+      );
+    }
+  }
+
   if (catalogue.datasets.length === 0) return findings;
 
   const apiSourceIds = new Set(
@@ -982,13 +1031,14 @@ export function computeDiagnostic(
 
   const coverage = computeCoverage(catalogue);
   const sensitivity = summariseSensitivity(catalogue);
+  const reversibility = resolveReversibility(catalogue);
 
   const findings = [
     ...inventaireFindings(catalogue, coverage),
     ...personalDataFindings(catalogue, sensitivity),
     ...securityFindings(catalogue),
     ...aiFindings(catalogue),
-    ...reversibilityFindings(catalogue),
+    ...reversibilityFindings(catalogue, reversibility),
     ...qualityFindings(catalogue, coverage, referenceDate),
   ].sort(
     (a, b) =>
@@ -1016,6 +1066,7 @@ export function computeDiagnostic(
     SENSITIVITY_LIMIT_NOTE,
     "Le diagnostic porte sur ce qui a été rendu lisible : une source injoignable reste un angle mort, jamais un point positif.",
     "Les volumétries issues des catalogues système sont des estimations du moteur, pas des comptages exacts.",
+    REVERSIBILITY_LIMIT_NOTE,
     "Ce diagnostic n’est ni un avis juridique, ni une certification, ni une décision d’assurabilité.",
   ];
 
@@ -1030,6 +1081,7 @@ export function computeDiagnostic(
     findings,
     coverage,
     sensitivity,
+    reversibility,
     plan: buildTransitionPlan(findings),
     limits,
   };

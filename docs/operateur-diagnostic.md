@@ -103,6 +103,10 @@ Deux entretiens d'une heure, avec un ordre du jour dicté par le diagnostic :
 **Entretien 2 — technique (DSI, prestataire, éditeur)**
 
 - confirmer l'hébergement de chaque outil et l'existence d'un export complet ;
+- dérouler la section « Réversibilité par outil » du rapport : pour chaque
+  fiche, planifier le test d'export réel ; pour chaque outil **sans** fiche,
+  demander à l'éditeur sa procédure d'export et sa clause de restitution
+  (art. 28-3-g RGPD) ;
 - vérifier le hachage des colonnes de secrets signalées ;
 - statuer sur les données dormantes : purge, archivage, ou durée de conservation
   à inscrire au registre.

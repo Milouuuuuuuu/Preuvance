@@ -37,6 +37,13 @@
   ],
   "tools": [
     {
+      "id": "crm-salesforce",
+      "name": "Salesforce (CRM commercial)",
+      "category": "crm",
+      "hosting": "cloud",
+      "evidence": "declared"
+    },
+    {
       "id": "assistant-redaction",
       "name": "Assistant de rédaction commerciale",
       "category": "ia",

@@ -100,7 +100,8 @@ test("le rapport Markdown contient les sections attendues et la cartographie", (
     "## 4. Données personnelles repérées",
     "## 5. Cartographie des flux",
     "## 6. Plan de transition",
-    "## 7. Portée et limites",
+    "## 7. Réversibilité par outil",
+    "## 8. Portée et limites",
   ]) {
     assert.ok(markdown.includes(title), `section manquante : ${title}`);
   }
@@ -140,7 +141,7 @@ test("Markdown et HTML sont rendus depuis le même modèle de rapport", () => {
   const model = buildReportModel(catalogue, diagnostic);
 
   assert.equal(model.score, diagnostic.score);
-  assert.equal(model.sections.length, 7);
+  assert.equal(model.sections.length, 8);
 
   const markdown = renderDiagnosticMarkdown(catalogue, diagnostic);
   const html = renderDiagnosticHtml(catalogue, diagnostic);

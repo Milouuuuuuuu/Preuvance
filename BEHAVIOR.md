@@ -1,6 +1,6 @@
 # Comportement de construction — Preuvance
 
-Dernière mise à jour : 23 juillet 2026.
+Dernière mise à jour : 25 juillet 2026.
 
 Ce document est la mémoire de décision du projet. Toute décision produit, réglementaire, IA, données, sécurité ou architecture qui modifie le comportement livré doit être ajoutée au registre avec une note sur 100.
 
@@ -133,6 +133,7 @@ La note mesure la solidité de la décision au moment où elle est prise, pas un
 | D-101 | Dériver les six documents administratifs d'une mission d'un **profil unique** plutôt que de modèles séparés | 94 | Lettre de mission, facture, contrat de sous-traitance, registre, pack d'accès et attestation lisent le même profil et le même fichier de mission : ils ne peuvent plus se contredire, et une source ajoutée au périmètre apparaît partout. Le rendu passe par le moteur de blocs partagé (`lib/documents/render.ts`), donc la version commerciale et la version technique restent identiques. |
 | D-102 | Faire dépendre les mentions fiscales d'un **tableau de règles sourcé**, et refuser de deviner un cas non couvert | 92 | Le couple (régime de TVA de l'émetteur, pays du client) détermine taux, mentions et obligations déclaratives, chaque règle citant son article et son lien. Une combinaison inconnue rend une règle « à instruire » avec avertissement bloquant plutôt qu'un taux plausible. Le passage à une entité suisse ne demande que trois champs du profil. La note monterait après validation des mentions par une fiduciaire. |
 | D-103 | Tenir les montants en **centimes entiers** et laisser la numérotation des factures à l'émetteur | 96 | Aucune arithmétique flottante sur de l'argent : le devis et la facture ne peuvent pas diverger d'un centime, et l'arrondi de TVA est explicite et testé. La numérotation continue sans rupture étant une obligation portant sur l'émetteur, l'outil calcule le numéro suivant mais ne tient pas le compteur à sa place. |
+| D-104 | Rendre la réversibilité **nominative** par un registre de fiches par outil (`preuvance-reversibility-v1`), en données versionnées plutôt qu'en connecteurs | 91 | L'axe réversibilité disait « obtenir un export documenté par éditeur » sans dire comment : le registre cite, pour Salesforce, Dolibarr, HubSpot, Google Workspace, Microsoft 365 et Notion, le mécanisme d'export documenté publiquement, la procédure de suppression (art. 28-3-g RGPD) et le chemin de remise en local. Une fiche reconnue produit un constat à pénalité nulle (« documenté, à tester en réel ») ; un outil en ligne sans fiche produit un constat pénalisé — l'absence de sortie établie est le vrai risque. La reconnaissance par nom préfère la sous-couverture au faux positif (un `SharePoint Server` on-premise ne matche pas la fiche M365), le digest anonymise l'identifiant d'un outil sans fiche, et D-100 reste entière : une fiche est de la donnée, jamais un connecteur. La note monterait après un export réellement testé et chronométré chez un client par fiche citée. |
 
 ## Protocole de modification
 

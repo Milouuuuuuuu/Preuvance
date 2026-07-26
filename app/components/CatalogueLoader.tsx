@@ -280,6 +280,61 @@ export function CatalogueLoader() {
             </table>
           </div>
 
+          {state.diagnostic.reversibility.length > 0 ? (
+            <div className="pv-diag-table-wrap">
+              <div className="pv-scan-findings-head">
+                <ShieldCheck size={18} aria-hidden="true" />
+                <h3>Réversibilité par outil</h3>
+              </div>
+              <p>
+                Pour chaque outil en ligne du catalogue : la sortie documentée par
+                l’éditeur — exporter, faire supprimer, remettre en local. Une fiche
+                n’est pas un test : l’export doit être exécuté et chronométré.
+              </p>
+              {state.diagnostic.reversibility.some((entry) => entry.sheet) ? (
+                <table className="pv-diag-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Outil</th>
+                      <th scope="col">Export documenté</th>
+                      <th scope="col">Suppression chez l’éditeur</th>
+                      <th scope="col">Mise en local</th>
+                      <th scope="col">Charge</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {state.diagnostic.reversibility
+                      .filter((entry) => entry.sheet)
+                      .map((entry) => (
+                        <tr key={entry.sheet!.id}>
+                          <td>{entry.label}</td>
+                          <td>
+                            {entry.sheet!.exportMethod}. Restitution :{" "}
+                            {entry.sheet!.exportFormat}.
+                          </td>
+                          <td>{entry.sheet!.deletion}</td>
+                          <td>{entry.sheet!.localMigration}</td>
+                          <td>{entry.sheet!.effortDays} j</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              ) : null}
+              {state.diagnostic.reversibility.some((entry) => !entry.sheet) ? (
+                <p className="pv-empty-state">
+                  Sans fiche au registre :{" "}
+                  {state.diagnostic.reversibility
+                    .filter((entry) => !entry.sheet)
+                    .map((entry) => entry.label)
+                    .join(", ")}
+                  . Aucune procédure n’est supposée — la méthode d’export et la
+                  clause de restitution sont à établir avec chaque éditeur
+                  (art. 28-3-g RGPD).
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
           <div className="pv-scan-next">
             <p>
               Les deux exports sont générés dans votre navigateur à partir du
