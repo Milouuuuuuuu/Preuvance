@@ -154,8 +154,9 @@ export type ReversibilityEntry = {
 };
 
 function sheetOf(playbook: ReversibilityPlaybook): ReversibilitySheet {
-  const { pattern: _pattern, sourceSystems: _sourceSystems, ...sheet } = playbook;
-  return sheet;
+  const { id, label, exportMethod, exportFormat, deletion, localMigration, basis, effortDays } =
+    playbook;
+  return { id, label, exportMethod, exportFormat, deletion, localMigration, basis, effortDays };
 }
 
 /** Retrouve la fiche d'un outil par son nom, ou null — jamais une fiche « probable ». */
