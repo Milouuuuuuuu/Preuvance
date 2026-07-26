@@ -13,20 +13,30 @@ const POSTHOG_HOST =
 
 /**
  * Les identifiants de dossier (/dossiers/<uuid>) sont des données tenant :
- * ils sont expurgés de toute URL transmise, y compris celles que posthog-js
- * ajoute lui-même ($pageleave).
+ * ils sont expurgés de toute valeur transmise, y compris celles que posthog-js
+ * ajoute lui-même ($pageleave, $prev_pageview_pathname, $referrer).
  */
 export function redactPath(path: string): string {
-  return path.replace(/\/dossiers\/[^/?#]+/g, "/dossiers/[id]");
+  return path.replace(/\/dossiers\/[^/?#\s"']+/g, "/dossiers/[id]");
 }
 
-function sanitizeUrlProperties<
+/**
+ * Expurge TOUTE propriété de type chaîne qui contient un chemin de dossier,
+ * plutôt qu'une liste de clés à maintenir à la main.
+ *
+ * L'audit du 26/07/2026 a montré la faille de l'approche par liste : le SDK
+ * ajoute de lui-même `$prev_pageview_pathname` (et selon les cas `$referrer`,
+ * `$initial_current_url`), qui échappaient à l'expurgation — un identifiant de
+ * dossier partait alors en clair à la navigation suivante. Balayer toutes les
+ * valeurs ferme la fuite aussi pour les propriétés qu'une future version du
+ * SDK ajouterait (D-110).
+ */
+export function sanitizeUrlProperties<
   T extends { properties?: Record<string, unknown> } | null,
 >(event: T): T {
   if (!event?.properties) return event;
-  for (const key of ["$current_url", "$pathname"]) {
-    const value = event.properties[key];
-    if (typeof value === "string") {
+  for (const [key, value] of Object.entries(event.properties)) {
+    if (typeof value === "string" && value.includes("/dossiers/")) {
       event.properties[key] = redactPath(value);
     }
   }
@@ -52,6 +62,15 @@ export function initPostHogClient(): void {
     capture_dead_clicks: false,
     rageclick: false,
     capture_exceptions: false,
+    // Aucun aller-retour de configuration distante, aucun script tiers chargé
+    // à l'exécution : le SDK n'émet que vers l'hôte d'ingestion. C'est la
+    // conséquence logique des épinglages ci-dessus — si la config distante ne
+    // doit rien pouvoir réactiver, autant ne pas aller la chercher — et cela
+    // permet une CSP sans exception pour us-assets.i.posthog.com (D-112).
+    // Nous n'utilisons ni feature flags, ni sondages, ni enregistrement.
+    advanced_disable_flags: true,
+    disable_external_dependency_loading: true,
+    disable_surveys: true,
     before_send: sanitizeUrlProperties,
   });
   initialized = true;

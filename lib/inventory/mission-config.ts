@@ -9,10 +9,45 @@ import { SQL_DIALECTS } from "./sql-introspection";
  *
  * Règle non négociable : AUCUN secret dans ce fichier. Les identifiants sont
  * nommés (`tokenEnv`, `apiKeyEnv`, `passwordEnv`) et lus dans l'environnement
- * du poste. Le fichier de mission peut donc être versionné, relu et transmis
- * sans risque, ce qui est justement ce qui rend le pack d'accès partageable.
+ * du poste. Le fichier de mission peut donc être versionné et relu sans
+ * exposer de credential.
+ *
+ * En revanche il DÉCLENCHE des exécutions : un exécuteur `command` lance un
+ * programme sur le poste de l'opérateur — celui qui détient les accès en
+ * lecture de tous les clients. Un fichier de mission reçu d'un tiers est donc
+ * traité comme du code, pas comme de la donnée : seuls les clients SQL de la
+ * liste blanche ci-dessous peuvent être invoqués, par leur nom nu, sans
+ * chemin. Un `powershell -c ...` glissé dans un mission.json est refusé à la
+ * validation (audit du 26/07/2026, D-109).
  */
 export const MISSION_CONFIG_VERSION = "preuvance-mission-v1";
+
+/**
+ * Clients SQL en ligne de commande admis comme exécuteurs. Volontairement
+ * court : ce sont les binaires que le mode « commande locale » documente
+ * (docs/preuvance-v2-diagnostic.md §5). Élargir cette liste est une décision
+ * consciente, pas un effet de bord d'un fichier reçu par courriel.
+ */
+export const ALLOWED_EXECUTOR_COMMANDS = [
+  "psql",
+  "mysql",
+  "mariadb",
+  "sqlcmd",
+  "bcp",
+  "sqlite3",
+] as const;
+
+/**
+ * Accepte `psql` ou `psql.exe`, refuse tout chemin (`/`, `\`, `..`, lettre de
+ * lecteur) et toute variante non listée. Le nom nu est ensuite résolu par le
+ * PATH du poste de l'opérateur, sous sa responsabilité.
+ */
+export function isAllowedExecutorCommand(command: string): boolean {
+  const trimmed = command.trim();
+  if (trimmed === "" || /[\\/]/.test(trimmed) || trimmed.includes("..")) return false;
+  const bare = trimmed.toLowerCase().replace(/\.exe$/, "");
+  return (ALLOWED_EXECUTOR_COMMANDS as readonly string[]).includes(bare);
+}
 
 const identifier = z
   .string()
@@ -31,8 +66,19 @@ const envName = z
 const commandExecutorSchema = z
   .object({
     type: z.literal("command"),
-    /** Exécutable appelé sans shell : pas d'interpolation, pas d'injection. */
-    command: z.string().trim().min(1).max(200),
+    /**
+     * Exécutable appelé sans shell (pas d'interpolation), et restreint à la
+     * liste blanche des clients SQL : l'absence de shell empêche l'injection
+     * DANS une commande, elle n'empêche pas de choisir une autre commande.
+     */
+    command: z
+      .string()
+      .trim()
+      .min(1)
+      .max(200)
+      .refine(isAllowedExecutorCommand, {
+        message: `exécuteur non autorisé : seuls ${ALLOWED_EXECUTOR_COMMANDS.join(", ")} sont admis, par leur nom nu et sans chemin`,
+      }),
     /** `{{sql}}` est remplacé par la requête ; tout autre argument est passé tel quel. */
     args: z.array(z.string().max(2_000)).max(40),
     format: z.enum(["csv", "tsv", "json"]).default("csv"),

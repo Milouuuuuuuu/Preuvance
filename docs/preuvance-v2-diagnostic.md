@@ -128,6 +128,14 @@ Le mot de passe n'apparaît jamais dans la mission : il est fourni par
 l'environnement du poste (`PGPASSWORD`, `MYSQL_PWD`, fichier `.pgpass`…), sous
 la responsabilité de l'opérateur.
 
+**Un fichier de mission est du code, pas de la donnée** (D-109). Il déclenche
+l'exécution d'un programme sur le poste de l'opérateur — celui qui détient les
+accès en lecture de tous les clients. Depuis l'audit du 26 juillet 2026, seuls
+les clients SQL de la liste blanche sont admis comme exécuteurs : `psql`,
+`mysql`, `mariadb`, `sqlcmd`, `bcp`, `sqlite3`, par leur nom nu, sans chemin.
+Un `powershell -c …` glissé dans un `mission.json` reçu par courriel est refusé
+à la validation, avant toute exécution.
+
 ## 6. Classification des champs sensibles
 
 [`lib/inventory/sensitive-fields.ts`](../lib/inventory/sensitive-fields.ts) —

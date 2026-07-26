@@ -88,10 +88,14 @@ test("rend la page Preuvance en français sans vestige du starter", async () => 
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   assert.equal(response.headers.get("x-frame-options"), "DENY");
   assert.equal(response.headers.get("x-content-type-options"), "nosniff");
-  assert.match(
-    response.headers.get("content-security-policy") ?? "",
-    /frame-ancestors 'none'/,
-  );
+  const csp = response.headers.get("content-security-policy") ?? "";
+  assert.match(csp, /frame-ancestors 'none'/);
+  // Sans default-src ni script-src, la politique ne bloquait aucun script
+  // distant : ces deux directives sont le cœur du correctif D-112.
+  assert.match(csp, /default-src 'self'/);
+  assert.match(csp, /script-src 'self'/);
+  assert.match(csp, /connect-src [^;]*us\.i\.posthog\.com/);
+  assert.doesNotMatch(csp, /script-src[^;]*\*[^;]*;/);
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang="fr"/i);

@@ -5,13 +5,22 @@ on:
     branches: [main]
   pull_request:
 
+# Le workflow ne fait que vérifier : il n'écrit ni commit, ni release, ni
+# paquet. Un token en lecture seule limite ce qu'une dépendance compromise
+# pendant `npm ci` pourrait faire du GITHUB_TOKEN (audit du 26/07/2026).
+permissions:
+  contents: read
+
 jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Actions épinglées par SHA : une étiquette mobile repointée exécuterait
+      # du code arbitraire dans le runner. Même discipline que package.json,
+      # dont toutes les versions npm sont épinglées.
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: "22.13.0"
           cache: npm
@@ -30,6 +39,11 @@ jobs:
 
       - name: Build de production
         run: npm run build
+
+      # Ce test démarre le serveur Node de production : c'est le seul garde-fou
+      # du chargeur WASM maison (D-084). Il tournait uniquement en local.
+      - name: Démarrage du serveur de production
+        run: node --test tests/production-start.test.mjs
 
       - name: Tests HTTP sous Workerd
         run: node --test tests/rendered-html.test.mjs

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { deflateRawSync } from "node:zlib";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -139,6 +140,60 @@ function buildXlsx(): Buffer {
 
   return Buffer.concat([Buffer.concat(locals), centralBuffer, end]);
 }
+
+/**
+ * Archive minimale d'une seule entrée compressée, dont on contrôle la taille
+ * décompressée déclarée : c'est le vecteur de la bombe de décompression.
+ */
+function buildZipBomb(payloadBytes: number, declaredSize: number): Buffer {
+  const name = "xl/workbook.xml";
+  const nameBuffer = Buffer.from(name, "utf8");
+  const data = deflateRawSync(Buffer.alloc(payloadBytes, 0x20));
+
+  const local = Buffer.alloc(30);
+  local.writeUInt32LE(0x04034b50, 0);
+  local.writeUInt16LE(20, 4);
+  local.writeUInt16LE(8, 8); // méthode 8 : deflate
+  local.writeUInt32LE(data.length, 18);
+  local.writeUInt32LE(declaredSize, 22);
+  local.writeUInt16LE(nameBuffer.length, 26);
+
+  const entry = Buffer.alloc(46);
+  entry.writeUInt32LE(0x02014b50, 0);
+  entry.writeUInt16LE(20, 4);
+  entry.writeUInt16LE(20, 6);
+  entry.writeUInt16LE(8, 10);
+  entry.writeUInt32LE(data.length, 20);
+  entry.writeUInt32LE(declaredSize, 24);
+  entry.writeUInt16LE(nameBuffer.length, 28);
+  entry.writeUInt32LE(0, 42);
+
+  const central = Buffer.concat([entry, nameBuffer]);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(1, 8);
+  end.writeUInt16LE(1, 10);
+  end.writeUInt32LE(central.length, 12);
+  end.writeUInt32LE(30 + nameBuffer.length + data.length, 16);
+
+  return Buffer.concat([local, nameBuffer, data, central, end]);
+}
+
+test("une bombe de décompression est refusée, pas décompressée", () => {
+  // Près de 4 Go annoncés (maximum d'un champ ZIP32) pour quelques kilo-octets
+  // compressés : l'ancien code appelait inflateRawSync sans borne et mourait
+  // par épuisement mémoire.
+  assert.throws(
+    () => readXlsxMetadata(buildZipBomb(64 * 1024, 4_000_000_000)),
+    /limite de sécurité/,
+  );
+});
+
+test("une archive qui ment sur sa taille déclarée est bornée par la décompression elle-même", () => {
+  // Taille déclarée honnête (sous la limite), sortie réelle bien plus grande :
+  // c'est maxOutputLength qui doit arrêter le flux, pas l'en-tête.
+  assert.throws(() => readXlsxMetadata(buildZipBomb(80 * 1024 * 1024, 1_024)), /limite de sécurité/);
+});
 
 test("le lecteur XLSX rend les feuilles, les en-têtes et le nombre de lignes", () => {
   const { sheets } = readXlsxMetadata(buildXlsx());

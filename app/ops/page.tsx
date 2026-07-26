@@ -45,10 +45,10 @@ const ENV_GROUPS: EnvGroup[] = [
     ],
   },
   {
-    label: "Courriel",
+    label: "Console",
     checks: [
-      { name: "ENABLE_RESEND", role: "interrupteur d'envoi" },
-      { name: "RESEND_API_KEY", role: "clé Resend" },
+      { name: "PREUVANCE_OPS", role: "existence de cette console (1 = servie)" },
+      { name: "NEXT_PUBLIC_APP_URL", role: "origine publique faisant autorité (SEO, JSON-LD)" },
     ],
   },
 ];

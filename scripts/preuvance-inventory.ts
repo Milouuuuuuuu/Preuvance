@@ -33,6 +33,8 @@ import type { JsonFetch } from "../lib/inventory/connectors/http";
 import { computeDiagnostic } from "../lib/inventory/diagnostic";
 import { inventoryFile } from "../lib/inventory/file-inventory";
 import {
+  ALLOWED_EXECUTOR_COMMANDS,
+  isAllowedExecutorCommand,
   parseMissionConfig,
   parseTabular,
   resolveSecret,
@@ -125,6 +127,14 @@ function commandExecutor(source: SqlMissionSource): SqlExecutor {
   const executor = source.executor;
   if (executor.type !== "command") {
     throw new Error("exécuteur de commande attendu");
+  }
+  // Deuxième verrou, indépendant du schéma : un appelant qui construirait une
+  // configuration en mémoire (test, script tiers) sans passer par
+  // parseMissionConfig ne doit pas pouvoir lancer un programme arbitraire.
+  if (!isAllowedExecutorCommand(executor.command)) {
+    throw new Error(
+      `exécuteur « ${executor.command} » non autorisé : seuls ${ALLOWED_EXECUTOR_COMMANDS.join(", ")} sont admis`,
+    );
   }
   return async (sql: string) => {
     const args = executor.sqlOnStdin

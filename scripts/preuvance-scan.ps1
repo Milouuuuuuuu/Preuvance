@@ -176,6 +176,10 @@ Write-Host "PREUVANCE — Scan local de conformité IA" -ForegroundColor White
 Write-Host "Ce scan reste 100% local. Il ne copie aucun contenu de fichier, n'envoie rien"
 Write-Host "sur Internet et ne demande aucun droit administrateur. Il produit un rapport"
 Write-Host "JSON que vous pouvez charger dans Preuvance ou supprimer à tout moment."
+Write-Host "Le rapport contient des chemins de fichiers sensibles : il est écrit dans un"
+Write-Host "dossier local non synchronise (AppData\Local\Preuvance). Si vous choisissez"
+Write-Host "vous-meme un emplacement synchronise (OneDrive, Drive), c'est votre poste qui"
+Write-Host "le televersera — le scan, lui, n'envoie rien."
 Write-Host ""
 Write-Host "Il observe : (1) un inventaire des fichiers sensibles (chemin, taille, dates,"
 Write-Host "empreinte), (2) les appels réseau de vos logiciels vers des API d'IA connues."
@@ -437,10 +441,35 @@ if ($null -ne $declarationMethod) {
   }
 }
 
+# Le rapport liste les chemins des fichiers sensibles du poste (secrets, paie,
+# pieces d'identite). Ecrire par defaut dans Documents le faisait synchroniser
+# vers OneDrive des que le dossier etait redirige — cas courant en PME — ce qui
+# contredisait la promesse « rien ne sort du poste ». LOCALAPPDATA n'est jamais
+# synchronise par OneDrive ni par Google Drive.
 if (-not $OutFile) {
-  $outDir = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "Preuvance"
+  $localAppData = [Environment]::GetFolderPath("LocalApplicationData")
+  if ([string]::IsNullOrWhiteSpace($localAppData)) {
+    $localAppData = Join-Path $env:USERPROFILE "AppData\Local"
+  }
+  $outDir = Join-Path $localAppData "Preuvance"
   if (-not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
   $OutFile = Join-Path $outDir "preuvance-scan.json"
+}
+
+# Un emplacement explicitement choisi est respecte, mais l'avertissement est du
+# a l'utilisateur : c'est son poste qui televersera, pas le scan.
+$syncedRootMarkers = @($env:OneDrive, $env:OneDriveCommercial, $env:OneDriveConsumer) |
+  Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+$resolvedOut = [System.IO.Path]::GetFullPath($OutFile)
+$isSynced = $false
+foreach ($marker in $syncedRootMarkers) {
+  $normalized = [System.IO.Path]::GetFullPath($marker).TrimEnd('\')
+  if ($resolvedOut.StartsWith($normalized + '\', [StringComparison]::OrdinalIgnoreCase)) {
+    $isSynced = $true
+  }
+}
+if (-not $isSynced -and $resolvedOut -match '(?i)\\(OneDrive|Google Drive|Dropbox)[\\ ]') {
+  $isSynced = $true
 }
 
 try {
@@ -454,5 +483,10 @@ try {
 
 Write-Section "Scan terminé"
 Write-Host "  Rapport écrit : $OutFile" -ForegroundColor Green
+if ($isSynced) {
+  Write-Host "  ATTENTION : cet emplacement est synchronise vers un cloud. Le rapport" -ForegroundColor Yellow
+  Write-Host "  contient les chemins de vos fichiers sensibles ; il sera televerse par" -ForegroundColor Yellow
+  Write-Host "  votre client de synchronisation. Preferez AppData\Local\Preuvance." -ForegroundColor Yellow
+}
 Write-Host "  Chargez-le dans Preuvance (page « Scanner en local ») pour voir votre score d'exposition."
 Write-Host "  Pour tout supprimer : lancez DESINSTALLER_PREUVANCE.cmd."

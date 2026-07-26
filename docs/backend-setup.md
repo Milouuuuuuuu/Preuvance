@@ -34,7 +34,7 @@ Sans URL ou clé publique Supabase, les helpers retournent `null`, l’écran `/
 
 ## Base de données et Auth
 
-Appliquer dans l’ordre [`supabase/migrations/202607130001_preuvance_core.sql`](../supabase/migrations/202607130001_preuvance_core.sql), [`supabase/migrations/202607130002_persist_assessment.sql`](../supabase/migrations/202607130002_persist_assessment.sql), puis [`supabase/migrations/202607200001_evidence_dossier.sql`](../supabase/migrations/202607200001_evidence_dossier.sql) avec le CLI Supabase ou depuis le SQL Editor :
+Appliquer dans l’ordre [`supabase/migrations/202607130001_preuvance_core.sql`](../supabase/migrations/202607130001_preuvance_core.sql), [`supabase/migrations/202607130002_persist_assessment.sql`](../supabase/migrations/202607130002_persist_assessment.sql), [`supabase/migrations/202607200001_evidence_dossier.sql`](../supabase/migrations/202607200001_evidence_dossier.sql), puis [`supabase/migrations/202607260001_harden_evidence_immutability.sql`](../supabase/migrations/202607260001_harden_evidence_immutability.sql) avec le CLI Supabase ou depuis le SQL Editor :
 
 ```bash
 supabase db push
@@ -52,6 +52,8 @@ Le trigger `auth_users_provision_preuvance` crée une organisation à chaque nou
 Les clés étrangères composites imposent aussi en base qu’un assessment appartienne à la même organisation que son système IA, et qu’une étape de raisonnement appartienne à la même organisation que son assessment. La RLS filtre chaque lecture et mutation selon `auth.uid()`. Les clients authentifiés ne peuvent pas modifier directement les memberships ; cette opération reste réservée au service role pour une future fonctionnalité d’invitation administrée.
 
 La migration du dossier de preuves ajoute un registre multi-tenant, un journal avant/après, un ordre canonique et `assessments.evidence_revision`. Les comptes `authenticated` n’ont qu’un accès direct en lecture aux tables concernées. La mutation du registre passe par `sync_assessment_evidence`, qui vérifie l’appartenance, les invariants, la taille, les doublons et la révision attendue. Un client obsolète reçoit un conflit HTTP 409 via l’API au lieu d’écraser une version plus récente.
+
+La migration de durcissement du 26 juillet 2026 (D-108) ferme les chemins de suppression indirecte : `authenticated` n’a plus que la lecture sur `ai_systems`, `reasoning_steps` et `organization_members`, et ne peut plus supprimer une organisation. Sans elle, un simple `DELETE` sur la table parente emportait par cascade l’évaluation, son registre de preuves et son journal d’audit, sans laisser d’événement. Un déclencheur plafonne en outre les créations d’évaluation à cinq par utilisateur et par heure, quel que soit le chemin d’écriture — le quota de la route HTTP ne protégeait pas un appel direct à la RPC. Conséquence opérationnelle : la suppression d’une organisation (droit à l’effacement) devient une opération de support à outiller côté `service_role`, avec journal.
 
 Lorsque Supabase est configuré, `POST /api/assessments` vérifie la session avant d’appeler le modèle. Une fois le pipeline terminé, la fonction RPC `persist_completed_assessment` met à jour le nom de l’organisation, crée ou réutilise le système IA, puis écrit l’assessment, son payload PDF et les quatre étapes de raisonnement dans une seule transaction PostgreSQL. Si la transaction échoue, l’API renvoie `PERSISTENCE_ERROR` au lieu d’annoncer à tort que le dossier a été conservé. Sans variables Supabase, le même flux reste disponible en mode démonstration avec `persistence.status = "disabled"`.
 

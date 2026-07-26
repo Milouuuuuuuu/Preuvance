@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
+import { resolveBaseUrlFromHeaders } from "@/lib/base-url";
 import { PostHogProvider } from "./components/PostHogProvider";
 import { ThemeToggle } from "./components/ThemeToggle";
 import "./globals.css";
@@ -26,15 +27,7 @@ const description =
   "Transformez la description de votre système IA en dossier de préparation courtier, daté et traçable.";
 
 async function resolveBaseUrl(): Promise<URL> {
-  const requestHeaders = await headers();
-  const forwardedHost = requestHeaders.get("x-forwarded-host");
-  const host = forwardedHost ?? requestHeaders.get("host");
-  const forwardedProtocol = requestHeaders.get("x-forwarded-proto");
-  const protocol = forwardedProtocol === "http" ? "http" : "https";
-  const configuredUrl = process.env.NEXT_PUBLIC_APP_URL;
-  return host
-    ? new URL(`${protocol}://${host}`)
-    : new URL(configuredUrl ?? "http://localhost:3000");
+  return resolveBaseUrlFromHeaders(await headers());
 }
 
 export async function generateMetadata(): Promise<Metadata> {

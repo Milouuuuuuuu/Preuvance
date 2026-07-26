@@ -37,6 +37,7 @@ cp .env.example .env.local
 | Rôle | Variables à remplir | Ce que ça ouvre |
 | --- | --- | --- |
 | Direction / pilotage | `PREUVANCE_OPS=1`, clés PostHog (`phc_`, `phx_`, projet) | Console interne `/ops`, tableaux de bord, provisionnement analytics |
+| Déploiement | `NEXT_PUBLIC_APP_URL` | Origine publique faisant autorité : canoniques, sitemap, JSON-LD, images de partage (sans elle, l'origine est dérivée de la requête — à éviter en production, D-111) |
 | Opérateur de mission | aucune obligatoire | Agent d'inventaire, documents admin et rapports : tout tourne en local sans clé |
 | Développeur produit | `OPENAI_API_KEY` (pipeline réel), Supabase si besoin de la persistance | Dossier instantané réel, comptes et sauvegarde |
 

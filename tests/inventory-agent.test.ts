@@ -8,7 +8,11 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 
 import { validateCatalogue } from "../lib/inventory/catalogue-contract";
-import { parseMissionConfig, parseTabular } from "../lib/inventory/mission-config";
+import {
+  isAllowedExecutorCommand,
+  parseMissionConfig,
+  parseTabular,
+} from "../lib/inventory/mission-config";
 import { buildPurgeLog, renderPurgeLog } from "../lib/inventory/mission-log";
 
 const execFileAsync = promisify(execFile);
@@ -128,6 +132,59 @@ test("le fichier de mission refuse un secret en clair et accepte un nom de varia
     ],
   });
   assert.equal(withEnv.success, true);
+});
+
+test("un fichier de mission ne peut pas lancer un programme arbitraire", () => {
+  const sqlSource = (command: string) => ({
+    configVersion: "preuvance-mission-v1",
+    mission: { client: "C", reference: "R" },
+    sources: [
+      {
+        id: "erp",
+        kind: "sql",
+        system: "postgresql",
+        dialect: "postgresql",
+        label: "ERP",
+        executor: { type: "command", command, args: ["-c", "{{sql}}"], format: "csv" },
+      },
+    ],
+  });
+
+  // Le vecteur réel : un mission.json reçu du client, ouvert par l'opérateur
+  // qui détient les accès en lecture de tous les autres clients.
+  for (const hostile of [
+    "powershell",
+    "cmd.exe",
+    "curl",
+    "bash",
+    "C:\\Windows\\System32\\psql.exe",
+    "../../psql",
+    "./psql",
+  ]) {
+    const result = parseMissionConfig(sqlSource(hostile));
+    assert.equal(result.success, false, `exécuteur accepté à tort : ${hostile}`);
+    if (!result.success) {
+      assert.match(result.errors.join(" "), /exécuteur non autorisé/);
+    }
+  }
+
+  for (const allowed of ["psql", "mysql", "sqlcmd", "PSQL.EXE"]) {
+    assert.equal(
+      parseMissionConfig(sqlSource(allowed)).success,
+      true,
+      `client SQL refusé à tort : ${allowed}`,
+    );
+  }
+});
+
+test("isAllowedExecutorCommand refuse tout chemin et toute variante non listée", () => {
+  assert.equal(isAllowedExecutorCommand("psql"), true);
+  assert.equal(isAllowedExecutorCommand("psql.exe"), true);
+  assert.equal(isAllowedExecutorCommand("  mysql  "), true);
+  assert.equal(isAllowedExecutorCommand("/usr/bin/psql"), false);
+  assert.equal(isAllowedExecutorCommand("..\\psql.exe"), false);
+  assert.equal(isAllowedExecutorCommand("psqlx"), false);
+  assert.equal(isAllowedExecutorCommand(""), false);
 });
 
 test("deux sources de même identifiant sont refusées", () => {

@@ -112,6 +112,15 @@ Calcul déterministe et auditable (`app/lib/assessment/scan-scoring.ts`,
   petit fichier, il peut théoriquement être inversé. Le rapport reste donc local ;
   l'option `-NoHash` supprime les empreintes.
 - Rien n'est transmis : ni le scan, ni la page de lecture n'effectuent d'upload.
+- **Où le rapport est écrit** (depuis le 26 juillet 2026, audit S-10) : par
+  défaut dans `%LOCALAPPDATA%\Preuvance`, jamais dans `Documents`. Le rapport
+  liste les chemins des fichiers sensibles du poste ; sur une machine où
+  Documents est redirigé vers OneDrive — cas courant en PME — l'ancien
+  emplacement faisait synchroniser cette liste vers le cloud, ce qui
+  contredisait la promesse « rien ne sort du poste ». Un emplacement
+  synchronisé choisi explicitement reste accepté, mais le scan l'écrit en
+  avertissement : c'est alors le client de synchronisation qui téléverse, pas
+  le scan.
 - Tout se supprime via `DESINSTALLER_PREUVANCE.cmd`.
 
 ## Utilisation

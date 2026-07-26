@@ -213,7 +213,23 @@ export function splitCsvRecords(text: string): string[] {
  * la dimension déclarée (nombre de lignes).
  * ----------------------------------------------------------------------- */
 
-type ZipEntry = { name: string; method: number; offset: number; compressedSize: number };
+type ZipEntry = {
+  name: string;
+  method: number;
+  offset: number;
+  compressedSize: number;
+  uncompressedSize: number;
+};
+
+/**
+ * Borne dure de décompression d'une entrée ZIP. Le plafond MAX_XLSX_BYTES ne
+ * borne que le fichier compressé : un classeur piégé au ratio 1000:1 ferait
+ * sinon allouer des dizaines de gigaoctets par inflateRawSync et tuerait
+ * l'agent par épuisement mémoire en pleine collecte. La taille déclarée par
+ * l'archive est vérifiée d'abord, mais c'est `maxOutputLength` qui fait foi :
+ * une archive peut mentir sur sa taille déclarée, pas sur sa sortie réelle.
+ */
+const MAX_XLSX_TEXT_BYTES = 64 * 1024 * 1024;
 
 function readZipDirectory(buffer: Buffer): ZipEntry[] {
   const signature = 0x06054b50;
@@ -233,12 +249,13 @@ function readZipDirectory(buffer: Buffer): ZipEntry[] {
     if (buffer.readUInt32LE(cursor) !== 0x02014b50) break;
     const method = buffer.readUInt16LE(cursor + 10);
     const compressedSize = buffer.readUInt32LE(cursor + 20);
+    const uncompressedSize = buffer.readUInt32LE(cursor + 24);
     const nameLength = buffer.readUInt16LE(cursor + 28);
     const extraLength = buffer.readUInt16LE(cursor + 30);
     const commentLength = buffer.readUInt16LE(cursor + 32);
     const offset = buffer.readUInt32LE(cursor + 42);
     const name = buffer.toString("utf8", cursor + 46, cursor + 46 + nameLength);
-    entries.push({ name, method, offset, compressedSize });
+    entries.push({ name, method, offset, compressedSize, uncompressedSize });
     cursor += 46 + nameLength + extraLength + commentLength;
   }
   return entries;
@@ -253,7 +270,20 @@ function readZipEntry(buffer: Buffer, entry: ZipEntry): string {
   const start = entry.offset + 30 + nameLength + extraLength;
   const raw = buffer.subarray(start, start + entry.compressedSize);
   if (entry.method === 0) return raw.toString("utf8");
-  if (entry.method === 8) return inflateRawSync(raw).toString("utf8");
+  if (entry.method === 8) {
+    if (entry.uncompressedSize > MAX_XLSX_TEXT_BYTES) {
+      throw new Error(
+        `entrée ZIP « ${entry.name} » refusée : taille décompressée déclarée (${entry.uncompressedSize} octets) au-delà de la limite de sécurité`,
+      );
+    }
+    try {
+      return inflateRawSync(raw, { maxOutputLength: MAX_XLSX_TEXT_BYTES }).toString("utf8");
+    } catch {
+      throw new Error(
+        `entrée ZIP « ${entry.name} » refusée : décompression au-delà de la limite de sécurité (${MAX_XLSX_TEXT_BYTES} octets) ou flux corrompu`,
+      );
+    }
+  }
   throw new Error(`compression ZIP non gérée (méthode ${entry.method}) pour « ${entry.name} »`);
 }
 

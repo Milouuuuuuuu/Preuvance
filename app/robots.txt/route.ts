@@ -1,7 +1,9 @@
+import { resolveBaseUrlFromRequest } from "@/lib/base-url";
+
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const sitemapUrl = new URL("/sitemap.xml", resolveBaseUrl(request)).toString();
+  const sitemapUrl = new URL("/sitemap.xml", resolveBaseUrlFromRequest(request)).toString();
   const body = [
     "User-agent: *",
     "Allow: /",
@@ -23,16 +25,3 @@ export async function GET(request: Request) {
   });
 }
 
-// Même dérivation d’origine que generateMetadata (app/layout.tsx) : en-têtes
-// du proxy d’abord, NEXT_PUBLIC_APP_URL ensuite. Garder les deux synchronisés.
-function resolveBaseUrl(request: Request): URL {
-  const requestHeaders = request.headers;
-  const forwardedHost = requestHeaders.get("x-forwarded-host");
-  const host = forwardedHost ?? requestHeaders.get("host");
-  const forwardedProtocol = requestHeaders.get("x-forwarded-proto");
-  const protocol = forwardedProtocol === "http" ? "http" : "https";
-  const configuredUrl = process.env.NEXT_PUBLIC_APP_URL;
-  return host
-    ? new URL(`${protocol}://${host}`)
-    : new URL(configuredUrl ?? "http://localhost:3000");
-}
