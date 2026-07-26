@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Brand } from "../components/Brand";
+import { ArrowRight } from "lucide-react";
+import { SiteHeader } from "../components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Preuvance en clair",
@@ -16,26 +16,8 @@ export default function EnClairPage() {
       <a className="pv-skip-link" href="#contenu">
         Aller au contenu
       </a>
+      <SiteHeader current="/en-clair" />
 
-      <header className="pv-site-header">
-        <div className="pv-header-inner">
-          <Link className="pv-brand-link" href="/">
-            <Brand />
-          </Link>
-          <nav className="pv-main-nav" aria-label="Navigation principale">
-            <Link href="/scan">Scanner en local</Link>
-            <Link href="/#methode">Méthode</Link>
-            <Link href="/#referentiel">Référentiel</Link>
-            <Link href="/auth/sign-in">Espace</Link>
-          </nav>
-          <div className="pv-header-actions">
-            <Link className="pv-header-action" href="/">
-              <ArrowLeft size={16} aria-hidden="true" />
-              Retour à l’accueil
-            </Link>
-          </div>
-        </div>
-      </header>
 
       <main id="contenu" className="pv-plain">
         <section aria-labelledby="plain-title">

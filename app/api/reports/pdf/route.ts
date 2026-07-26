@@ -7,6 +7,7 @@ import {
   validatePreuvanceAssessment,
 } from "@/lib/pdf/assessment-payload";
 import { createPreuvanceReportDocument } from "@/lib/pdf/preuvance-report";
+import { consumePdfRenderQuota } from "@/lib/supabase/pdf-quota";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -43,6 +44,12 @@ export async function POST(request: Request) {
     return problem(413, "payload_too_large", "Le rapport dépasse la taille autorisée.");
   }
 
+  // L'identité est résolue AVANT de lire le corps : un anonyme faisait sinon
+  // consommer jusqu'à 512 Ko de lecture, de parsing JSON et de validation Zod
+  // par requête avant de recevoir son 401 (audit du 26/07/2026, S-09).
+  const access = await resolvePdfAccess(request);
+  if (access.mode === "denied") return access.response;
+
   let rawBody: string;
   try {
     rawBody = await request.text();
@@ -70,9 +77,6 @@ export async function POST(request: Request) {
       requestValidation.error.issues.map(formatValidationIssue),
     );
   }
-
-  const access = await resolvePdfAccess(request);
-  if (access.mode === "denied") return access.response;
 
   let assessment: PreuvanceAssessment | Response;
   if ("assessmentId" in requestValidation.data) {
@@ -110,6 +114,35 @@ export async function POST(request: Request) {
   }
 
   if (assessment instanceof Response) return assessment;
+
+  // Le rendu react-pdf est l'opération la plus coûteuse de l'application : un
+  // compte authentifié pouvait la déclencher en boucle sans aucune limite
+  // (S-09). Le quota est large — 30 rendus par heure — donc invisible pour un
+  // usage normal. Le développement local hors Supabase n'est pas concerné.
+  if (access.mode === "authenticated") {
+    try {
+      const quota = await consumePdfRenderQuota(access.supabase);
+      if (!quota.allowed) {
+        return problem(
+          429,
+          "pdf_quota_exceeded",
+          `Trop de rapports générés sur la dernière heure. Réessayez dans ${quota.retryAfterSeconds} seconde(s).`,
+          undefined,
+          { "Retry-After": String(quota.retryAfterSeconds) },
+        );
+      }
+    } catch (error) {
+      console.error(
+        "[PREUVANCE] report.quota_unavailable",
+        JSON.stringify({ name: error instanceof Error ? error.name : "unknown" }),
+      );
+      return problem(
+        503,
+        "pdf_quota_unavailable",
+        "Le quota de génération n’a pas pu être vérifié. Réessayez dans un instant.",
+      );
+    }
+  }
 
   try {
     const pdf = await renderToBuffer(
@@ -241,6 +274,7 @@ function problem(
   code: string,
   detail: string,
   errors?: string[],
+  extraHeaders?: Record<string, string>,
 ) {
   return Response.json(
     {
@@ -255,6 +289,7 @@ function problem(
       headers: {
         "Cache-Control": "no-store",
         "Content-Type": "application/problem+json; charset=utf-8",
+        ...extraHeaders,
       },
     },
   );

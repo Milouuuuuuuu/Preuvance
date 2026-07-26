@@ -1,6 +1,26 @@
 {
+  // Configuration Cloudflare de référence (audit du 26/07/2026, DT-03).
+  //
+  // Elle était incomplète : ni `nodejs_compat`, ni les bindings ASSETS/IMAGES
+  // que `worker/index.ts` attend. La vraie configuration ne vivait que dans
+  // `vite.config.ts`, si bien qu'un `wrangler deploy` lancé hors du pipeline
+  // Vite produisait un worker cassé. Les deux disent désormais la même chose.
+  //
+  // Le déploiement de référence reste `npm run deploy` (build Vite puis
+  // `wrangler deploy` sur l'artefact produit) — voir docs/deploiement.md.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "preuvance",
   "main": "worker/index.ts",
-  "compatibility_date": "2026-05-22"
+  "compatibility_date": "2026-05-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS"
+  },
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": true
+  }
 }

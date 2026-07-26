@@ -13,9 +13,12 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 
+// Le plugin Cloudflare fusionne ce bloc avec `wrangler.jsonc`. Tout ce qui est
+// déclaré dans le fichier versionné (point d'entrée, drapeaux de compatibilité,
+// bindings ASSETS/IMAGES) ne doit donc PAS être répété ici : workerd refuse de
+// démarrer sur un drapeau dupliqué. Ne restent que les bindings optionnels du
+// scaffold d'hébergement, absents de wrangler.jsonc (audit 26/07/2026, DT-03).
 const localBindingConfig = {
-  main: "./worker/index.ts",
-  compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
     ? [
         {

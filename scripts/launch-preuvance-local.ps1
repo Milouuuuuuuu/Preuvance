@@ -108,7 +108,12 @@ try {
 
   Write-Host ""
   Write-Host "[1/3] Installation reproductible des dependances..." -ForegroundColor Cyan
-  Invoke-CheckedCommand $npm.Source @("ci", "--no-audit", "--no-fund") "npm ci a echoue"
+  # --ignore-scripts : aucun script d'installation de l'arbre npm ne s'execute
+  # sur le poste du client. Un paquet transitif compromis ne peut donc pas
+  # prendre la main au moment ou ce script promet justement qu'aucun droit
+  # particulier n'est demande (audit du 26/07/2026, S-11). Verifie : la
+  # construction et le demarrage fonctionnent sans ces scripts.
+  Invoke-CheckedCommand $npm.Source @("ci", "--ignore-scripts", "--no-fund") "npm ci a echoue"
 
   Write-Host ""
   Write-Host "[2/3] Construction et verification du projet..." -ForegroundColor Cyan

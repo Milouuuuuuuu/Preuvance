@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowLeft, Database, FileCheck2, Route } from "lucide-react";
+import { Database, FileCheck2, Route } from "lucide-react";
 
-import { Brand } from "../components/Brand";
 import { CatalogueLoader } from "../components/CatalogueLoader";
+import { SiteHeader } from "../components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Diagnostic complet",
@@ -18,26 +17,8 @@ export default function DiagnosticPage() {
       <a className="pv-skip-link" href="#contenu">
         Aller au contenu
       </a>
+      <SiteHeader current="/diagnostic" />
 
-      <header className="pv-site-header">
-        <div className="pv-header-inner">
-          <Link className="pv-brand-link" href="/">
-            <Brand />
-          </Link>
-          <nav className="pv-main-nav" aria-label="Navigation principale">
-            <Link href="/#methode">Méthode</Link>
-            <Link href="/scan">Scanner</Link>
-            <Link href="/en-clair">En clair</Link>
-            <Link href="/auth/sign-in">Espace</Link>
-          </nav>
-          <div className="pv-header-actions">
-            <Link className="pv-header-action" href="/">
-              <ArrowLeft size={16} aria-hidden="true" />
-              Retour à l’accueil
-            </Link>
-          </div>
-        </div>
-      </header>
 
       <main id="contenu">
         <section className="pv-scan-hero" aria-labelledby="diagnostic-hero-title">

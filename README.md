@@ -55,7 +55,9 @@ npm run dev
 ```
 
 L’onboarding complet par rôle (fondateur, opérateur, développeur) est dans
-[`docs/onboarding-equipe.md`](docs/onboarding-equipe.md). L’équipe dispose d’une
+[`docs/onboarding-equipe.md`](docs/onboarding-equipe.md) ; la procédure de mise
+en ligne, les secrets à créer et les vérifications d’après-déploiement sont
+dans [`docs/deploiement.md`](docs/deploiement.md). L’équipe dispose d’une
 console interne `/ops` (état du poste, runbook mission, programmes) qui n’existe
 que si `PREUVANCE_OPS=1` est posée sur le poste — 404 sinon, noindex et exclue
 du sitemap (D-106). Un thème nuit public, discret et opt-in, est disponible via

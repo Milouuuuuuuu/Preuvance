@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
-  ArrowLeft,
   ArrowRight,
   CheckCircle2,
   Code2,
@@ -11,7 +9,7 @@ import {
   ShieldAlert,
   Terminal,
 } from "lucide-react";
-import { Brand } from "../../components/Brand";
+import { SiteHeader } from "../../components/SiteHeader";
 
 const repositoryUrl =
   "https://github.com/Milouuuuuuuu/sqlite-postgres-bridge";
@@ -30,26 +28,8 @@ export default function DataPortabilityPage() {
       <a className="pv-skip-link" href="#contenu">
         Aller au contenu
       </a>
+      <SiteHeader />
 
-      <header className="pv-site-header">
-        <div className="pv-header-inner">
-          <Link className="pv-brand-link" href="/">
-            <Brand />
-          </Link>
-          <nav className="pv-main-nav" aria-label="Navigation principale">
-            <Link href="/scan">Scanner en local</Link>
-            <Link href="/#methode">Méthode</Link>
-            <Link href="/en-clair">En clair</Link>
-            <Link href="/auth/sign-in">Espace</Link>
-          </nav>
-          <div className="pv-header-actions">
-            <Link className="pv-header-action" href="/">
-              <ArrowLeft size={16} aria-hidden="true" />
-              Retour à l’accueil
-            </Link>
-          </div>
-        </div>
-      </header>
 
       <main id="contenu" className="pv-portability-page">
         <section className="pv-portability-hero" aria-labelledby="portability-hero-title">

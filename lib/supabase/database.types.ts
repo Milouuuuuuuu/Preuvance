@@ -325,6 +325,16 @@ export type Database = {
           window_seconds: number;
         }>;
       };
+      consume_pdf_render_quota: {
+        Args: Record<string, never>;
+        Returns: Array<{
+          allowed: boolean;
+          remaining: number;
+          retry_after_seconds: number;
+          request_limit: number;
+          window_seconds: number;
+        }>;
+      };
       is_organization_member: {
         Args: { target_organization_id: string };
         Returns: boolean;

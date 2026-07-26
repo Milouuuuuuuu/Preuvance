@@ -42,6 +42,7 @@ Enfin, le hook `before_send` expurge les identifiants de dossier de **toute** va
 | `diagnostic_export` | `format` (`markdown` ou `html`) | Export local du rapport de diagnostic, généré côté navigateur | `app/components/CatalogueLoader.tsx` |
 | `demo_pdf_download_clicked` | — | Clic sur le dossier d’exemple (démo) | `app/demo/page.tsx` |
 | `theme_toggled` | `theme` (`nuit` ou `jour`) | Clic sur la bascule du thème nuit | `app/components/ThemeToggle.tsx` |
+| `app_error` | `digest` (empreinte React), `errorName`, `route` | Écran de dernier recours après une erreur de rendu — jamais le message ni la pile | `app/global-error.tsx` |
 
 Toute nouvelle propriété doit passer le filtre D-087 : nombre, booléen, ou valeur issue d'une énumération contrôlée par le code — jamais une chaîne construite à partir d'une saisie utilisateur.
 

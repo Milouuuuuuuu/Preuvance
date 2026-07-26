@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowLeft, Download, Terminal } from "lucide-react";
-import { Brand } from "../components/Brand";
 import { ScanReportLoader } from "../components/ScanReportLoader";
 import { TrackedLink } from "../components/TrackedLink";
+import { SiteHeader } from "../components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Scanner en local",
@@ -18,26 +17,8 @@ export default function ScanPage() {
       <a className="pv-skip-link" href="#contenu">
         Aller au contenu
       </a>
+      <SiteHeader current="/scan" />
 
-      <header className="pv-site-header">
-        <div className="pv-header-inner">
-          <Link className="pv-brand-link" href="/">
-            <Brand />
-          </Link>
-          <nav className="pv-main-nav" aria-label="Navigation principale">
-            <Link href="/#methode">Méthode</Link>
-            <Link href="/#referentiel">Référentiel</Link>
-            <Link href="/en-clair">En clair</Link>
-            <Link href="/auth/sign-in">Espace</Link>
-          </nav>
-          <div className="pv-header-actions">
-            <Link className="pv-header-action" href="/">
-              <ArrowLeft size={16} aria-hidden="true" />
-              Retour à l’accueil
-            </Link>
-          </div>
-        </div>
-      </header>
 
       <main id="contenu">
         <section className="pv-scan-hero" aria-labelledby="scan-hero-title">

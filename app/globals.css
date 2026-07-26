@@ -5458,3 +5458,61 @@ body:has(.ops-shell) .pv-theme-toggle {
   color: var(--ops-pink);
   font-weight: 700;
 }
+
+/* Écran de dernier recours du rendu client (D-114). Sobre et lisible : il
+ * s'affiche précisément quand le reste a échoué, donc il ne dépend d'aucun
+ * composant ni d'aucune ressource. */
+.pv-error-shell {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: clamp(48px, 10vw, 120px) 24px;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  color: var(--pv-ink);
+}
+
+.pv-error-shell h1 {
+  margin: 8px 0 16px;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 1.15;
+}
+
+.pv-error-shell p {
+  margin: 0 0 12px;
+  color: var(--pv-ink-soft);
+  line-height: 1.6;
+}
+
+.pv-error-digest code {
+  padding: 2px 6px;
+  border: 1px solid var(--pv-line);
+  border-radius: var(--pv-radius-sm);
+  background: var(--pv-blue-pale);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.85rem;
+}
+
+.pv-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.pv-error-actions button,
+.pv-error-actions a {
+  padding: 11px 20px;
+  border: 1px solid var(--pv-panel-dark);
+  border-radius: var(--pv-radius-sm);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.pv-error-actions button {
+  background: var(--pv-panel-dark);
+  color: #fff;
+}
+
+.pv-error-actions a {
+  background: transparent;
+  color: var(--pv-ink);
+}

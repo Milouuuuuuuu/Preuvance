@@ -22,13 +22,9 @@
       "@/*": ["./*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
-  ],
+  // `next-env.d.ts` et `.next/**` n'existent pas ici : le build passe par
+  // vinext, qui écrit dans `.vinext` (exclu plus bas). Les garder faisait
+  // mentir la configuration sur ce qu'elle compile (audit 26/07/2026, DT-03).
+  "include": ["**/*.ts", "**/*.tsx", "**/*.mts"],
   "exclude": ["node_modules", "dist", ".vinext", ".wrangler", "outputs", "public", "remotion"]
 }
