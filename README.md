@@ -15,9 +15,9 @@ Preuvance ne délivre ni avis juridique, ni certification, ni décision d’assu
 
 Le nom initial **Aplomb** a été rejeté après recherche : les trois domaines visés sont enregistrés et une entreprise homonyme intervient déjà en gouvernance IA et réglementaire. **Preuvance** a été retenu à **86/100**. Les contrôles RDAP sont favorables mais l’achat du domaine et la recherche EUIPO/TMview restent à effectuer avant lancement public.
 
-Le détail des sources est dans [`docs/research.md`](docs/research.md). Toutes les décisions et leur note sur 100 sont consignées dans [`BEHAVIOR.md`](BEHAVIOR.md). Pour une présentation simple, sans jargon technique, de tout ce que fait Preuvance : [`docs/preuvance-en-clair.md`](docs/preuvance-en-clair.md).
+Le détail des sources est dans [`docs/research.md`](docs/research.md). Pour une présentation simple, sans jargon technique, de tout ce que fait Preuvance : [`docs/preuvance-en-clair.md`](docs/preuvance-en-clair.md).
 
-Le cadrage de démonstration, la note hackathon et les hypothèses de valorisation sont dans [`docs/HACKATHON_2026_VALORISATION.md`](docs/HACKATHON_2026_VALORISATION.md).
+Le cadrage de démonstration et les hypothèses de valorisation sont tenus dans le dossier interne du projet, hors du dépôt.
 
 ## Vision livrée : « dossier instantané »
 
@@ -54,22 +54,18 @@ npm run poste:verifier   # état du poste : versions, clés présentes/absentes,
 npm run dev
 ```
 
-L’onboarding complet par rôle (fondateur, opérateur, développeur) est dans
-[`docs/onboarding-equipe.md`](docs/onboarding-equipe.md) ; la procédure de mise
-en ligne, les secrets à créer et les vérifications d’après-déploiement sont
-dans [`docs/deploiement.md`](docs/deploiement.md). L’équipe dispose d’une
-console interne `/ops` (état du poste, runbook mission, programmes) qui n’existe
-que si `PREUVANCE_OPS=1` est posée sur le poste — 404 sinon, noindex et exclue
-du sitemap (D-106). Un thème nuit public, discret et opt-in, est disponible via
-la pastille en bas de page (D-105).
+La procédure de mise en ligne, les secrets à créer et les vérifications
+d’après-déploiement sont dans [`docs/deploiement.md`](docs/deploiement.md).
+Un thème nuit public, discret et opt-in, est disponible via la pastille en
+bas de page.
 
 En développement, renseigner au minimum `OPENAI_API_KEY`. Sans cette clé, l’interface reste accessible mais refuse explicitement de produire une évaluation ; aucun résultat fictif n’est généré. En production, Supabase doit aussi être configuré afin d’éviter un endpoint OpenAI anonyme.
 
 Supabase est activé lorsque `NEXT_PUBLIC_SUPABASE_URL` et une clé publique (`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, ou l’ancienne `NEXT_PUBLIC_SUPABASE_ANON_KEY`) sont présentes. Dans ce mode, une session est requise et l’évaluation, son rapport et son journal de raisonnement sont enregistrés ensemble. Les secrets ne doivent jamais être commités.
 
-L’analyse produit (PostHog) est optionnelle et suit la même règle : sans `NEXT_PUBLIC_POSTHOG_KEY`, aucun script n’est chargé et aucun événement n’est envoyé. Lorsqu’elle est activée, seuls des événements nommés et des métadonnées agrégées (score, palier, nombre de manifestes ou de pièces vérifiées) sont transmis — jamais la description du système, le nom de l’organisation ni le contenu d’une preuve ; `autocapture` et l’enregistrement de session restent désactivés (voir D-087 dans [`BEHAVIOR.md`](BEHAVIOR.md)). Le catalogue des événements, les funnels et le provisionnement des tableaux de bord (`npm run analytics:setup`) sont documentés dans [`docs/analytics.md`](docs/analytics.md).
+L’analyse produit (PostHog) est optionnelle et suit la même règle : sans `NEXT_PUBLIC_POSTHOG_KEY`, aucun script n’est chargé et aucun événement n’est envoyé. Lorsqu’elle est activée, seuls des événements nommés et des métadonnées agrégées (score, palier, nombre de manifestes ou de pièces vérifiées) sont transmis — jamais la description du système, le nom de l’organisation ni le contenu d’une preuve ; `autocapture` et l’enregistrement de session restent désactivés. Le catalogue des événements, les funnels et le provisionnement des tableaux de bord (`npm run analytics:setup`) sont documentés dans [`docs/analytics.md`](docs/analytics.md).
 
-Le référencement technique est servi par l’application elle-même : `robots.txt` et `sitemap.xml` dynamiques, canonique et description par page publique, JSON-LD strictement factuel — sans note, avis ni décompte inventés (D-089). Les procédures récurrentes du projet sont encodées en skills versionnés dans [`.claude/skills/`](.claude/skills/) : `goal`, `posthog-analytics`, `seo-audit`, `supabase-local-verify`, aux côtés de `fable-gate`.
+Le référencement technique est servi par l’application elle-même : `robots.txt` et `sitemap.xml` dynamiques, canonique et description par page publique, JSON-LD strictement factuel — sans note, avis ni décompte inventés.
 
 ### Démonstration locale
 
@@ -214,7 +210,7 @@ Preuvance combine un raisonnement génératif borné et des garde-fous détermin
 
 **GPT-5.6 (runtime de l’évaluation).** Chaque évaluation appelle l’API Responses d’OpenAI avec un JSON Schema strict (`strict: true`, généré depuis Zod) pour l’extraction factuelle, la classification et l’analyse des écarts. Les modèles utilisés sont `gpt-5.6-sol` (raisonnement, décisions réglementaires) et `gpt-5.6-luna` (tâches économiques), sans substitution silencieuse. Le modèle **réellement retourné** est enregistré par étape dans la méthodologie du rapport (`resolvedModels`) — l’interface n’affiche jamais un simple libellé codé en dur. Le LLM ne rend jamais seul le verdict : un moteur de règles déterministe (`app/lib/assessment/rules.ts`) contre-vérifie chaque classification et plafonne le score en cas de contradiction.
 
-**Codex (environnement d’ingénierie de la Build Week).** Le workstream « dossier instantané » a été construit et vérifié dans Codex : audit de l’architecture existante, implémentation du registre de preuves vivant et de ses invariants d’intégrité (`lib/evidence/`), scan borné des manifestes de dépendances et handoff de scan expurgé (`lib/scan/`), persistance canonique sous RLS (`supabase/migrations/202607200001_evidence_dossier.sql`), tests ciblés, documentation et préparation de la candidature. L’intégration de la portabilité SQLite/PostgreSQL (décisions **D-069** et **D-070** du registre, rédigées via Codex/GPT-5) et la branche `codex/hackathon-remotion` en font partie ; les conventions d’agents sont dans [`AGENTS.md`](AGENTS.md).
+**Codex (environnement d’ingénierie de la Build Week).** Le workstream « dossier instantané » a été construit et vérifié dans Codex : audit de l’architecture existante, implémentation du registre de preuves vivant et de ses invariants d’intégrité (`lib/evidence/`), scan borné des manifestes de dépendances et handoff de scan expurgé (`lib/scan/`), persistance canonique sous RLS (`supabase/migrations/202607200001_evidence_dossier.sql`), tests ciblés, documentation et préparation de la candidature. L’intégration de la portabilité SQLite/PostgreSQL (rédigée via Codex/GPT-5) et la branche `codex/hackathon-remotion` en font partie ; les conventions d’agents sont dans [`AGENTS.md`](AGENTS.md).
 
 **Codex Session ID** (thread principal, via `/feedback`) : `019f7c5f-4963-7413-8675-dd19e35c25fd`. La séparation vérifiable entre le socle antérieur et les ajouts Build Week est dans [`docs/build-week-change-log.md`](docs/build-week-change-log.md).
 
@@ -273,6 +269,6 @@ Pas d’intégration assureur réelle, de tarification, de paiement, de généra
 
 ---
 
-Corrections, scan local et durcissement qualité des 13-14 juillet 2026 (D-042 à D-062 de [`BEHAVIOR.md`](BEHAVIOR.md)) rédigés par **Claude (Fable 5), Anthropic**. La revue de l’audit externe **ChatGPT 5.6** figure dans [`docs/revue-audit-externe.md`](docs/revue-audit-externe.md) : son analyse est attribuée à son auteur, et la documentation n’est pas signée sous une autre identité que celle qui l’a rédigée.
+Corrections, scan local et durcissement qualité des 13-14 juillet 2026 rédigés par **Claude (Fable 5), Anthropic**. La revue de l’audit externe **ChatGPT 5.6** figure dans [`docs/revue-audit-externe.md`](docs/revue-audit-externe.md) : son analyse est attribuée à son auteur, et la documentation n’est pas signée sous une autre identité que celle qui l’a rédigée.
 
 Vision « dossier instantané », registre preuve par preuve et paquet OpenAI Build Week du 20 juillet 2026 : **ChatGPT 5.6, OpenAI**.

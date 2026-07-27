@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { trackEvent } from "@/lib/analytics/posthog";
 
 /**
- * Dernier filet du rendu client (D-114).
+ * Dernier filet du rendu client.
  *
  * L'audit du 26/07/2026 a relevé qu'aucune erreur d'exécution n'était
  * observée : une page blanche en production n'était visible de personne tant
@@ -16,7 +16,7 @@ import { trackEvent } from "@/lib/analytics/posthog";
  * Ce qui part : le `digest` de React (une empreinte calculée côté serveur, pas
  * un message), le nom de la classe d'erreur et la route. Jamais la pile,
  * jamais le message — ils peuvent contenir des fragments de saisie
- * utilisateur, ce qu'interdit le contrat D-087.
+ * utilisateur, ce qu'interdit le contrat de confidentialité analytique.
  */
 export default function GlobalError({
   error,

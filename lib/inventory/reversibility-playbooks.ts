@@ -8,10 +8,10 @@ import { normalizeFieldName } from "./sensitive-fields";
  * QUOI faire, outil par outil : le mécanisme d'export documenté publiquement
  * par l'éditeur, la procédure de suppression en fin de contrat et le chemin de
  * remise en local. C'est de la donnée versionnée, pas du code : ajouter un
- * outil, c'est ajouter une fiche — jamais coder un connecteur (D-100 : un
- * connecteur dédié ne se code que pour un client signé).
+ * outil, c'est ajouter une fiche — jamais coder un connecteur (un connecteur
+ * dédié ne se code que pour un client signé).
  *
- * Règle héritée de D-081 : une fiche ne cite que des mécanismes documentés
+ * Règle constante du produit : une fiche ne cite que des mécanismes documentés
  * publiquement par l'éditeur. Un outil absent du registre produit un constat
  * « procédure à établir avec l'éditeur » — jamais une procédure supposée.
  */

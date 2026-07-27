@@ -1,8 +1,8 @@
 # Analytics produit (PostHog)
 
-Preuvance mesure l'usage du produit avec PostHog pour répondre à trois questions : où les visiteurs abandonnent-ils avant d'obtenir un dossier, le scan local amène-t-il des évaluations complètes, et où le pipeline échoue-t-il. L'instrumentation est optionnelle : sans `NEXT_PUBLIC_POSTHOG_KEY`, tout appel du module [`lib/analytics/posthog.ts`](../lib/analytics/posthog.ts) est un no-op, côté serveur comme côté client (même logique que `OPENAI_API_KEY` et Supabase — cf. D-020, D-024).
+Preuvance mesure l'usage du produit avec PostHog pour répondre à trois questions : où les visiteurs abandonnent-ils avant d'obtenir un dossier, le scan local amène-t-il des évaluations complètes, et où le pipeline échoue-t-il. L'instrumentation est optionnelle : sans `NEXT_PUBLIC_POSTHOG_KEY`, tout appel du module [`lib/analytics/posthog.ts`](../lib/analytics/posthog.ts) est un no-op, côté serveur comme côté client (même logique que `OPENAI_API_KEY` et Supabase).
 
-## Contrat de confidentialité (D-087)
+## Contrat de confidentialité
 
 Aucun texte libre saisi par l'utilisateur ne quitte le navigateur via l'analytics. Jamais :
 
@@ -15,9 +15,9 @@ Ce qui **est** envoyé, exclusivement : des noms d'événements fixes et des mé
 
 La configuration du client renforce ce contrat : `autocapture` désactivé (aucune capture automatique de clics ou de champs de formulaire), `disable_session_recording`, `respect_dnt`, `person_profiles: "identified_only"`. Les captures pilotables à distance (`capture_heatmaps`, `capture_dead_clicks`, `rageclick`, `capture_exceptions`) sont épinglées à `false` dans le code : la configuration distante du projet PostHog ne peut pas les réactiver à notre insu.
 
-Depuis l'audit du 26 juillet 2026, le SDK ne va même plus chercher cette configuration distante : `advanced_disable_flags`, `disable_external_dependency_loading` et `disable_surveys` coupent tout aller-retour vers `us-assets.i.posthog.com` et tout chargement de script tiers à l'exécution. Le SDK n'émet donc que vers l'hôte d'ingestion, ce qui permet une politique de sécurité du contenu (CSP) sans exception pour cet hôte (D-112). Conséquence à connaître : les feature flags, les sondages et les expériences PostHog sont indisponibles tant que ces options ne sont pas rouvertes — ce que le produit n'utilise pas.
+Depuis l'audit du 26 juillet 2026, le SDK ne va même plus chercher cette configuration distante : `advanced_disable_flags`, `disable_external_dependency_loading` et `disable_surveys` coupent tout aller-retour vers `us-assets.i.posthog.com` et tout chargement de script tiers à l'exécution. Le SDK n'émet donc que vers l'hôte d'ingestion, ce qui permet une politique de sécurité du contenu (CSP) sans exception pour cet hôte. Conséquence à connaître : les feature flags, les sondages et les expériences PostHog sont indisponibles tant que ces options ne sont pas rouvertes — ce que le produit n'utilise pas.
 
-Enfin, le hook `before_send` expurge les identifiants de dossier de **toute** valeur transmise (`/dossiers/<uuid>` devient `/dossiers/[id]`). Il balaie l'ensemble des propriétés de l'événement, et non une liste de clés : l'audit avait montré qu'un identifiant fuyait par `$prev_pageview_pathname`, ajouté par le SDK lui-même et absent de l'ancienne liste (D-110). Quatre tests (`tests/analytics-privacy.test.ts`) verrouillent ce contrat.
+Enfin, le hook `before_send` expurge les identifiants de dossier de **toute** valeur transmise (`/dossiers/<uuid>` devient `/dossiers/[id]`). Il balaie l'ensemble des propriétés de l'événement, et non une liste de clés : l'audit avait montré qu'un identifiant fuyait par `$prev_pageview_pathname`, ajouté par le SDK lui-même et absent de l'ancienne liste. Quatre tests (`tests/analytics-privacy.test.ts`) verrouillent ce contrat.
 
 ## Catalogue des événements
 
@@ -44,7 +44,7 @@ Enfin, le hook `before_send` expurge les identifiants de dossier de **toute** va
 | `theme_toggled` | `theme` (`nuit` ou `jour`) | Clic sur la bascule du thème nuit | `app/components/ThemeToggle.tsx` |
 | `app_error` | `digest` (empreinte React), `errorName`, `route` | Écran de dernier recours après une erreur de rendu — jamais le message ni la pile | `app/global-error.tsx` |
 
-Toute nouvelle propriété doit passer le filtre D-087 : nombre, booléen, ou valeur issue d'une énumération contrôlée par le code — jamais une chaîne construite à partir d'une saisie utilisateur.
+Toute nouvelle propriété doit passer le même filtre : nombre, booléen, ou valeur issue d'une énumération contrôlée par le code — jamais une chaîne construite à partir d'une saisie utilisateur.
 
 ## Hôtes : ingestion vs API privée
 

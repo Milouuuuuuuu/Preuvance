@@ -74,7 +74,6 @@ $files = @(
   ".gitignore",
   ".openai\hosting.json",
   "AGENTS.md",
-  "BEHAVIOR.md",
   "LANCER_PREUVANCE.cmd",
   "SCANNER_PREUVANCE.cmd",
   "DESINSTALLER_PREUVANCE.cmd",

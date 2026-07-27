@@ -4,7 +4,7 @@ import test from "node:test";
 import { redactPath, sanitizeUrlProperties } from "../lib/analytics/posthog";
 
 /**
- * Verrous du contrat D-087 : aucun identifiant de dossier ne doit franchir
+ * Verrous du contrat de confidentialité : aucun identifiant de dossier ne doit franchir
  * `before_send`, quelle que soit la propriété qui le porte. L'audit du
  * 26/07/2026 avait trouvé la fuite par `$prev_pageview_pathname`, ajouté par
  * le SDK lui-même et absent de l'ancienne liste de clés.

@@ -5075,7 +5075,7 @@ button.pv-scan-next-cta {
 }
 
 /* ---------------------------------------------------------------------------
- * Thème nuit public — discret et clean (D-105).
+ * Thème nuit public — discret et clean.
  *
  * Activé uniquement par la bascule (opt-in, persisté en localStorage), jamais
  * imposé. Les tokens surfaces/texte sont inversés ; les panneaux sombres
@@ -5202,7 +5202,7 @@ body:has(.ops-shell) .pv-theme-toggle {
 }
 
 /* ---------------------------------------------------------------------------
- * Console interne /ops (D-106) — esthétique inspirée des interfaces de
+ * Console interne /ops — esthétique inspirée des interfaces de
  * hacking de fiction (néon sur noir, scanlines, monospace). Réservée à
  * l'équipe : la page n'existe que si PREUVANCE_OPS=1, noindex, hors sitemap.
  * Aucun glitch permanent : les animations respectent prefers-reduced-motion.
@@ -5459,7 +5459,7 @@ body:has(.ops-shell) .pv-theme-toggle {
   font-weight: 700;
 }
 
-/* Écran de dernier recours du rendu client (D-114). Sobre et lisible : il
+/* Écran de dernier recours du rendu client. Sobre et lisible : il
  * s'affiche précisément quand le reste a échoué, donc il ne dépend d'aucun
  * composant ni d'aucune ressource. */
 .pv-error-shell {

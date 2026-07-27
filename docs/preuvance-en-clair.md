@@ -164,7 +164,6 @@ Aucun de ces trois programmes ne demande de droits administrateur.
 
 Ce document reste volontairement simple. Le détail technique complet se trouve
 dans le dépôt du projet : `README.md` (vue d'ensemble technique),
-`BEHAVIOR.md` (registre de chaque décision de conception, notée et justifiée),
 `docs/preuvance-scan.md` (détail technique du scan) et
 `docs/revue-audit-externe.md` (revue critique et transparente d'un audit tiers).
 

@@ -128,7 +128,7 @@ Le mot de passe n'apparaît jamais dans la mission : il est fourni par
 l'environnement du poste (`PGPASSWORD`, `MYSQL_PWD`, fichier `.pgpass`…), sous
 la responsabilité de l'opérateur.
 
-**Un fichier de mission est du code, pas de la donnée** (D-109). Il déclenche
+**Un fichier de mission est du code, pas de la donnée.** Il déclenche
 l'exécution d'un programme sur le poste de l'opérateur — celui qui détient les
 accès en lecture de tous les clients. Depuis l'audit du 26 juillet 2026, seuls
 les clients SQL de la liste blanche sont admis comme exécuteurs : `psql`,
@@ -203,14 +203,14 @@ Microsoft 365, Notion — les outils les plus fréquents en PME.
 Trois règles, héritées du reste du produit :
 
 - **une fiche ne cite que des mécanismes documentés par l'éditeur** — jamais
-  une procédure supposée (même discipline que D-081) ;
+  une procédure supposée (même discipline que le reste du produit : rien d'inventé) ;
 - **la reconnaissance préfère la sous-couverture au faux positif** : un nom
   ambigu (`SharePoint Server 2019`, `Tableur d'équipe`) ne matche pas et
   produit un constat « procédure à établir avec l'éditeur » plutôt qu'une
   fiche fausse ;
 - **une fiche est de la donnée, pas du code** : ajouter un outil au registre
-  n'ouvre aucun accès et ne code aucun connecteur (la discipline D-100 reste
-  entière).
+  n'ouvre aucun accès et ne code aucun connecteur (un connecteur dédié ne se
+  code que pour un client signé).
 
 Dans le diagnostic, une fiche reconnue produit un constat **à pénalité
 nulle** — une sortie documentée n'est pas un défaut — dont la recommandation

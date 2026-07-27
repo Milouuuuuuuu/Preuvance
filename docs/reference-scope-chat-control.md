@@ -1,6 +1,6 @@
 # Évaluation de périmètre — « Chat Control » et Preuvance
 
-État au **20 juillet 2026**. Ce document est une évaluation de périmètre produit, pas un avis juridique. Il consigne pourquoi Preuvance **n'intègre pas** de module « Chat Control » à ce stade, et à quelle condition la décision serait révisée. Voir la décision **D-083** dans [`BEHAVIOR.md`](../BEHAVIOR.md).
+État au **20 juillet 2026**. Ce document est une évaluation de périmètre produit, pas un avis juridique. Il consigne pourquoi Preuvance **n'intègre pas** de module « Chat Control » à ce stade, et à quelle condition la décision serait révisée.
 
 ## 1. Ce qu'est « Chat Control » (sources primaires et datées)
 
@@ -23,7 +23,7 @@ Sources consultées le 20/07/2026 : [EUR-Lex — Règlement (UE) 2021/1232](http
 1. **Autre instrument, autre base juridique.** Preuvance prépare un dossier de maîtrise **AI Act** (règlement (UE) 2024/1689). Chat Control relève de l'ePrivacy et de la protection de l'enfance — un domaine différent, avec d'autres acteurs assujettis.
 2. **Détection *volontaire*, pas d'obligation.** Sous 1.0, personne n'est « soumis » à une obligation : les opérateurs sont *autorisés* à scanner. Une brique « prêt au contrôle » n'a donc pas d'objet réglementaire clair.
 3. **Assujettis ≠ clientèle de Preuvance.** Les acteurs visés sont des opérateurs de messagerie / hébergement / app store / FAI. La cible de Preuvance — PME/SMC **déployant** une IA — n'en fait, dans la très grande majorité des cas, pas partie.
-4. **Loi en pleine tempête.** Expirée puis réintroduite en trois mois, CSAR non tranché : afficher un statut « Chat Control » dans le produit violerait la règle D-003 (séparer le droit contraignant du droit annoncé) et produirait un faux positif quasi garanti à court terme.
+4. **Loi en pleine tempête.** Expirée puis réintroduite en trois mois, CSAR non tranché : afficher un statut « Chat Control » dans le produit violerait la règle du produit qui sépare le droit contraignant du droit annoncé et produirait un faux positif quasi garanti à court terme.
 5. **L'angle CSAM pertinent pour l'AI Act est déjà couvert.** La modification signée de l'article 5 (`non-consensual-intimate-or-csam-generation`, appliquée le 2 décembre 2026 sous réserve de publication) traite la *génération* par IA de CSAM / NCII, correctement marquée « pas encore en vigueur » dans le référentiel.
 6. **Risque de positionnement.** Associer un outil de préparation à l'assurance IA à la détection de contenus dans les communications privées brouillerait la proposition de valeur et toucherait un sujet politiquement sensible (scan de messages, débat E2EE).
 

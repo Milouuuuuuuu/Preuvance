@@ -7,7 +7,7 @@ import { ThemeToggle } from "./components/ThemeToggle";
 import "./globals.css";
 
 // Pose data-theme avant la première peinture pour éviter le flash clair quand
-// le visiteur a choisi le mode nuit (D-105). Aucune entrée utilisateur n'est
+// le visiteur a choisi le mode nuit. Aucune entrée utilisateur n'est
 // interprétée : seule la valeur exacte « nuit » est honorée.
 const themeInitScript =
   'try{if(localStorage.getItem("pv-theme")==="nuit"){document.documentElement.dataset.theme="nuit"}}catch(e){}';
@@ -76,7 +76,7 @@ export default async function RootLayout({
 }>) {
   const origin = (await resolveBaseUrl()).origin;
   // JSON-LD strictement factuel : aucune note agrégée, aucun avis, aucun
-  // décompte d’utilisateurs ni certification (D-081). L’offre gratuite décrit
+  // décompte d’utilisateurs ni certification. L’offre gratuite décrit
   // uniquement le scan local réellement téléchargeable sans compte.
   const structuredData = {
     "@context": "https://schema.org",

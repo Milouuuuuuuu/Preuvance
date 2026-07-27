@@ -1,6 +1,6 @@
 begin;
 
--- Durcissement de l'immuabilité de la preuve (audit du 26/07/2026, D-108).
+-- Durcissement de l'immuabilité de la preuve (audit du 26/07/2026).
 --
 -- La migration 202607200001 a rendu `assessments` en lecture seule pour le
 -- client, mais deux portes parentes restaient ouvertes : DELETE sur

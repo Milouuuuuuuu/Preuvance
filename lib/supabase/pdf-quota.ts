@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types";
 
 /**
- * Quota de rendu PDF, distinct de celui des évaluations (D-113).
+ * Quota de rendu PDF, distinct de celui des évaluations.
  *
  * Télécharger plusieurs fois son propre dossier est légitime ; lancer une
  * analyse coûte des appels modèle. La limite est donc large — elle ne gêne pas

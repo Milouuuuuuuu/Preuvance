@@ -74,7 +74,7 @@ Populate this table only from the actual Git history after the work is intention
 | `2d95a3a` | 2026-07-20 11:53:41 +0200 | Yes | Build Week package: /build-week deck, demo fixture, submission docs, deck/QA scripts | `git show --stat 2d95a3a` |
 | `5c4c1af` | 2026-07-20 11:53:41 +0200 | Yes | Remotion film refinements; Higgsfield render outputs untracked | `git show --stat 5c4c1af` |
 | `5d9307d` | 2026-07-20 11:54:50 +0200 | Yes | /scan and /en-clair pages, product docs and local launcher aligned with the instant dossier | `git show --stat 5d9307d` |
-| `efa319b` | 2026-07-20 11:55:23 +0200 | Yes | BEHAVIOR.md D-071..D-082, README Build Week section, baseline and this change log | `git show --stat efa319b` |
+| `efa319b` | 2026-07-20 11:55:23 +0200 | Yes | Registre de décisions interne, README Build Week section, baseline and this change log | `git show --stat efa319b` |
 | `becf9ed` | 2026-07-20 11:57:09 +0200 | Yes | Final 8-slide PowerPoint tracked in the repository | `git show --stat becf9ed` |
 
 Earlier post-cutoff commits (2026-07-13 20:24 +0200 through 2026-07-18 20:18 +0200, `d0c6abd`..`9c429dc`) hold the hardening, local scanner, declared/observed concordance, portability and film groundwork; they are also eligible but predate this Build Week sprint's dossier workstream.

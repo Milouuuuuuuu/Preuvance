@@ -37,18 +37,18 @@
                 },
     "files":  {
                   "rootsScanned":  [
-                                       "C:\\Users\\ganda\\AppData\\Local\\Temp\\claude\\c--Users-ganda-OneDrive-Documents-Aplomb-aplomb-app\\9cb4dee7-ac4b-46cb-b6a0-b705805bd0bb\\scratchpad\\scan-fixture-root"
+                                       "C:\\Temp\\preuvance-scan-fixture\\scan-fixture-root"
                                    ],
                   "sensitive":  [
                                     {
-                                        "path":  "C:\\Users\\ganda\\AppData\\Local\\Temp\\claude\\c--Users-ganda-OneDrive-Documents-Aplomb-aplomb-app\\9cb4dee7-ac4b-46cb-b6a0-b705805bd0bb\\scratchpad\\scan-fixture-root\\.env.local",
+                                        "path":  "C:\\Temp\\preuvance-scan-fixture\\scan-fixture-root\\.env.local",
                                         "category":  "secret",
                                         "sizeBytes":  28,
                                         "modifiedAt":  "2026-07-16T08:07:53.238Z",
                                         "sha256":  "7ea80915230eef204ee74d928e2848146c3afcfba4930089a88df87c89b96a5b"
                                     },
                                     {
-                                        "path":  "C:\\Users\\ganda\\AppData\\Local\\Temp\\claude\\c--Users-ganda-OneDrive-Documents-Aplomb-aplomb-app\\9cb4dee7-ac4b-46cb-b6a0-b705805bd0bb\\scratchpad\\scan-fixture-root\\facture-demo.pdf",
+                                        "path":  "C:\\Temp\\preuvance-scan-fixture\\scan-fixture-root\\facture-demo.pdf",
                                         "category":  "financial",
                                         "sizeBytes":  6,
                                         "modifiedAt":  "2026-07-16T08:07:53.243Z",

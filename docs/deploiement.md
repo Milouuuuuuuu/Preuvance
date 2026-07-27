@@ -19,7 +19,7 @@ laquelle PostHog ne mesure aucun trafic — voir `outputs/` pour le rapport.
 ## Déployer l'application sur Cloudflare
 
 ```bash
-npm test          # la porte fable-gate complète, jamais sautée
+npm test          # la porte de vérification complète, jamais sautée
 npm run deploy    # build Vite puis wrangler deploy
 ```
 
@@ -42,9 +42,9 @@ Prérequis, à faire une fois :
    ```
 
    `NEXT_PUBLIC_APP_URL` fait autorité sur l'origine publique (canoniques,
-   sitemap, JSON-LD) : sans elle, l'origine est dérivée de la requête (D-111).
+   sitemap, JSON-LD) : sans elle, l'origine est dérivée de la requête.
    Ne **jamais** poser `PREUVANCE_OPS` sur un déploiement public : la console
-   interne doit rester en 404 (D-106).
+   interne doit rester en 404.
 
 3. Appliquer les migrations Supabase sur le projet visé avant la première mise
    en ligne avec persistance (`supabase db push`, voir `docs/backend-setup.md`).

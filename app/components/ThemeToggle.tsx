@@ -8,7 +8,7 @@ import { trackEvent } from "@/lib/analytics/posthog";
 const STORAGE_KEY = "pv-theme";
 
 /**
- * Bascule du thème nuit (D-105). Opt-in : le site reste en mode jour tant que
+ * Bascule du thème nuit. Opt-in : le site reste en mode jour tant que
  * le visiteur n'a pas choisi, et le choix persiste en localStorage. Le script
  * d'initialisation du layout pose data-theme avant la peinture pour éviter le
  * flash ; ici on ne fait que lire puis basculer.

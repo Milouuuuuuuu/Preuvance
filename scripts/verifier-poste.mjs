@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Vérification du poste de travail Preuvance (D-107).
+ * Vérification du poste de travail Preuvance.
  *
  * Objectif : qu'un membre de l'équipe sache en une commande si son poste est
  * prêt — versions, dépendances, clés présentes (jamais leurs valeurs) et
@@ -112,7 +112,7 @@ function main() {
 
   if (root.includes("OneDrive")) {
     warn(
-      "dépôt sous OneDrive : après « npm run build », attendre ~25 s avant les tests HTTP, et vérifier le zip après build-local-download.ps1 (cf. skill fable-gate).",
+      "dépôt sous OneDrive : après « npm run build », attendre ~25 s avant les tests HTTP, et vérifier le zip après build-local-download.ps1.",
     );
   }
 

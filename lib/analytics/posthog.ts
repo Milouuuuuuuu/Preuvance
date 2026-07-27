@@ -2,7 +2,7 @@ import posthog from "posthog-js";
 
 /**
  * Analyse produit optionnelle : sans clé, tout appel de ce module est un
- * no-op (même logique que OPENAI_API_KEY/Supabase — cf. D-020, D-024).
+ * no-op (même logique que OPENAI_API_KEY/Supabase).
  * Aucune valeur envoyée ici ne doit contenir de texte libre saisi par
  * l'utilisateur (description système, nom d'organisation, contenu de
  * preuve) : uniquement des métadonnées structurées et agrégées.
@@ -29,7 +29,7 @@ export function redactPath(path: string): string {
  * `$initial_current_url`), qui échappaient à l'expurgation — un identifiant de
  * dossier partait alors en clair à la navigation suivante. Balayer toutes les
  * valeurs ferme la fuite aussi pour les propriétés qu'une future version du
- * SDK ajouterait (D-110).
+ * SDK ajouterait.
  */
 export function sanitizeUrlProperties<
   T extends { properties?: Record<string, unknown> } | null,
@@ -57,7 +57,7 @@ export function initPostHogClient(): void {
     disable_session_recording: true,
     respect_dnt: true,
     // Épinglés explicitement : sans cela, ces captures suivent la config
-    // distante du projet PostHog et pourraient s'activer à notre insu (D-087).
+    // distante du projet PostHog et pourraient s'activer à notre insu.
     capture_heatmaps: false,
     capture_dead_clicks: false,
     rageclick: false,
@@ -66,7 +66,7 @@ export function initPostHogClient(): void {
     // à l'exécution : le SDK n'émet que vers l'hôte d'ingestion. C'est la
     // conséquence logique des épinglages ci-dessus — si la config distante ne
     // doit rien pouvoir réactiver, autant ne pas aller la chercher — et cela
-    // permet une CSP sans exception pour us-assets.i.posthog.com (D-112).
+    // permet une CSP sans exception pour us-assets.i.posthog.com.
     // Nous n'utilisons ni feature flags, ni sondages, ni enregistrement.
     advanced_disable_flags: true,
     disable_external_dependency_loading: true,

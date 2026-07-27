@@ -8,6 +8,7 @@ import { computeScanExposure } from "../app/lib/assessment/scan-scoring";
 
 // Rapport réellement produit par scripts/preuvance-scan.ps1 sur un poste Windows,
 // gelé comme fixture pour verrouiller le contrat entre le CLI et l'application.
+// Les chemins machine ont été anonymisés (préfixe neutre), le reste est intact.
 const fixturePath = fileURLToPath(
   new URL("./fixtures/scan-sample.json", import.meta.url),
 );

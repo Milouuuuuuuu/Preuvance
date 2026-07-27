@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { Brand } from "./Brand";
 
 /**
- * En-tête des pages secondaires (D-115).
+ * En-tête des pages secondaires.
  *
  * Il existait en quatre copies quasi identiques dont les navigations avaient
  * divergé : `/diagnostic` était absent de trois d'entre elles, donc le module

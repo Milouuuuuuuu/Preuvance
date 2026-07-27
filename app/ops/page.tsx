@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 /**
- * Console interne d'opérations (D-106).
+ * Console interne d'opérations.
  *
  * Réservée à l'équipe : la page n'existe que si PREUVANCE_OPS=1 dans
  * l'environnement du poste — sinon 404, comme si la route n'existait pas.
@@ -66,7 +66,7 @@ const PROGRAMS: Array<{ cmd: string; role: string }> = [
   { cmd: "npm run admin -- --profil profil.json --mission mission.json", role: "six documents de mission" },
   { cmd: "npm run analytics:setup", role: "tableaux de bord PostHog (idempotent)" },
   { cmd: "npm run poste:verifier", role: "vérification du poste (Node, env, pièges)" },
-  { cmd: "npm test", role: "porte fable-gate complète avant tout commit" },
+  { cmd: "npm test", role: "porte de vérification complète avant tout commit" },
 ];
 
 export default function OpsPage() {
@@ -117,7 +117,7 @@ export default function OpsPage() {
             ))}
             <p className="ops-note">
               Une clé absente ne casse rien : chaque module devient no-op ou
-              refuse explicitement (D-020, D-024, D-087).
+              refuse explicitement.
             </p>
           </section>
 

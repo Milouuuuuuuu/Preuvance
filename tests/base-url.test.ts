@@ -7,7 +7,7 @@ import { resolveBaseUrlFromHeaders, resolveBaseUrlFromRequest } from "../lib/bas
  * L'audit du 26/07/2026 a montré qu'un visiteur pouvait déplacer l'origine
  * absolue du sitemap, du JSON-LD et des images OpenGraph vers son domaine en
  * posant `x-forwarded-host` — avec une mise en cache publique d'une heure sur
- * robots.txt et sitemap.xml. Ces tests verrouillent le comportement (D-111).
+ * robots.txt et sitemap.xml. Ces tests verrouillent le comportement.
  */
 
 function headersOf(entries: Record<string, string>) {

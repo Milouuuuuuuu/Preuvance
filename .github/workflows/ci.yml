@@ -41,7 +41,7 @@ jobs:
         run: npm run build
 
       # Ce test démarre le serveur Node de production : c'est le seul garde-fou
-      # du chargeur WASM maison (D-084). Il tournait uniquement en local.
+      # du chargeur WASM maison. Il tournait uniquement en local.
       - name: Démarrage du serveur de production
         run: node --test tests/production-start.test.mjs
 

@@ -11,8 +11,8 @@ est juste, pas parce qu'il était demandé.
 
 | Constat ChatGPT 5.6 | Vérification | Action |
 |---|---|---|
-| `documented` surqualifie un contrôle simplement déclaré (`synthesis.ts`) | **Exact.** Un contrôle mentionné devenait « Documenté ». | Statut `declared` ajouté, libellé « Déclaré · non vérifié » (D-055). |
-| Le schéma peut recevoir « risque minimal » avec une pratique interdite applicable (`schemas.ts`) | **Partiellement exact.** Le schéma autorise la combinaison ; rien ne l'interceptait au niveau du libellé. | Règles de cohérence ajoutées au moteur de contre-vérification : toute incohérence niveau de risque ↔ pratique interdite / haut risque devient une divergence qui plafonne le score (D-056). |
+| `documented` surqualifie un contrôle simplement déclaré (`synthesis.ts`) | **Exact.** Un contrôle mentionné devenait « Documenté ». | Statut `declared` ajouté, libellé « Déclaré · non vérifié ». |
+| Le schéma peut recevoir « risque minimal » avec une pratique interdite applicable (`schemas.ts`) | **Partiellement exact.** Le schéma autorise la combinaison ; rien ne l'interceptait au niveau du libellé. | Règles de cohérence ajoutées au moteur de contre-vérification : toute incohérence niveau de risque ↔ pratique interdite / haut risque devient une divergence qui plafonne le score. |
 
 ## Constats fondés — reconnus comme feuille de route (non implémentés)
 

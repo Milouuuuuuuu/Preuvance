@@ -3,7 +3,7 @@
  *
  * Deux raisons d'exister (audit du 26/07/2026) :
  *
- * 1. **Sécurité (D-111).** `x-forwarded-host` est fourni par l'appelant :
+ * 1. **Sécurité.** `x-forwarded-host` est fourni par l'appelant :
  *    Cloudflare Workers ne le pose pas. Le lire sans contrôle laissait un
  *    visiteur déplacer l'origine absolue du sitemap, du JSON-LD et des images
  *    OpenGraph vers son propre domaine — avec, pour robots.txt et sitemap.xml,

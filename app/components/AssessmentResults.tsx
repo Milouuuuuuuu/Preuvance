@@ -669,7 +669,7 @@ export function AssessmentResults({
           ? downloadError.message
           : "Le téléchargement du rapport a échoué.",
       );
-      // D-087 : jamais le message d'erreur, uniquement le statut de persistance.
+      // Jamais le message d'erreur, uniquement le statut de persistance.
       trackEvent("report_pdf_failed", {
         persistenceStatus,
       });

@@ -91,7 +91,7 @@ test("rend la page Preuvance en français sans vestige du starter", async () => 
   const csp = response.headers.get("content-security-policy") ?? "";
   assert.match(csp, /frame-ancestors 'none'/);
   // Sans default-src ni script-src, la politique ne bloquait aucun script
-  // distant : ces deux directives sont le cœur du correctif D-112.
+  // distant : ces deux directives sont le cœur du correctif CSP.
   assert.match(csp, /default-src 'self'/);
   assert.match(csp, /script-src 'self'/);
   assert.match(csp, /connect-src [^;]*us\.i\.posthog\.com/);
@@ -123,7 +123,7 @@ test("la console interne /ops n’existe pas sans PREUVANCE_OPS", async (t) => {
   // Le serveur de test lit les fichiers .env du dépôt, pas l'environnement du
   // processus : sur un poste d'équipe où .env.local active la console, on
   // vérifie alors le noindex — la garantie 404 est falsifiée en CI, qui n'a
-  // aucun .env.local (D-106).
+  // aucun .env.local.
   if (response.status === 200) {
     const html = await response.text();
     assert.match(html, /noindex/i);

@@ -3,7 +3,7 @@ import { resolveBaseUrlFromRequest } from "@/lib/base-url";
 export const dynamic = "force-dynamic";
 
 // /demo et /build-week restent volontairement hors sitemap : ces pages sont
-// noindex (D-085 pour la démo, deck interne pour /build-week), comme /auth,
+// noindex (la démo, le deck interne /build-week), comme /auth,
 // /api et /dossiers. Une URL noindex soumise en sitemap est une erreur SEO.
 const publicPaths = [
   "/",

@@ -18,7 +18,7 @@ import { SQL_DIALECTS } from "./sql-introspection";
  * traité comme du code, pas comme de la donnée : seuls les clients SQL de la
  * liste blanche ci-dessous peuvent être invoqués, par leur nom nu, sans
  * chemin. Un `powershell -c ...` glissé dans un mission.json est refusé à la
- * validation (audit du 26/07/2026, D-109).
+ * validation (audit du 26/07/2026).
  */
 export const MISSION_CONFIG_VERSION = "preuvance-mission-v1";
 

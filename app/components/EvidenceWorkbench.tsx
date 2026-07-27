@@ -194,7 +194,7 @@ export const EvidenceWorkbench = forwardRef<
         window.localStorage.setItem(storageKey, JSON.stringify(validation.data));
       }
 
-      // D-087 : uniquement des compteurs et un booléen, jamais le contenu.
+      // Uniquement des compteurs et un booléen, jamais le contenu.
       trackEvent("evidence_saved", {
         itemCount: validation.data.length,
         verifiedCount: validation.data.filter(
