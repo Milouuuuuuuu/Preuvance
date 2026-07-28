@@ -5,7 +5,7 @@ import { z } from "zod";
  * coordonnées de paiement.
  *
  * Ce fichier est la seule chose à mettre à jour quand l'entité émettrice
- * change — passage d'une micro-entreprise française à une Sàrl suisse, par
+ * change : passage d'une micro-entreprise française à une Sàrl suisse, par
  * exemple. Tous les documents de mission (lettre de mission, facture, contrat
  * de sous-traitance, registre, attestation) en découlent, ce qui évite qu'une
  * mention légale reste figée dans un modèle Word oublié.
@@ -40,7 +40,7 @@ export const ENTITY_FORM_LABELS: Record<EntityForm, string> = {
 
 /**
  * Régime de TVA de l'entité émettrice. Il détermine à lui seul les mentions
- * portées sur la facture — voir `lib/admin/invoicing.ts`.
+ * portées sur la facture (voir `lib/admin/invoicing.ts`).
  */
 export const VAT_REGIMES = [
   /** France, franchise en base : aucune TVA facturée (art. 293 B du CGI). */
@@ -207,7 +207,7 @@ export function dueDate(issuedOn: string, paymentTermsDays: number): string {
 
 export function entityIdentityLines(entity: EntityProfile): string[] {
   const lines = [
-    `${entity.legalName}${entity.tradeName ? ` (${entity.tradeName})` : ""} — ${ENTITY_FORM_LABELS[entity.form]}`,
+    `${entity.legalName}${entity.tradeName ? ` (${entity.tradeName})` : ""}, ${ENTITY_FORM_LABELS[entity.form]}`,
     entity.address.line1,
     ...(entity.address.line2 ? [entity.address.line2] : []),
     `${entity.address.postalCode} ${entity.address.city}, ${entity.address.country}`,

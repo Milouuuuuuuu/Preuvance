@@ -1,5 +1,5 @@
 /**
- * Agent local Preuvance v2 — inventaire des sources de données.
+ * Agent local Preuvance v2 : inventaire des sources de données.
  *
  * Tout s'exécute sur le poste de l'opérateur ou du client : les connecteurs
  * lisent des métadonnées, l'agent écrit un catalogue, un diagnostic et un
@@ -112,7 +112,7 @@ function runCommand(
     child.on("close", (code) => {
       clearTimeout(timer);
       if (code === 0) resolvePromise(stdout);
-      else rejectPromise(new Error(`code ${code} — ${stderr.trim().slice(0, 300) || "sans détail"}`));
+      else rejectPromise(new Error(`code ${code} (${stderr.trim().slice(0, 300) || "sans détail"})`));
     });
 
     if (options.input !== undefined) {
@@ -432,7 +432,7 @@ async function runCollect(
       sources.push(collected.source);
       datasets.push(...collected.datasets);
       log(
-        `   ${collected.source.status} — ${collected.datasets.length} jeu(x) de données, ${collected.datasets.reduce((sum, dataset) => sum + dataset.fields.length, 0)} champ(s)`,
+        `   ${collected.source.status} : ${collected.datasets.length} jeu(x) de données, ${collected.datasets.reduce((sum, dataset) => sum + dataset.fields.length, 0)} champ(s)`,
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : "erreur inconnue";
@@ -445,7 +445,7 @@ async function runCollect(
         status: "unreachable",
         notes: [`Collecte interrompue : ${message}`],
       });
-      log(`   injoignable — ${message}`);
+      log(`   injoignable : ${message}`);
     }
   }
 
@@ -524,7 +524,7 @@ async function runCollect(
  */
 async function runDryRun(config: MissionConfig, outDirectory: string): Promise<void> {
   const lines: string[] = [
-    "-- PREUVANCE — requêtes de lecture seule du diagnostic",
+    "-- PREUVANCE : requêtes de lecture seule du diagnostic",
     `-- Mission ${config.mission.reference} · client ${config.mission.client}`,
     "-- Ces requêtes ne lisent que les catalogues système. Aucune donnée métier.",
     "-- Exécutez-les et rendez un fichier CSV par étape (tables.csv, columns.csv, …).",
@@ -690,7 +690,7 @@ async function runSelfTest(): Promise<void> {
 
 /* ---------------------------------------------------------------------- */
 
-const HELP = `Preuvance — agent d’inventaire local (v2)
+const HELP = `Preuvance, agent d’inventaire local (v2)
 
   --mission <fichier>   fichier de mission JSON (obligatoire sauf --self-test)
   --out <dossier>       dossier de sortie (défaut : ./preuvance-mission)

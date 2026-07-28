@@ -157,7 +157,7 @@ function slide1(deck) {
 
   text(
     slide,
-    "Turn an AI system into a living, source-linked assurance dossier—evidence by evidence.",
+    "Turn an AI system into a living, source-linked assurance dossier, evidence by evidence.",
     80,
     505,
     500,
@@ -369,7 +369,7 @@ function slide3(deck) {
 
   line(slide, 62, 570, 1154, 0, C.line, 1);
   circle(slide, 66, 596, 14, C.green);
-  text(slide, "Only bounded, expurgated digests cross the local boundary—and only with consent.", 96, 586, 990, 42, {
+  text(slide, "Only bounded, expurgated digests cross the local boundary, and only with consent.", 96, 586, 990, 42, {
     size: 24,
     bold: true,
     color: C.ink,
@@ -387,7 +387,7 @@ function slide4(deck) {
   const slide = deck.slides.add();
   slide.background.fill = C.bg;
   addWordmark(slide, 4);
-  addTitle(slide, "The dossier is useful when it appears—\nand stays alive after the review");
+  addTitle(slide, "The dossier is useful when it appears,\nand stays alive after the review");
 
   // Large document visual.
   rect(slide, 64, 253, 648, 360, "#F7FAFC", {
@@ -520,7 +520,7 @@ function slide5(deck) {
     lineSpacing: 1.05,
   });
   line(slide, 854, 500, 295, 0, C.line, 1);
-  text(slide, "SHA-256 proves integrity—not truth.", 854, 520, 294, 32, {
+  text(slide, "SHA-256 proves integrity, not truth.", 854, 520, 294, 32, {
     size: 20,
     bold: true,
     color: C.amber,
@@ -590,7 +590,7 @@ function slide6(deck) {
   const guards = [
     ["NO AUTO-VERIFICATION", "Models never upgrade evidence."],
     ["ACTUAL MODEL RECORDED", "Every run stays in methodology."],
-    ["BOUNDED INPUTS", "Digests—not raw local content."],
+    ["BOUNDED INPUTS", "Digests, not raw local content."],
   ];
   guards.forEach(([label, desc], i) => {
     const x = 385 + i * 270;
@@ -601,7 +601,7 @@ function slide6(deck) {
   addNotes(slide, [
     "GPT-5.6 performs the high-value reasoning stages: extraction, classification, and gap analysis.",
     "Deterministic synthesis enforces schemas, stable identifiers, and evidence invariants.",
-    "Codex is used materially to build, test, and document the implementation—not merely as a wrapper.",
+    "Codex is used materially to build, test, and document the implementation, not merely as a wrapper.",
   ]);
 }
 
@@ -609,7 +609,7 @@ function slide7(deck) {
   const slide = deck.slides.add();
   slide.background.fill = C.bg;
   addWordmark(slide, 7);
-  addTitle(slide, "Privacy is an architectural constraint—\nnot a policy footnote");
+  addTitle(slide, "Privacy is an architectural constraint,\nnot a policy footnote");
 
   rect(slide, 57, 263, 446, 308, C.panel, {
     radius: 28,
@@ -706,7 +706,7 @@ function slide8(deck) {
   });
   text(
     slide,
-    "Preuvance makes governance operable at build speed—without blurring the line between a declaration, a signal, and proof.",
+    "Preuvance makes governance operable at build speed, without blurring the line between a declaration, a signal, and proof.",
     80,
     490,
     650,
@@ -748,7 +748,7 @@ function slide8(deck) {
 
   addNotes(slide, [
     "Preuvance gives teams a practical loop: prompt, scan, and prove.",
-    "Its key design choice is to preserve epistemic honesty—declared, detected, and proven remain distinct.",
+    "Its key design choice is to preserve epistemic honesty: declared, detected, and proven remain distinct.",
     "We are applying to the Work & Productivity track because Preuvance turns assurance into a repeatable part of how AI systems are built and reviewed.",
   ]);
 }

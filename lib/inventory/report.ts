@@ -23,7 +23,7 @@ import { SENSITIVE_CATEGORY_LABELS } from "./sensitive-fields";
  * Le contenu est construit une seule fois sous forme de blocs typés, puis
  * rendu en Markdown (repris tel quel dans un document) ou en HTML autonome
  * (imprimable en PDF depuis le navigateur, sans envoi réseau). Les deux
- * sorties disent donc exactement la même chose — impossible qu'une version
+ * sorties disent donc exactement la même chose : impossible qu'une version
  * commerciale s'écarte de la version technique.
  */
 export const REPORT_VERSION = "preuvance-diagnostic-report-v1";
@@ -36,10 +36,10 @@ export type ReportModel = DocumentModel & {
 };
 
 const TIER_LABELS: Record<Diagnostic["tier"], string> = {
-  A: "A — socle solide",
-  B: "B — écarts circonscrits",
-  C: "C — chantiers structurants",
-  D: "D — reprise en profondeur",
+  A: "A (socle solide)",
+  B: "B (écarts circonscrits)",
+  C: "C (chantiers structurants)",
+  D: "D (reprise en profondeur)",
 };
 
 const OWNER_LABELS = {
@@ -63,7 +63,7 @@ function findingRow(finding: DiagnosticFinding): string[] {
     SEVERITY_LABELS[finding.severity],
     AXIS_LABELS[finding.axis],
     finding.title,
-    finding.basis ?? "—",
+    finding.basis ?? "Non précisé",
     `${finding.effortDays} j`,
   ];
 }
@@ -144,7 +144,7 @@ export function buildReportModel(catalogue: Catalogue, diagnostic: Diagnostic): 
             : source.status === "partial"
               ? "partielle"
               : "injoignable",
-          source.location ?? "—",
+          source.location ?? "Non renseigné",
         ]),
       },
     ],
@@ -163,7 +163,7 @@ export function buildReportModel(catalogue: Catalogue, diagnostic: Diagnostic): 
       constatBlocks.push({
         kind: "callout",
         tone: "risk",
-        title: `Critique — ${item.title}`,
+        title: `Critique : ${item.title}`,
         text: `${item.detail} → ${item.recommendation}`,
       });
     }
@@ -234,7 +234,7 @@ export function buildReportModel(catalogue: Catalogue, diagnostic: Diagnostic): 
         phase.actions.length === 0
           ? []
           : [
-              { kind: "paragraph", text: `**${phase.label} (${phase.window})** — ${phase.objective}` },
+              { kind: "paragraph", text: `**${phase.label} (${phase.window})** : ${phase.objective}` },
               {
                 kind: "table",
                 head: ["Action", "Porteur", "Charge"],
@@ -255,7 +255,7 @@ export function buildReportModel(catalogue: Catalogue, diagnostic: Diagnostic): 
   if (diagnostic.reversibility.length === 0) {
     reversibilityBlocks.push({
       kind: "paragraph",
-      text: "Aucun outil hébergé en ligne n’a été repéré au catalogue. La réversibilité repose alors sur les sauvegardes des bases internes — à tester comme n’importe quelle restauration.",
+      text: "Aucun outil hébergé en ligne n’a été repéré au catalogue. La réversibilité repose alors sur les sauvegardes des bases internes, à tester comme n’importe quelle restauration.",
     });
   } else {
     reversibilityBlocks.push({
@@ -310,7 +310,7 @@ export function buildReportModel(catalogue: Catalogue, diagnostic: Diagnostic): 
 
   return {
     version: REPORT_VERSION,
-    title: `Diagnostic Preuvance — ${catalogue.mission.client}`,
+    title: `Diagnostic Preuvance : ${catalogue.mission.client}`,
     subtitle: `Référence ${catalogue.mission.reference} · collecte du ${formatDate(catalogue.mission.startedAt)} · rapport du ${formatDate(catalogue.generatedAt)} · mode ${catalogue.mission.mode === "metadata_only" ? "métadonnées seules" : "métadonnées et fraîcheur"}`,
     headline: {
       value: `${diagnostic.score}/100`,

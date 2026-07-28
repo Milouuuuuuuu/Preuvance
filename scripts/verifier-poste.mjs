@@ -3,8 +3,9 @@
  * Vérification du poste de travail Preuvance.
  *
  * Objectif : qu'un membre de l'équipe sache en une commande si son poste est
- * prêt — versions, dépendances, clés présentes (jamais leurs valeurs) et
- * pièges connus de la machine (Docker vs tests Workerd, OneDrive).
+ * prêt. Il passe en revue les versions, les dépendances, les clés présentes
+ * (jamais leurs valeurs) et les pièges connus de la machine (Docker vs tests
+ * Workerd, OneDrive).
  *
  * Le script est en lecture seule : il n'installe rien, ne modifie rien,
  * n'affiche jamais la valeur d'une variable d'environnement.
@@ -30,7 +31,7 @@ export const EXPECTED_KEYS = [
 
 /**
  * Extrait les NOMS de variables d'un contenu dotenv, jamais les valeurs.
- * Ignore commentaires, lignes vides, lignes sans « = » et valeurs vides —
+ * Ignore commentaires, lignes vides, lignes sans « = » et valeurs vides :
  * `OPENAI_API_KEY=` sans valeur est traité comme absent, exactement comme le
  * fera le module qui la lit. Seule la longueur de la valeur est consultée.
  */
@@ -78,13 +79,13 @@ function main() {
   if (checkNodeVersion(nodeVersion)) {
     ok(`Node ${nodeVersion} (minimum ${NODE_MIN.major}.${NODE_MIN.minor})`);
   } else {
-    fail(`Node ${nodeVersion} — le projet exige >= ${NODE_MIN.major}.${NODE_MIN.minor} (cf. package.json engines)`);
+    fail(`Node ${nodeVersion} alors que le projet exige >= ${NODE_MIN.major}.${NODE_MIN.minor} (cf. package.json engines)`);
   }
 
   if (existsSync(join(root, "node_modules"))) {
     ok("dépendances installées (node_modules présent)");
   } else {
-    fail("node_modules absent — lancer « npm ci »");
+    fail("node_modules absent : lancer « npm ci »");
   }
 
   const envPath = join(root, ".env.local");
@@ -93,13 +94,13 @@ function main() {
     ok(`.env.local présent (${present.length} variable(s) définie(s))`);
     for (const key of EXPECTED_KEYS) {
       if (present.includes(key.name)) {
-        ok(`${key.name} — ${key.module}`);
+        ok(`${key.name} : ${key.module}`);
       } else {
-        warn(`${key.name} absente — ${key.module}`);
+        warn(`${key.name} absente : ${key.module}`);
       }
     }
   } else {
-    warn(".env.local absent — copier .env.example et remplir selon le rôle du poste");
+    warn(".env.local absent ; copier .env.example et remplir selon le rôle du poste");
   }
 
   if (isDockerDesktopRunning()) {

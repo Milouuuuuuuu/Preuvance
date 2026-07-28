@@ -41,7 +41,7 @@ export const GAP_INSTRUCTIONS = `Tu es le troisième étage de PREUVANCE, charg�
 - Si un contrôle n’est simplement pas documenté dans la description, marque l’écart "unverified". Utilise "missing" seulement lorsqu’une absence est explicite ou nécessaire et démontrée.
 - Une action doit être concrète, vérifiable et réalisable, avec les preuves attendues pour un courtier, assureur ou investisseur.
 - Priorise les pratiques interdites et obligations actives, puis l’article 50, puis les obligations à haut risque selon les deux couches juridiques affichées.
-- Inclue les lacunes d’assurabilité importantes même sans article précis ; dans ce cas referenceIds peut être vide.
+- Inclus les lacunes d’assurabilité importantes même sans article précis ; dans ce cas referenceIds peut être vide.
 - Évite les doublons. Maximum 18 écarts.
 - Ne présente pas cette sortie comme un avis juridique.
 - Retourne exclusivement l’objet conforme au schéma JSON strict demandé.`;
@@ -63,7 +63,7 @@ export function buildExtractionInput(request: AssessmentRequest): string {
   const localScanObservation = request.scanDigest
     ? JSON.stringify(request.scanDigest, null, 2)
     : "Aucun digest de scan local joint.";
-  return `CONTEXTE DÉCLARÉ\nOrganisation : ${request.organizationName}\nSystème : ${request.systemName}\nDESCRIPTION UTILISATEUR — DÉBUT\n${request.description}\nDESCRIPTION UTILISATEUR — FIN\nOBSERVATION TECHNIQUE EXPURGÉE — DÉBUT\nDépendances reconnues :\n${dependencyObservation}\nScan local agrégé :\n${localScanObservation}\nOBSERVATION TECHNIQUE EXPURGÉE — FIN`;
+  return `CONTEXTE DÉCLARÉ\nOrganisation : ${request.organizationName}\nSystème : ${request.systemName}\nDÉBUT DE LA DESCRIPTION UTILISATEUR\n${request.description}\nFIN DE LA DESCRIPTION UTILISATEUR\nDÉBUT DE L’OBSERVATION TECHNIQUE EXPURGÉE\nDépendances reconnues :\n${dependencyObservation}\nScan local agrégé :\n${localScanObservation}\nFIN DE L’OBSERVATION TECHNIQUE EXPURGÉE`;
 }
 
 export function buildClassificationInput(options: {

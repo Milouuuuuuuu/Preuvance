@@ -25,7 +25,7 @@ const worstCase: Assessment = {
   gaps: [],
   decisionLog: [
     {
-      title: "Pratiques interdites — droit publié",
+      title: "Pratiques interdites (droit publié)",
       decision: "Applicable",
       score: 1,
       rationale: "Signal fort dans la description.",

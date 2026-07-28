@@ -556,7 +556,7 @@ export async function inventoryFile(options: {
       toDataset({
         sourceId,
         id: toIdentifier(sourceId, label, sheet.name),
-        name: `${label} — ${sheet.name}`,
+        name: `${label} (${sheet.name})`,
         kind: "sheet",
         columns: sheet.columns,
         rows: sheet.dataRows,

@@ -2430,6 +2430,113 @@ a {
   color: var(--pv-ink);
 }
 
+/* Bande d'acquisition du scan local. Même gabarit que la bande de portabilité
+   (grille icône / texte / action), avec une colonne d'actions car le scan en
+   propose deux : télécharger tout de suite, ou comprendre d'abord. */
+.pv-scan-band {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  width: min(100% - 48px, 1240px);
+  margin: 64px auto 0;
+  padding: 30px 34px;
+  border: 1px solid var(--pv-line-strong);
+  border-radius: var(--pv-radius-lg);
+  background: var(--pv-blue-pale);
+}
+
+.pv-scan-band-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid var(--pv-blue);
+  border-radius: var(--pv-radius);
+  background: var(--pv-white);
+  color: var(--pv-blue-dark);
+}
+
+.pv-scan-band-copy h2 {
+  margin: 6px 0 7px;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+}
+
+.pv-scan-band-copy > p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--pv-ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.pv-scan-band-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--pv-ink-soft);
+  font-size: 0.76rem;
+  font-weight: 620;
+}
+
+.pv-scan-band-points li::before {
+  margin-right: 7px;
+  color: var(--pv-blue);
+  content: "\2713";
+}
+
+/* Sélecteur aligné sur `.pv-scan-band-copy > p` ci-dessus, sinon la note
+   hérite du corps de texte et la mise en garde SmartScreen se lit avec le
+   même poids que l'argumentaire. */
+.pv-scan-band-copy > p.pv-scan-band-note {
+  max-width: 760px;
+  margin: 12px 0 0;
+  /* --pv-muted tombe à 4,41:1 sur --pv-blue-pale en thème jour, sous le seuil
+     AA de 4,5:1 pour ce corps de texte. La hiérarchie passe par la taille. */
+  color: var(--pv-ink-soft);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.pv-scan-band-actions {
+  display: grid;
+  gap: 8px;
+  justify-items: stretch;
+}
+
+.pv-scan-band-action,
+.pv-scan-band-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 0 20px;
+  border-radius: var(--pv-radius-sm);
+  font-size: 0.8rem;
+  font-weight: 720;
+  white-space: nowrap;
+}
+
+.pv-scan-band-action {
+  background: var(--pv-blue);
+  color: var(--pv-white);
+}
+
+.pv-scan-band-action:hover,
+.pv-scan-band-action:focus-visible {
+  background: var(--pv-blue-dark);
+}
+
+.pv-scan-band-secondary {
+  border: 1px solid var(--pv-line-strong);
+  background: var(--pv-white);
+  color: var(--pv-ink);
+}
+
 .pv-portability-page {
   width: min(100% - 48px, 1240px);
   margin: 0 auto;
@@ -3286,16 +3393,23 @@ a {
 @media (max-width: 900px) {
   .pv-portability-band,
   .pv-portability-hero,
-  .pv-portability-workflow {
+  .pv-portability-workflow,
+  .pv-scan-band {
     grid-template-columns: 1fr;
   }
 
-  .pv-portability-band {
+  .pv-portability-band,
+  .pv-scan-band {
     align-items: start;
   }
 
   .pv-portability-action {
     justify-self: start;
+  }
+
+  .pv-scan-band-actions {
+    grid-auto-flow: column;
+    justify-content: start;
   }
 
   .pv-portability-hero {
@@ -3331,9 +3445,15 @@ a {
     width: 100%;
   }
 
-  .pv-portability-band {
+  .pv-portability-band,
+  .pv-scan-band {
     width: min(100% - 32px, 1240px);
     padding: 26px 22px;
+  }
+
+  .pv-scan-band-actions {
+    grid-auto-flow: row;
+    justify-content: stretch;
   }
 
   .pv-portability-features,
@@ -5075,7 +5195,7 @@ button.pv-scan-next-cta {
 }
 
 /* ---------------------------------------------------------------------------
- * Thème nuit public — discret et clean.
+ * Thème nuit public : discret et sobre.
  *
  * Activé uniquement par la bascule (opt-in, persisté en localStorage), jamais
  * imposé. Les tokens surfaces/texte sont inversés ; les panneaux sombres
@@ -5202,7 +5322,7 @@ body:has(.ops-shell) .pv-theme-toggle {
 }
 
 /* ---------------------------------------------------------------------------
- * Console interne /ops — esthétique inspirée des interfaces de
+ * Console interne /ops. Esthétique inspirée des interfaces de
  * hacking de fiction (néon sur noir, scanlines, monospace). Réservée à
  * l'équipe : la page n'existe que si PREUVANCE_OPS=1, noindex, hors sitemap.
  * Aucun glitch permanent : les animations respectent prefers-reduced-motion.

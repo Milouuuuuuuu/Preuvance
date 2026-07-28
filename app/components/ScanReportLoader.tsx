@@ -33,9 +33,9 @@ const SEVERITY_LABELS: Record<ScanFindingSeverity, string> = {
 };
 
 const CONCORDANCE_LABELS: Record<ScanConcordance["status"], string> = {
-  concordant: "Concordant — déclaration corroborée",
-  uncorroborated: "Non contredit — corroboration à renforcer",
-  divergent: "Divergent — usage non déclaré détecté",
+  concordant: "Concordant : déclaration corroborée",
+  uncorroborated: "Non contredit : corroboration à renforcer",
+  divergent: "Divergent : usage non déclaré détecté",
   no_declaration: "Sans déclaration d’usage",
 };
 
@@ -202,7 +202,7 @@ export function ScanReportLoader() {
                 <dd>
                   {state.exposure.concordance.corroborated.length
                     ? state.exposure.concordance.corroborated.join(", ")
-                    : "—"}
+                    : "aucun"}
                 </dd>
               </div>
               <div>
@@ -210,7 +210,7 @@ export function ScanReportLoader() {
                 <dd>
                   {state.exposure.concordance.undeclaredObserved.length
                     ? state.exposure.concordance.undeclaredObserved.join(", ")
-                    : "—"}
+                    : "aucun"}
                 </dd>
               </div>
             </dl>

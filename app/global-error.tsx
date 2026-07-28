@@ -15,7 +15,7 @@ import { trackEvent } from "@/lib/analytics/posthog";
  *
  * Ce qui part : le `digest` de React (une empreinte calculée côté serveur, pas
  * un message), le nom de la classe d'erreur et la route. Jamais la pile,
- * jamais le message — ils peuvent contenir des fragments de saisie
+ * jamais le message : ils peuvent contenir des fragments de saisie
  * utilisateur, ce qu'interdit le contrat de confidentialité analytique.
  */
 export default function GlobalError({

@@ -107,7 +107,7 @@ export const BridgeProcedural = () => {
   const frame = useCurrentFrame();
   const {width, height} = useVideoConfig();
 
-  // Single point of light, constant speed, no easing on the way in — this is deliberate:
+  // Single point of light, constant speed, no easing on the way in. This is deliberate:
   // no acceleration/deceleration reads as "impact". It just travels.
   const travelStart = 22;
   const travelEnd = 158;
@@ -118,7 +118,7 @@ export const BridgeProcedural = () => {
     extrapolateRight: 'clamp',
   });
 
-  // Calm status change on arrival — a slow crossfade, not a flash.
+  // Calm status change on arrival: a slow crossfade, not a flash.
   const arrived = interpolate(frame, [travelEnd, settleEnd], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
@@ -130,7 +130,7 @@ export const BridgeProcedural = () => {
   const railY = height * 0.5;
   const packetX = interpolate(travel, [0, 1], [leftX, rightX]);
 
-  // Very gentle brightness rise as the packet passes through the midpoint ring — no burst, no debris.
+  // Very gentle brightness rise as the packet passes through the midpoint ring; no burst, no debris.
   const ringGlow = interpolate(travel, [0.4, 0.5, 0.6], [0.28, 0.62, 0.28], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
@@ -178,7 +178,7 @@ export const BridgeProcedural = () => {
 
       <div style={{position: 'absolute', left: leftX, top: railY, width: rightX - leftX, height: 2, background: 'rgba(150,190,240,.16)', transform: 'translateY(-1px)'}} />
 
-      {/* Midpoint translucent ring — the packet passes cleanly through it, no collision effect of any kind */}
+      {/* Midpoint translucent ring: the packet passes cleanly through it, no collision effect of any kind */}
       <div
         style={{
           position: 'absolute',
@@ -193,7 +193,7 @@ export const BridgeProcedural = () => {
         }}
       />
 
-      {/* Trailing light streak behind the packet — pure motion blur, no splash or liquid */}
+      {/* Trailing light streak behind the packet (pure motion blur, no splash or liquid) */}
       {travel > 0 && travel < 1 && (
         <div
           style={{
@@ -209,7 +209,7 @@ export const BridgeProcedural = () => {
         />
       )}
 
-      {/* The single point of light itself — no lightning bolt icon */}
+      {/* The single point of light itself, no lightning bolt icon */}
       {travel < 1 && (
         <div
           style={{

@@ -10,7 +10,7 @@ $ErrorActionPreference = "Stop"
 $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $documentsScan = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "Preuvance"
 
-Write-Host "PREUVANCE — Désinstallation propre" -ForegroundColor White
+Write-Host "PREUVANCE : désinstallation propre" -ForegroundColor White
 Write-Host "Cette action supprime la clé API locale, les caches, les dépendances, les"
 Write-Host "sorties et les rapports de scan. Aucun droit administrateur n'est requis."
 if ($RemoveAll) {

@@ -7,7 +7,7 @@ begin;
 -- `ai_systems` (FK on delete cascade → l'évaluation, son registre de preuves
 -- ET son journal d'audit disparaissaient sans événement) et DELETE sur
 -- `organizations` (même cascade, un cran plus haut). `reasoning_steps` restait
--- de plus réinscriptible par le client — la trace de raisonnement qui fonde le
+-- de plus réinscriptible par le client : la trace de raisonnement qui fonde le
 -- dossier pouvait être réécrite sans journal.
 --
 -- Aucun flux applicatif n'écrit directement sur ces tables (vérifié : zéro
@@ -15,7 +15,7 @@ begin;
 -- les écritures passent par les RPC SECURITY DEFINER, qui ne dépendent pas des
 -- droits du rôle `authenticated`. On peut donc fermer sans rien casser.
 
--- Patron systématique : `revoke all` puis re-grant du strict nécessaire —
+-- Patron systématique : `revoke all` puis re-grant du strict nécessaire,
 -- comme la migration 202607200001 l'avait fait pour `assessments`. Les
 -- privilèges par défaut de Supabase (ALL, y compris TRUNCATE qui n'est pas
 -- soumis à la RLS) restaient sinon accrochés aux tables de la migration 1.
@@ -36,15 +36,15 @@ grant select on table public.ai_systems to authenticated;
 
 -- 2. organizations : plus de suppression par appel PostgREST direct.
 -- L'effacement d'une organisation (droit RGPD) devient une opération de
--- support outillée par service_role, avec journal — pas un DELETE silencieux
--- qui emporte les preuves et leur journal d'audit dans la cascade.
+-- support outillée par service_role, avec journal, et non un DELETE
+-- silencieux qui emporte les preuves et leur journal d'audit dans la cascade.
 drop policy if exists organizations_delete_owner on public.organizations;
 
 revoke all on table public.organizations from authenticated;
 grant select, insert, update on table public.organizations to authenticated;
 
 -- 2 bis. organization_members : les politiques n'autorisent que la lecture
--- (les mutations d'appartenance sont service-role, cf. migration 1) — les
+-- (les mutations d'appartenance sont service-role, cf. migration 1) ; les
 -- droits de table doivent dire la même chose.
 revoke all on table public.organization_members from authenticated;
 grant select on table public.organization_members to authenticated;

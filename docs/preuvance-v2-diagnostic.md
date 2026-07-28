@@ -1,4 +1,4 @@
-# Preuvance v2 — du scan IA local au diagnostic complet
+# Preuvance v2 : du scan IA local au diagnostic complet
 
 Ce document décrit le module **diagnostic complet** : l'inventaire des sources de
 données du client, la cartographie de ses flux et le plan de transition chiffré.
@@ -50,7 +50,7 @@ n'existe parce qu'un modèle l'a supposé.
 ```
 
 Tout s'exécute sur le poste de l'opérateur ou du client. Rien n'est transmis à un
-serveur Preuvance, à aucune étape — y compris la page `/diagnostic`, qui lit le
+serveur Preuvance, à aucune étape, y compris la page `/diagnostic`, qui lit le
 catalogue dans le navigateur.
 
 ## 3. Le catalogue client
@@ -98,16 +98,16 @@ signé.** P0 plus les exports couvrent la grande majorité des cas.
 
 ## 5. Trois façons de collecter, par ordre de friction croissante
 
-1. **Résultats remis par le client** (`executor.type = "results"`) — l'agent
+1. **Résultats remis par le client** (`executor.type = "results"`) : l'agent
    imprime les requêtes (`--dry-run`), l'équipe du client les exécute, rend des
    fichiers CSV, l'agent les lit. *Aucune connexion, aucun compte à créer.*
    C'est souvent le chemin le plus rapide vers un premier diagnostic.
-2. **Commande locale** (`executor.type = "command"`) — l'agent appelle le client
+2. **Commande locale** (`executor.type = "command"`) : l'agent appelle le client
    en ligne de commande déjà présent chez le client (`psql`, `mysql`, `sqlcmd`)
    avec un compte de lecture seule. Aucun shell n'est utilisé : la commande et
    ses arguments sont passés tels quels, la requête remplace `{{sql}}` ou passe
    par l'entrée standard.
-3. **API métier** (Dolibarr, Salesforce) — jeton de lecture fourni par une
+3. **API métier** (Dolibarr, Salesforce) : jeton de lecture fourni par une
    variable d'environnement, jamais écrit dans le fichier de mission.
 
 Exemples d'exécuteurs :
@@ -129,7 +129,7 @@ l'environnement du poste (`PGPASSWORD`, `MYSQL_PWD`, fichier `.pgpass`…), sous
 la responsabilité de l'opérateur.
 
 **Un fichier de mission est du code, pas de la donnée.** Il déclenche
-l'exécution d'un programme sur le poste de l'opérateur — celui qui détient les
+l'exécution d'un programme sur le poste de l'opérateur, celui qui détient les
 accès en lecture de tous les clients. Depuis l'audit du 26 juillet 2026, seuls
 les clients SQL de la liste blanche sont admis comme exécuteurs : `psql`,
 `mysql`, `mariadb`, `sqlcmd`, `bcp`, `sqlite3`, par leur nom nu, sans chemin.
@@ -138,7 +138,7 @@ Un `powershell -c …` glissé dans un `mission.json` reçu par courriel est ref
 
 ## 6. Classification des champs sensibles
 
-[`lib/inventory/sensitive-fields.ts`](../lib/inventory/sensitive-fields.ts) —
+[`lib/inventory/sensitive-fields.ts`](../lib/inventory/sensitive-fields.ts),
 version `preuvance-sensitivity-v1`.
 
 Chaque règle a un identifiant, une catégorie, un niveau de confiance et un
@@ -148,9 +148,9 @@ mineurs, secrets d'authentification, localisation.
 
 Deux mécanismes évitent le rapport gonflé qui décrédibilise tout :
 
-- **exclusions** — `nom_fichier`, `nom_produit`, `raison_sociale`,
+- **exclusions** : `nom_fichier`, `nom_produit`, `raison_sociale`,
   `empreinte_fichier`, `id_facture`… ne sont jamais comptés comme personnels ;
-- **contexte du jeu de données** — un champ `nom` dans une table de produits ou
+- **contexte du jeu de données** : un champ `nom` dans une table de produits ou
   de paramètres garde le signalement mais voit sa confiance abaissée, avec la
   raison écrite dans le rapport.
 
@@ -160,7 +160,7 @@ métier, pas à le remplacer.
 
 ## 7. Score, plafonds et plan
 
-[`lib/inventory/diagnostic.ts`](../lib/inventory/diagnostic.ts) — version
+[`lib/inventory/diagnostic.ts`](../lib/inventory/diagnostic.ts), version
 `preuvance-diagnostic-v1`.
 
 Six axes pondérés : connaissance des sources (20), données personnelles (25),
@@ -186,11 +186,11 @@ avant plafonds, le plafond appliqué et son motif.
 Le plan de transition découle mécaniquement des constats : gravité et charge
 décident de la fenêtre (mise en sécurité S+0 à S+2, conformité documentaire
 S+2 à S+6, transition et réversibilité S+6 à S+13). Les charges sont exprimées
-en jours de travail, jamais en euros — le prix reste une décision commerciale.
+en jours de travail, jamais en euros : le prix reste une décision commerciale.
 
 ## 8. Fiches de réversibilité par outil
 
-[`lib/inventory/reversibility-playbooks.ts`](../lib/inventory/reversibility-playbooks.ts) —
+[`lib/inventory/reversibility-playbooks.ts`](../lib/inventory/reversibility-playbooks.ts),
 version `preuvance-reversibility-v1`.
 
 Le diagnostic sait dire « la donnée dépend d'un éditeur » ; le registre des
@@ -198,11 +198,11 @@ fiches dit **quoi faire, outil par outil** : le mécanisme d'export documenté
 publiquement par l'éditeur, la procédure de suppression en fin de contrat
 (art. 28-3-g RGPD) et le chemin de remise en local en formats relisibles.
 Première version du registre : Salesforce, Dolibarr, HubSpot, Google Workspace,
-Microsoft 365, Notion — les outils les plus fréquents en PME.
+Microsoft 365, Notion, soit les outils les plus fréquents en PME.
 
 Trois règles, héritées du reste du produit :
 
-- **une fiche ne cite que des mécanismes documentés par l'éditeur** — jamais
+- **une fiche ne cite que des mécanismes documentés par l'éditeur**, jamais
   une procédure supposée (même discipline que le reste du produit : rien d'inventé) ;
 - **la reconnaissance préfère la sous-couverture au faux positif** : un nom
   ambigu (`SharePoint Server 2019`, `Tableur d'équipe`) ne matche pas et
@@ -213,7 +213,7 @@ Trois règles, héritées du reste du produit :
   code que pour un client signé).
 
 Dans le diagnostic, une fiche reconnue produit un constat **à pénalité
-nulle** — une sortie documentée n'est pas un défaut — dont la recommandation
+nulle** (une sortie documentée n'est pas un défaut) dont la recommandation
 est nominative : exécuter un export réel, chronométrer la restauration locale,
 exiger la confirmation écrite de suppression. Un outil en ligne sans fiche
 produit un constat pénalisé (art. 28-3-g) : l'absence de procédure de sortie
@@ -240,7 +240,7 @@ commerciale ne peut pas diverger de la version technique.
 `--purge` calcule l'empreinte SHA-256 de chaque artefact **avant** de le
 supprimer, puis écrit `journal-suppression.txt` et `journal-suppression.json`.
 Le client peut ainsi vérifier ce qui a été produit, ce qui a été supprimé, et
-qu'aucune copie ne subsiste ailleurs — une promesse de réversibilité qui se
+qu'aucune copie ne subsiste ailleurs : une promesse de réversibilité qui se
 vérifie plutôt qu'une promesse qui se répète.
 
 ## 11. Commandes

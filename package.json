@@ -19,6 +19,7 @@
     "demo:pdf": "node --import tsx scripts/build-northstar-demo-pdf.ts",
     "analytics:setup": "node --env-file=.env.local scripts/posthog-setup.mjs",
     "poste:verifier": "node scripts/verifier-poste.mjs",
+    "local:download": "powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-local-download.ps1",
     "deploy": "npm run build && wrangler deploy",
     "deploy:preview": "npm run build && wrangler versions upload",
     "typecheck": "tsc --noEmit",

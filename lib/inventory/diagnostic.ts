@@ -19,7 +19,7 @@ import {
  *
  * Il ne consulte aucun modèle de langage : à catalogue identique, il rend
  * exactement le même score, les mêmes constats et le même plan. Le LLM
- * interviendra plus tard, pour rédiger et hiérarchiser une restitution — il ne
+ * interviendra plus tard, pour rédiger et hiérarchiser une restitution ; il ne
  * décide ni du score, ni de l'existence d'un constat.
  */
 export const DIAGNOSTIC_VERSION = "preuvance-diagnostic-v1";
@@ -655,7 +655,7 @@ function reversibilityFindings(
   for (const entry of entries) {
     if (entry.sheet) {
       // Fiche reconnue : la sortie est documentée par l'éditeur, elle ne pénalise
-      // pas le score — mais elle n'est un acquis qu'une fois testée en réel.
+      // pas le score, mais elle n'est un acquis qu'une fois testée en réel.
       findings.push(
         finding({
           id: `reversibilite-sortie-a-tester-${entry.sheet.id}`,
@@ -663,7 +663,7 @@ function reversibilityFindings(
           severity: "minor",
           penalty: 0,
           title: `${entry.sheet.label} : procédure de sortie documentée, à tester en réel`,
-          detail: `La sortie de ${entry.sheet.label} est documentée par l’éditeur — export : ${entry.sheet.exportMethod}. Restitution : ${entry.sheet.exportFormat}. Une procédure documentée n’est pas une procédure testée.`,
+          detail: `La sortie de ${entry.sheet.label} est documentée par l’éditeur. Export : ${entry.sheet.exportMethod}. Restitution : ${entry.sheet.exportFormat}. Une procédure documentée n’est pas une procédure testée.`,
           recommendation: `Exécuter un export complet réel, chronométrer la restauration locale (${entry.sheet.localMigration}) et exiger la confirmation écrite de suppression en fin de contrat.`,
           basis: entry.sheet.basis,
           evidence: "declared",
@@ -1012,7 +1012,7 @@ function buildSummary(
     parts.push("Aucun constat critique ou majeur sur le périmètre observé.");
   }
   if (caps.length > 0 && score < rawScore) {
-    parts.push(`Score plafonné (calcul pondéré : ${rawScore}/100) — ${caps[0].reason}`);
+    parts.push(`Score plafonné (calcul pondéré : ${rawScore}/100). ${caps[0].reason}`);
   }
   return parts.join(" ");
 }

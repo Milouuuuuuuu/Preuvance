@@ -10,10 +10,10 @@ import { SQL_DIALECTS } from "./sql-introspection";
  * Règle non négociable : AUCUN secret dans ce fichier. Les identifiants sont
  * nommés (`tokenEnv`, `apiKeyEnv`, `passwordEnv`) et lus dans l'environnement
  * du poste. Le fichier de mission peut donc être versionné et relu sans
- * exposer de credential.
+ * exposer d'identifiant.
  *
  * En revanche il DÉCLENCHE des exécutions : un exécuteur `command` lance un
- * programme sur le poste de l'opérateur — celui qui détient les accès en
+ * programme sur le poste de l'opérateur, celui qui détient les accès en
  * lecture de tous les clients. Un fichier de mission reçu d'un tiers est donc
  * traité comme du code, pas comme de la donnée : seuls les clients SQL de la
  * liste blanche ci-dessous peuvent être invoqués, par leur nom nu, sans
@@ -270,7 +270,7 @@ export function parseMissionConfig(input: unknown): MissionConfigResult {
   if (duplicates.length > 0) {
     return {
       success: false,
-      errors: [`sources: identifiant(s) en double — ${duplicates.join(", ")}`],
+      errors: [`sources: identifiant(s) en double (${duplicates.join(", ")})`],
     };
   }
 

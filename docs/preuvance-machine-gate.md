@@ -1,4 +1,4 @@
-# Extension locale « System Exposure » — gate et Step 0
+# Extension locale « System Exposure » : gate et Step 0
 
 Dernière vérification : 13 juillet 2026.
 
@@ -14,7 +14,7 @@ La phase « whole-machine audit » n’est donc **pas implémentée** dans ce d�
 | Ne jamais simuler un signal Windows côté web | 100 | Le site reste une évaluation déclarative d’un système IA. |
 | Exécuter la collecte future dans un CLI local, puis importer un JSON strict et expurgé | 94 | Les API OS restent locales ; seuls des constats structurés peuvent rejoindre le pipeline de classification et le rapport. |
 
-## Step 0 — environnement observé
+## Step 0 : environnement observé
 
 Seule la présence des commandes a été contrôlée avec `Get-Command`. Aucun listener, partage, compte, volume, logiciel, historique ou secret de la machine n’a été énuméré.
 
@@ -50,7 +50,7 @@ Premières fixtures à écrire dans le vrai dépôt CLI :
 
 - **trigger** : listener TCP `0.0.0.0:5432`, profil Public actif, pare-feu activé, `DefaultInboundAction=Allow`, aucune règle de blocage correspondante ;
 - **non-trigger** : même listener, avec règle `ActiveStore` active, entrante, `Block`, TCP, port local `5432`, profil Public, adresses quelconques ;
-- **garde-fou obligatoire** : même listener, aucune règle explicite et `DefaultInboundAction=Block` — aucun finding d’exposition.
+- **garde-fou obligatoire** : même listener, aucune règle explicite et `DefaultInboundAction=Block` ; aucun finding d’exposition.
 
 La troisième fixture dépasse le minimum demandé de deux, mais protège précisément contre le faux positif induit par une lecture trop littérale du prompt.
 

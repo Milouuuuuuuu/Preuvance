@@ -1,4 +1,4 @@
-# Script vidéo Build Week — Preuvance en 2 min 45 s
+# Script vidéo Build Week : Preuvance en 2 min 45 s
 
 > **État au 22 juillet 2026, après la clôture :** une nouvelle version de 154,1 secondes a été rendue localement dans `remotion/out/preuvance-build-week-submission.mp4`. Elle contient une voix anglaise, des sous-titres et des captures du build réel. Le dossier Northstar y est explicitement présenté comme une fixture fictive sans appel modèle ; l’architecture GPT-5.6 est expliquée séparément, sans prétendre montrer un run absent. Toute publication ou modification Devpost postérieure à la clôture nécessite l’accord des organisateurs.
 
@@ -17,7 +17,7 @@ Durée cible : **2 min 45 s**, audio inclus. La marge de quinze secondes évite 
 - Ne montrer aucun secret, token, adresse interne, chemin personnel, adresse IP, document client ou notification privée.
 - Utiliser des animations procédurales sans watermark. Les clips Veo audités ne font pas partie du montage recommandé.
 - Ajouter une voix intelligible et, si possible, des sous-titres anglais. Toute musique doit être originale, sous licence appropriée ou supprimée.
-- Exporter en 1080p, relire la vidéo entière et confirmer sa durée après l’upload YouTube.
+- Exporter en 1080p, relire la vidéo entière et confirmer sa durée après le téléversement YouTube.
 
 ## Données de démonstration à préparer
 
@@ -36,48 +36,48 @@ Le manifeste et le prompt exacts doivent être renseignés dans le README avant 
 
 | Temps | Écran et action | Message à faire passer |
 |---|---|---|
-| 00:00–00:12 | Titre procédural Preuvance, puis accueil | Une promesse simple : Prompt. Scan. Prove. |
-| 00:12–00:30 | Carte problème, transition immédiate vers le produit | Les déclarations et les preuves ne sont pas équivalentes |
-| 00:30–00:55 | Saisir le prompt Northstar dans le formulaire | Le dossier commence avec un contexte compréhensible |
-| 00:55–01:20 | Ajouter le manifeste de démo ; montrer le digest | Analyse locale bornée, pas d’envoi du manifeste brut |
-| 01:20–01:50 | Lancer puis ouvrir le dossier instantané | GPT-5.6 structure ; les règles déterministes gardent les états distincts |
-| 01:50–02:12 | Ouvrir « Evidence by evidence » ; compléter une revue | Un élément n’est Proven qu’avec relecteur et date |
-| 02:12–02:30 | Montrer digest de scan, modèle réel et export/reprise | Consentement, provenance, modèle réellement utilisé |
-| 02:30–02:45 | Conclusion animée + URL courte | Preuvance rend la gouvernance praticable sans promettre la conformité |
+| 00:00-00:12 | Titre procédural Preuvance, puis accueil | Une promesse simple : Prompt. Scan. Prove. |
+| 00:12-00:30 | Carte problème, transition immédiate vers le produit | Les déclarations et les preuves ne sont pas équivalentes |
+| 00:30-00:55 | Saisir le prompt Northstar dans le formulaire | Le dossier commence avec un contexte compréhensible |
+| 00:55-01:20 | Ajouter le manifeste de démo ; montrer le digest | Analyse locale bornée, pas d’envoi du manifeste brut |
+| 01:20-01:50 | Lancer puis ouvrir le dossier instantané | GPT-5.6 structure ; les règles déterministes gardent les états distincts |
+| 01:50-02:12 | Ouvrir « Evidence by evidence » ; compléter une revue | Un élément n’est Proven qu’avec relecteur et date |
+| 02:12-02:30 | Montrer digest de scan, modèle réel et export/reprise | Consentement, provenance, modèle réellement utilisé |
+| 02:30-02:45 | Conclusion animée + URL courte | Preuvance rend la gouvernance praticable sans promettre la conformité |
 
 ## Narration anglaise prête à enregistrer
 
 Le texte ci-dessous vise environ 300 mots. Le lire naturellement, sans accélérer. Répéter puis ajuster les silences aux captures réelles.
 
-### 00:00–00:12 — Opening
+### Opening (00:00-00:12)
 
 > AI governance should not begin with another stale spreadsheet. Preuvance turns a prompt or repository signal into a living, verifiable AI dossier. Prompt. Scan. Prove.
 
-### 00:12–00:30 — Problem
+### Problem (00:12-00:30)
 
 > Today, a user declaration, a detected dependency, and a reviewed document are often treated as if they meant the same thing. They do not. That ambiguity slows reviews and creates false confidence.
 
-### 00:30–00:55 — Prompt
+### Prompt (00:30-00:55)
 
 > Here is Northstar, a fictional support copilot. I describe what it does, who uses it, and where humans remain in control. This gives Preuvance the operational context for an assessment.
 
-### 00:55–01:20 — Dependency scan
+### Dependency scan (00:55-01:20)
 
 > I can also add a supported dependency manifest. It is parsed in my browser. Preuvance extracts a bounded digest of recognized AI providers, frameworks, vector stores, and observability tools. The raw manifest is not uploaded by this workflow.
 
-### 01:20–01:50 — Instant dossier
+### Instant dossier (01:20-01:50)
 
 > GPT-5.6 structures the supplied facts and identifies gaps. Deterministic rules then assemble the dossier. Notice the evidence ladder: Declared, Detected, Missing, and Proven. A model observation can create a lead, but it cannot silently become proof.
 
-### 01:50–02:12 — Human proof
+### Human proof (01:50-02:12)
 
 > This policy item is still documented, not proven. To verify it, I add its owner, reviewer, review date, validity, and browser-computed integrity hash. Proven is accepted only when the human-review fields are complete. A hash protects integrity; it does not prove truth.
 
-### 02:12–02:30 — Provenance and privacy
+### Provenance and privacy (02:12-02:30)
 
 > A local scan can contribute an aggregate digest only after explicit consent. Paths, IP addresses, process names, and raw evidence stay out of the handoff. The methodology also records the model actually returned by each AI stage.
 
-### 02:30–02:45 — Close
+### Close (02:30-02:45)
 
 > Preuvance does not certify compliance. It makes every claim reviewable, every gap actionable, and every proof traceable. From AI inventory to assurance dossier, evidence by evidence.
 

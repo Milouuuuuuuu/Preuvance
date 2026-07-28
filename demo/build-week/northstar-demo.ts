@@ -8,8 +8,8 @@ export const northstarDemoReport: PreuvanceAssessment = {
   generatedAt,
   lastRegulatoryVerification: "2026-07-13",
   organization: {
-    name: "Northstar Demo Ltd — organisation fictive",
-    registrationCountry: "France — démonstration",
+    name: "Northstar Demo Ltd (organisation fictive)",
+    registrationCountry: "France (démonstration)",
     employeeCount: 120,
     annualRevenueEur: 24_000_000,
     balanceSheetTotalEur: 18_000_000,
@@ -19,7 +19,7 @@ export const northstarDemoReport: PreuvanceAssessment = {
     name: "Northstar Support Copilot",
     description:
       "Assistant interne fictif qui recherche des passages dans une base approuvée, résume des tickets et prépare une réponse. Un agent de support doit relire et approuver chaque brouillon avant tout envoi.",
-    sector: "Support client — démonstration",
+    sector: "Support client (démonstration)",
     intendedUse:
       "Aider les agents à préparer des réponses à partir d’une base de connaissances approuvée.",
     affectedPeople: "Agents de support et clients de démonstration",
@@ -41,14 +41,14 @@ export const northstarDemoReport: PreuvanceAssessment = {
   },
   decisionLog: [
     {
-      title: "Pratiques interdites — droit publié",
+      title: "Pratiques interdites (droit publié)",
       decision: "Aucun signal explicite dans le scénario fourni",
       score: 88,
       rationale:
         "Le scénario exclut les décisions d’éligibilité, de tarification et d’évaluation des salariés.",
     },
     {
-      title: "Transparence — article 50",
+      title: "Transparence (article 50)",
       decision: "Obligation d’information à documenter",
       score: 82,
       rationale:
@@ -72,7 +72,7 @@ export const northstarDemoReport: PreuvanceAssessment = {
         finding:
           "Les personnes qui utilisent le système doivent disposer d’un niveau de maîtrise adapté à leur rôle.",
         deadline: "Applicable depuis le 2 février 2025",
-        deadlineStatus: "Droit publié — actif",
+        deadlineStatus: "Droit publié, actif",
       },
       {
         reference: "Article 50",
@@ -80,7 +80,7 @@ export const northstarDemoReport: PreuvanceAssessment = {
         finding:
           "Le dispositif d’information et les responsabilités de validation doivent être décrits et conservés.",
         deadline: "2 août 2026",
-        deadlineStatus: "Droit publié — échéance programmée",
+        deadlineStatus: "Droit publié, échéance programmée",
       },
     ],
   },
@@ -115,7 +115,7 @@ export const northstarDemoReport: PreuvanceAssessment = {
       recommendedAction:
         "Faire approuver la procédure, nommer son propriétaire et conserver les versions et dates de revue.",
       articleReferences: ["Article 4", "Article 50"],
-      owner: "Responsable support — persona fictive",
+      owner: "Responsable support (persona fictive)",
     },
     {
       priority: "medium",
@@ -143,7 +143,7 @@ export const northstarDemoReport: PreuvanceAssessment = {
       status: "declared",
       detail:
         "Contrôle déclaré dans le scénario Northstar ; aucune pièce de production ni identité réelle n’est associée.",
-      owner: "Responsable support — persona fictive",
+      owner: "Responsable support (persona fictive)",
       sourceType: "user-declaration",
       sourceLabel: "Description fictive du système",
       collectedAt: generatedAt,
@@ -177,12 +177,12 @@ export const northstarDemoReport: PreuvanceAssessment = {
       status: "documented",
       detail:
         "Document de démonstration uniquement. Son empreinte établit l’intégrité du fichier, pas sa validité organisationnelle.",
-      owner: "Responsable support — persona fictive",
+      owner: "Responsable support (persona fictive)",
       sourceType: "policy",
       sourceLabel: "Pièce locale de démonstration",
       fileName: "review-procedure-demo.md",
       fileSizeBytes: 672,
-      sha256: "e3973e70aee07ca6c3243456c604363e85ef2058763eeee4f0095c0b9b0e1b0e",
+      sha256: "0b96d4dcbce749a675f7e5ee31c3161ff9c313eb68c10a2a79fd29522cc0fe14",
       collectedAt: generatedAt,
       updatedAt: generatedAt,
     },
@@ -195,7 +195,7 @@ export const northstarDemoReport: PreuvanceAssessment = {
       owner: "Équipe de démonstration",
       sourceType: "test",
       sourceLabel: "Checklist de démonstration Preuvance",
-      reviewedBy: "Relecteur de démonstration — persona fictive",
+      reviewedBy: "Relecteur de démonstration (persona fictive)",
       reviewedAt: "2026-07-22T10:15:00.000Z",
       collectedAt: generatedAt,
       updatedAt: "2026-07-22T10:15:00.000Z",
@@ -239,7 +239,7 @@ export const northstarDemoAssessment: Assessment = {
   product: "PREUVANCE",
   demoMode: true,
   facts: {
-    sector: "Support client — démonstration",
+    sector: "Support client (démonstration)",
     intendedPurpose:
       "Préparer des brouillons à partir d’une base de connaissances approuvée.",
     targetUsers: ["Agents de support fictifs"],
@@ -250,10 +250,10 @@ export const northstarDemoAssessment: Assessment = {
     ],
   },
   classification: {
-    riskTier: "Risque limité — obligations de transparence",
-    category: "Risque limité — obligations de transparence",
+    riskTier: "Risque limité : obligations de transparence",
+    category: "Risque limité : obligations de transparence",
     confidence: 84,
-    companyRegime: "PME — données fictives",
+    companyRegime: "PME (données fictives)",
     summary: northstarDemoReport.classification.rationale,
     applicableArticles: northstarDemoReport.classification.articles,
     obligations: northstarDemoReport.classification.articles,

@@ -101,6 +101,7 @@ const DASHBOARDS = [
         name: "Preuvance — Funnel scan local → évaluation",
         query: funnelQuery(
           [
+            "scan_zip_download_clicked",
             "scan_report_loaded",
             "scan_digest_handoff",
             "assessment_started",
@@ -234,7 +235,7 @@ async function main() {
   }
   if (API_KEY.startsWith("phc_")) {
     throw new Error(
-      "POSTHOG_PERSONAL_API_KEY contient une clé projet (phc_...), réservée à l'ingestion navigateur. L'API privée exige une clé personnelle phx_... — créez-en une dans PostHog → Settings → Personal API Keys.",
+      "POSTHOG_PERSONAL_API_KEY contient une clé projet (phc_...), réservée à l'ingestion navigateur. L'API privée exige une clé personnelle phx_..., à créer dans PostHog → Settings → Personal API Keys.",
     );
   }
 

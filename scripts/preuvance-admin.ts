@@ -165,7 +165,7 @@ async function runSelfTest(): Promise<void> {
   fail(`AUTOTEST ÉCHEC (${failures.length}/${count}) : ${failures.join(" | ")}`);
 }
 
-/** Profil d'exemple utilisé par les autotests — volontairement fictif. */
+/** Profil d'exemple utilisé par les autotests, volontairement fictif. */
 function sampleInput(): AdminInput {
   const parsed = parseAdminInput({
     entity: {
@@ -205,7 +205,7 @@ function sampleInput(): AdminInput {
       workingDays: 10,
       lines: [
         {
-          label: "Diagnostic complet — inventaire, cartographie, plan de transition",
+          label: "Diagnostic complet (inventaire, cartographie, plan de transition)",
           quantity: 1,
           unit: "forfait",
           unitPriceCents: 450_000,
@@ -222,7 +222,7 @@ function sampleInput(): AdminInput {
   return parsed.data;
 }
 
-const HELP = `Preuvance — documents administratifs de mission
+const HELP = `Preuvance : documents administratifs de mission
 
   --profil <fichier>        profil administratif JSON (entité, client, engagement)
   --mission <fichier>       fichier de mission de l’agent (pack d’accès, DPA, registre)
@@ -358,7 +358,7 @@ async function main(): Promise<void> {
   const totals = computeTotals(input.engagement.lines, treatment, input.engagement.depositCents);
 
   log("");
-  log(`Mission ${input.engagement.reference} — ${input.client.legalName}`);
+  log(`Mission ${input.engagement.reference} (${input.client.legalName})`);
   log(
     `Montant : ${formatMoney(totals.totalCents, input.entity.currency)} (règle de TVA « ${treatment.ruleId} »)`,
   );

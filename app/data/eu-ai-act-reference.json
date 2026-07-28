@@ -10,27 +10,27 @@
   "sources": [
     {
       "id": "eu-ai-act-oj",
-      "title": "Règlement (UE) 2024/1689 — texte publié au JOUE",
+      "title": "Règlement (UE) 2024/1689, texte publié au JOUE",
       "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
     },
     {
       "id": "omnibus-procedure",
-      "title": "Procédure 2025/0359/COD — Digital Omnibus on AI",
+      "title": "Procédure 2025/0359/COD (Digital Omnibus on AI)",
       "url": "https://eur-lex.europa.eu/procedure/EN/2025_359"
     },
     {
       "id": "omnibus-final-green-light",
-      "title": "Conseil de l’UE — feu vert définitif du 29 juin 2026",
+      "title": "Conseil de l’UE : feu vert définitif du 29 juin 2026",
       "url": "https://www.consilium.europa.eu/fr/press/press-releases/2026/06/29/artificial-intelligence-council-gives-final-green-light-to-simplify-and-streamline-rules/"
     },
     {
       "id": "smc-recommendation",
-      "title": "Recommandation (UE) 2025/1099 — définition des petites entreprises à moyenne capitalisation",
+      "title": "Recommandation (UE) 2025/1099, définition des petites entreprises à moyenne capitalisation",
       "url": "https://eur-lex.europa.eu/eli/reco/2025/1099/oj"
     },
     {
       "id": "sme-recommendation",
-      "title": "Recommandation 2003/361/CE — définition des micro, petites et moyennes entreprises",
+      "title": "Recommandation 2003/361/CE : définition des micro, petites et moyennes entreprises",
       "url": "https://eur-lex.europa.eu/eli/reco/2003/361/oj"
     }
   ],
@@ -45,7 +45,7 @@
     },
     {
       "id": "digital-omnibus-ai-2025-0359-cod",
-      "label": "Digital Omnibus on AI — 2025/0359(COD)",
+      "label": "Digital Omnibus on AI, 2025/0359(COD)",
       "status": "signed_pending_official_journal",
       "signedAt": "2026-07-08",
       "sourceIds": ["omnibus-procedure", "omnibus-final-green-light"],
@@ -321,7 +321,7 @@
       "standardUndertakingRule": "higher_of_fixed_or_percentage",
       "bindingSmeRule": "lower_of_fixed_or_percentage",
       "signedSmcRule": "lower_of_fixed_or_percentage_pending_official_journal",
-      "labelFr": "Non-respect de certaines obligations des opérateurs et organismes notifiés, dont les obligations de transparence de l’article 50 — et pas uniquement les systèmes à haut risque"
+      "labelFr": "Non-respect de certaines obligations des opérateurs et organismes notifiés, dont les obligations de transparence de l’article 50, et pas uniquement les systèmes à haut risque"
     },
     {
       "id": "incorrect-information-fine",

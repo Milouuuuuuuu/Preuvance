@@ -8,12 +8,12 @@ import { normalizeFieldName } from "./sensitive-fields";
  * QUOI faire, outil par outil : le mécanisme d'export documenté publiquement
  * par l'éditeur, la procédure de suppression en fin de contrat et le chemin de
  * remise en local. C'est de la donnée versionnée, pas du code : ajouter un
- * outil, c'est ajouter une fiche — jamais coder un connecteur (un connecteur
+ * outil, c'est ajouter une fiche, jamais coder un connecteur (un connecteur
  * dédié ne se code que pour un client signé).
  *
  * Règle constante du produit : une fiche ne cite que des mécanismes documentés
  * publiquement par l'éditeur. Un outil absent du registre produit un constat
- * « procédure à établir avec l'éditeur » — jamais une procédure supposée.
+ * « procédure à établir avec l'éditeur » ; jamais une procédure supposée.
  */
 export const REVERSIBILITY_VERSION = "preuvance-reversibility-v1";
 
@@ -119,7 +119,7 @@ export const REVERSIBILITY_PLAYBOOKS: readonly ReversibilityPlaybook[] = [
       "Messagerie exportée en PST par la recherche de contenu (eDiscovery Purview) ; fichiers SharePoint et OneDrive récupérés par synchronisation ou via l’API Microsoft Graph",
     exportFormat: "PST (messagerie), fichiers dans leur format d’origine",
     deletion:
-      "Suppression des comptes puis résiliation de l’abonnement ; l’éditeur documente un délai de rétention post-résiliation avant suppression définitive — la confirmation écrite reste à exiger",
+      "Suppression des comptes puis résiliation de l’abonnement ; l’éditeur documente un délai de rétention post-résiliation avant suppression définitive (la confirmation écrite reste à exiger)",
     localMigration:
       "Messagerie vers un serveur de messagerie interne ou des archives PST ; fichiers vers un serveur de fichiers ou une instance Nextcloud auto-hébergée",
     basis: "Art. 20 et art. 28-3-g RGPD",
@@ -143,7 +143,7 @@ export const REVERSIBILITY_PLAYBOOKS: readonly ReversibilityPlaybook[] = [
 
 /**
  * Une entrée de réversibilité du diagnostic : une fiche reconnue (avec les
- * références du catalogue qu'elle couvre), ou un outil en ligne sans fiche —
+ * références du catalogue qu'elle couvre), ou un outil en ligne sans fiche,
  * auquel cas rien n'est prescrit, tout est « à établir avec l'éditeur ».
  */
 export type ReversibilityEntry = {
@@ -159,7 +159,7 @@ function sheetOf(playbook: ReversibilityPlaybook): ReversibilitySheet {
   return { id, label, exportMethod, exportFormat, deletion, localMigration, basis, effortDays };
 }
 
-/** Retrouve la fiche d'un outil par son nom, ou null — jamais une fiche « probable ». */
+/** Retrouve la fiche d'un outil par son nom, ou null. Jamais une fiche « probable ». */
 export function matchPlaybook(toolName: string): ReversibilityPlaybook | null {
   const normalized = normalizeFieldName(toolName);
   if (normalized === "_") return null;

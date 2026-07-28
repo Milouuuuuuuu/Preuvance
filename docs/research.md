@@ -1,4 +1,4 @@
-# Recherche préalable — 13 juillet 2026
+# Recherche préalable du 13 juillet 2026
 
 ## Nom et domaines
 

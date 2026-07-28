@@ -1,10 +1,10 @@
-# OpenAI Build Week 2026 — ready-to-paste submission copy
+# OpenAI Build Week 2026: ready-to-paste submission copy
 
 > Historical English copy for the submitted Devpost entry. The July 21, 2026 5:00 PM PT deadline has passed. The links below describe the locked submission; the post-deadline `/demo` route and 154-second walkthrough may replace them only with organizer approval. The new walkthrough explains the GPT-5.6 architecture but does not misrepresent its fictional fixture as a real model run.
 
 ## Project title
 
-**Preuvance — Instant AI Assurance, Evidence by Evidence**
+**Preuvance: Instant AI Assurance, Evidence by Evidence**
 
 ## Tagline
 
@@ -108,7 +108,7 @@ These are product and engineering properties, not claims about adoption, accurac
 
 AI governance becomes more credible when uncertainty is visible. The most useful model output is not a definitive badge; it is a structured, traceable set of claims and gaps that a human can challenge.
 
-We also learned that provenance needs to be designed into the interaction. Consent, source labels, review metadata, integrity hashes, and immutable event records are not secondary audit features—they are part of the core user experience.
+We also learned that provenance needs to be designed into the interaction. Consent, source labels, review metadata, integrity hashes, and immutable event records are not secondary audit features; they are part of the core user experience.
 
 ## What’s next
 
@@ -125,7 +125,7 @@ Preuvance is an assistance and documentation product. It does not provide legal 
 ## Testing instructions
 
 1. No setup, in the browser: open `/demo` on the deployed application to explore the fictional Northstar dossier and download its sample broker PDF. This bounded fixture makes no model-provenance claim and triggers no API call.
-2. To run the real assessment app locally (it requires your own OpenAI API key, by design — Preuvance never ships an anonymous OpenAI endpoint): clone the repository, then `npm install && npm run dev` and open http://localhost:3000 — or, on Windows, double-click `LANCER_PREUVANCE.cmd` (it prompts for the key without echoing it). No sign-in is required in the local non-persistent flow.
+2. To run the real assessment app locally (it requires your own OpenAI API key, by design: Preuvance never ships an anonymous OpenAI endpoint): clone the repository, then `npm install && npm run dev` and open http://localhost:3000. On Windows, you can instead double-click `LANCER_PREUVANCE.cmd` (it prompts for the key without echoing it). No sign-in is required in the local non-persistent flow.
 3. Start a new dossier with the fictional values and exact description in `demo/build-week/northstar-prompt.md`.
 4. Attach `demo/build-week/package.json`.
 5. Run the assessment and open the “Evidence by evidence” section.
@@ -136,14 +136,14 @@ Expected result: the dossier keeps Declared, Detected, Missing, and Proven state
 
 ## Submission links
 
-- **Live landing (public):** https://milouuuuuuuu.github.io/Preuvance/ — the assessment app runs locally (see "Testing instructions").
-- **Source repository:** `https://github.com/Milouuuuuuuu/Preuvance` — confirm public visibility or grant the two required private-repository accounts before submission.
+- **Live landing (public):** https://milouuuuuuuu.github.io/Preuvance/ (the assessment app runs locally; see "Testing instructions").
+- **Source repository:** `https://github.com/Milouuuuuuuu/Preuvance`. Confirm public visibility or grant the two required private-repository accounts before submission.
 - **YouTube demo (under 3 minutes, with audio):** https://youtu.be/T8e0u6iMdeA
 - **Codex Session ID:** `019f7c5f-4963-7413-8675-dd19e35c25fd`
 
 ## 500-character fallback description
 
-Preuvance turns a prompt, supported dependency manifests, and a consented local-scan digest into a living AI assurance dossier. GPT-5.6 structures context and identifies gaps; deterministic rules keep declarations, detections, missing evidence, and human-reviewed proof distinct. Each Proven item requires a reviewer and date. Raw manifests and evidence files are not uploaded by these workflows. Preuvance assists review—it does not certify compliance.
+Preuvance turns a prompt, supported dependency manifests, and a consented local-scan digest into a living AI assurance dossier. GPT-5.6 structures context and identifies gaps; deterministic rules keep declarations, detections, missing evidence, and human-reviewed proof distinct. Each Proven item requires a reviewer and date. Raw manifests and evidence files are not uploaded by these workflows. Preuvance assists review; it does not certify compliance.
 
 ## Final pre-paste checklist
 

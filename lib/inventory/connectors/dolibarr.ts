@@ -13,7 +13,7 @@ import {
 import type { ApiConnectorOutcome } from "./salesforce";
 
 /**
- * Connecteur Dolibarr (P1) — métadonnées seulement.
+ * Connecteur Dolibarr (P1) : métadonnées seulement.
  *
  * La liste des ressources exposées dépend des modules activés : elle est donc
  * DÉCOUVERTE, jamais supposée. La source d'autorité est le descripteur Swagger

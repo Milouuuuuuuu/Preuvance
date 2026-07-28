@@ -9,7 +9,7 @@ begin;
 --
 -- Compteur distinct de celui des évaluations : télécharger plusieurs fois son
 -- dossier est légitime, lancer plusieurs analyses coûte des appels modèle. La
--- limite est donc large (30/heure) — elle ne gêne pas un usage normal et coupe
+-- limite est donc large (30/heure) : elle ne gêne pas un usage normal et coupe
 -- l'abus. Même patron que assessment_rate_limits : une ligne par utilisateur,
 -- table inaccessible au client, remise à zéro impossible sans la RPC definer.
 create table public.pdf_render_limits (

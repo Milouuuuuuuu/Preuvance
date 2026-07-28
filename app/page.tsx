@@ -47,14 +47,14 @@ export default function Home() {
           </nav>
           <div className="pv-header-actions">
             <TrackedLink
-              eventName="local_zip_download_clicked"
+              eventName="scan_zip_download_clicked"
               className="pv-local-download-action"
-              href="/downloads/preuvance-local.zip"
+              href="/downloads/preuvance-scan.zip"
               download
-              aria-label="Télécharger la version locale"
+              aria-label="Télécharger le scan local pour Windows, archive de 10 kilo-octets"
             >
               <Download size={15} aria-hidden="true" />
-              <span>Télécharger la version locale</span>
+              <span>Télécharger le scan · 10 Ko</span>
             </TrackedLink>
             <a className="pv-mobile-auth-action" href="/auth/sign-in">
               Espace
@@ -133,7 +133,7 @@ export default function Home() {
                 </span>
                 <span className="pv-path-copy">
                   L’agent local lit les métadonnées des bases, exports et outils
-                  métier en lecture seule — structures, volumétries, dates —
+                  métier en lecture seule (structures, volumétries, dates),
                   jamais une valeur métier.
                 </span>
                 <span className="pv-path-produces">
@@ -176,7 +176,7 @@ export default function Home() {
               </div>
               <div>
                 <p className="pv-kicker">Prochaine échéance ferme</p>
-                <strong>Transparence — Article 50</strong>
+                <strong>Transparence : Article 50</strong>
                 <ul className="pv-deadline-scope">
                   <li>
                     <b>Interaction · 50(1)</b> informer la personne qu’elle
@@ -206,13 +206,58 @@ export default function Home() {
 
         <div id="pv-results-slot" />
 
+        <section className="pv-scan-band" aria-labelledby="scan-band-title">
+          <div className="pv-scan-band-icon" aria-hidden="true">
+            <MonitorCheck size={28} />
+          </div>
+          <div className="pv-scan-band-copy">
+            <p className="pv-kicker">Scan local · sans compte, sans clé API</p>
+            <h2 id="scan-band-title">
+              Voyez ce que vos postes appellent vraiment.
+            </h2>
+            <p>
+              Une archive de 10 Ko, un double-clic, Windows PowerShell : le scan
+              liste les appels vers les API d’IA connues par nom d’hôte et
+              inventorie les fichiers sensibles par nom, extension et empreinte
+              SHA-256, sans en lire le contenu. Rien ne quitte le poste, aucun
+              droit administrateur n’est demandé.
+            </p>
+            <ul className="pv-scan-band-points">
+              <li>Windows PowerShell 5.1 ou supérieur</li>
+              <li>Ni Node.js, ni installation, ni clé API</li>
+              <li>Script lisible en clair, désinstallation par suppression</li>
+              <li>Rapport relu dans votre navigateur, jamais téléversé</li>
+            </ul>
+            <p className="pv-scan-band-note">
+              Au premier lancement, Windows peut afficher « Windows a protégé
+              votre ordinateur » : cliquez sur « Informations complémentaires »
+              puis « Exécuter quand même ».
+            </p>
+          </div>
+          <div className="pv-scan-band-actions">
+            <TrackedLink
+              eventName="scan_zip_download_clicked"
+              className="pv-scan-band-action"
+              href="/downloads/preuvance-scan.zip"
+              download
+            >
+              <Download size={16} aria-hidden="true" />
+              Télécharger le scan
+            </TrackedLink>
+            <a className="pv-scan-band-secondary" href="/scan">
+              Comment ça marche
+              <ArrowRight size={15} aria-hidden="true" />
+            </a>
+          </div>
+        </section>
+
         <section className="pv-method" id="methode" aria-labelledby="method-title">
           <div className="pv-section-intro">
             <p className="pv-kicker">Une preuve, pas une checklist</p>
             <h2 id="method-title">Du contexte métier à une décision traçable.</h2>
             <p>
               Chaque conclusion reste reliée aux faits extraits, aux dépendances
-              observées, au texte applicable et aux pièces qui la confirment —
+              observées, au texte applicable et aux pièces qui la confirment,
               ou qui manquent encore.
             </p>
           </div>
@@ -340,9 +385,10 @@ export default function Home() {
         <div className="pv-local-download-note">
           <Download size={18} aria-hidden="true" />
           <p>
-            <strong>Version locale.</strong> Lance l’application web sur votre
-            ordinateur ; Node.js 22.13 ou supérieur et une clé API OpenAI sont
-            requis.
+            <strong>Application complète en local.</strong> Lance l’application
+            web sur votre ordinateur ; Node.js 22.13 ou supérieur et une clé API
+            OpenAI sont requis. Pour observer le poste sans rien installer,
+            l’archive de scan de 10 Ko suffit.
           </p>
           <TrackedLink
             eventName="local_zip_download_clicked"

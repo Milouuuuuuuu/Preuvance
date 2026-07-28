@@ -797,7 +797,7 @@ export function AssessmentResults({
                 <li key={dimension.label}>
                   <div className="pv-dimension-heading">
                     <span>{dimension.label}</span>
-                    <strong>{dimension.score === null ? "—" : `${dimension.score}/100`}</strong>
+                    <strong>{dimension.score === null ? "non noté" : `${dimension.score}/100`}</strong>
                   </div>
                   <div
                     className="pv-dimension-track"
@@ -879,7 +879,7 @@ export function AssessmentResults({
                   {obligation.detail ? <p>{obligation.detail}</p> : null}
                 </div>
                 <div role="cell">
-                  {obligation.article ? <span className="pv-reference-chip">{obligation.article}</span> : "—"}
+                  {obligation.article ? <span className="pv-reference-chip">{obligation.article}</span> : "Non précisé"}
                 </div>
                 <div role="cell">
                   <strong>{obligation.deadline ?? obligation.status ?? "À confirmer"}</strong>

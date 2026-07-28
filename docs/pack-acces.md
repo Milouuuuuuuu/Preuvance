@@ -1,7 +1,7 @@
-# Pack d'accès — le livrable qui tient le délai de 10 jours
+# Pack d'accès : le livrable qui tient le délai de 10 jours
 
 Le facteur limitant d'un diagnostic n'est pas la technique : c'est l'attente des
-accès. Credentials à créer, validations internes, interlocuteur en congés — c'est
+accès. Identifiants à créer, validations internes, interlocuteur en congés : c'est
 là que deux semaines deviennent deux mois.
 
 Le pack d'accès est donc traité comme un **livrable commercial à part entière**,

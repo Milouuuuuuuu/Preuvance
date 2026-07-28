@@ -71,7 +71,7 @@ export function buildPurgeLog(input: {
 /** Rendu texte remis au client, lisible sans outil. */
 export function renderPurgeLog(log: PurgeLog): string {
   const lines = [
-    `PREUVANCE — journal de suppression de fin de mission`,
+    `PREUVANCE : journal de suppression de fin de mission`,
     `Mission   : ${log.missionReference}`,
     `Client    : ${log.client}`,
     log.operator ? `Opérateur : ${log.operator}` : null,
@@ -88,7 +88,7 @@ export function renderPurgeLog(log: PurgeLog): string {
           ? "conservé à la demande de l’opérateur"
           : "introuvable au moment de la purge";
     lines.push(
-      `  - ${artefact.name} (${artefact.sizeBytes} octets) — ${outcome}`,
+      `  - ${artefact.name} (${artefact.sizeBytes} octets), ${outcome}`,
       `    sha256 ${artefact.sha256}`,
     );
     if (artefact.reason) lines.push(`    motif : ${artefact.reason}`);

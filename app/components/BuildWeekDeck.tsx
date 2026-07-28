@@ -179,14 +179,14 @@ function ProblemSlide({ active }: SlideProps) {
           <span className="pv-bw-gap-index">01</span>
           <strong>Questionnaire</strong>
           <p>What the organisation says.</p>
-          <small>Useful context — not proof.</small>
+          <small>Useful context, not proof.</small>
         </div>
         <div className="pv-bw-gap-arrow" aria-hidden="true">→</div>
         <div className="pv-bw-gap-card is-signal">
           <span className="pv-bw-gap-index">02</span>
           <strong>Technical signal</strong>
           <p>What manifests and local observations reveal.</p>
-          <small>Detected — still needs interpretation.</small>
+          <small>Detected, but still needs interpretation.</small>
         </div>
         <div className="pv-bw-gap-arrow" aria-hidden="true">→</div>
         <div className="pv-bw-gap-card is-proof">

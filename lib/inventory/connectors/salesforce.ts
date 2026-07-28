@@ -14,7 +14,7 @@ import {
 } from "./http";
 
 /**
- * Connecteur Salesforce (P1) — métadonnées seulement.
+ * Connecteur Salesforce (P1) : métadonnées seulement.
  *
  * Trois ressources REST documentées, toutes en lecture :
  * - `/services/data/` : versions disponibles ;
@@ -209,7 +209,7 @@ export async function inventorySalesforce(
         value,
         kind: "estimate",
         method:
-          "Ressource limits/recordCount — comptage asynchrone déclaré approximatif par Salesforce, hors corbeille et archives.",
+          "Ressource limits/recordCount (comptage asynchrone déclaré approximatif par Salesforce, hors corbeille et archives).",
       };
     }
   } else {

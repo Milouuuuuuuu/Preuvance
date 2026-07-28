@@ -1,4 +1,4 @@
-# Northstar Support Copilot — demo prompt
+# Northstar Support Copilot (demo prompt)
 
 > Fictional Build Week demonstration data. It describes no real organisation, customer or production deployment.
 

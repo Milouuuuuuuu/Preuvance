@@ -30,7 +30,7 @@ type LexicalRule = {
 
 /**
  * Analyse lexicale volontairement conservatrice : chaque règle exige des
- * termes explicites dans la description. Elle ne classe jamais seule — elle
+ * termes explicites dans la description. Elle ne classe jamais seule : elle
  * signale uniquement un point que la classification LLM n’a pas traité.
  */
 const LEXICAL_RULES: LexicalRule[] = [
@@ -76,42 +76,42 @@ const LEXICAL_RULES: LexicalRule[] = [
   },
   {
     topic: "Recrutement et gestion des travailleurs",
-    article: "Annexe III — emploi",
+    article: "Annexe III, emploi",
     all: [/(recrutement|tri de cv|candidature|embauche|preselection de candidat|licenciement|promotion interne)/],
     area: "employment_and_workers",
     kind: "annex_iii",
   },
   {
     topic: "Éducation et évaluation des apprenants",
-    article: "Annexe III — éducation",
+    article: "Annexe III, éducation",
     all: [/(admission|notation d.examen|correction de copies|evaluation des eleves|orientation scolaire)/],
     area: "education_and_vocational_training",
     kind: "annex_iii",
   },
   {
     topic: "Accès au crédit ou aux prestations essentielles",
-    article: "Annexe III — services essentiels",
+    article: "Annexe III, services essentiels",
     all: [/(solvabilite|octroi de credit|scoring bancaire|prestation sociale|aide sociale|tarification.{0,40}(vie|sante))/],
     area: "essential_services_and_benefits",
     kind: "annex_iii",
   },
   {
     topic: "Migration, asile et frontières",
-    article: "Annexe III — migration",
+    article: "Annexe III, migration",
     all: [/(asile|visa|frontiere|migration)/],
     area: "migration_asylum_and_border_control",
     kind: "annex_iii",
   },
   {
     topic: "Justice et processus démocratiques",
-    article: "Annexe III — justice",
+    article: "Annexe III, justice",
     all: [/(decision de justice|juridiction|tribunal|magistrat|election)/],
     area: "justice_and_democratic_processes",
     kind: "annex_iii",
   },
   {
     topic: "Infrastructures critiques",
-    article: "Annexe III — infrastructures critiques",
+    article: "Annexe III, infrastructures critiques",
     all: [/(reseau electrique|distribution d.eau|reseau de gaz|trafic routier|infrastructure critique)/],
     area: "critical_infrastructure",
     kind: "annex_iii",
@@ -120,7 +120,7 @@ const LEXICAL_RULES: LexicalRule[] = [
 
 /**
  * Issues où la classification ne traite PAS affirmativement le point :
- * « non applicable », mais aussi « informations insuffisantes » — si
+ * « non applicable », mais aussi « informations insuffisantes ». Si
  * l'extraction déterministe a déjà produit un signal structuré, un
  * classifieur qui répond « informations insuffisantes » l'ignore, ce qui
  * est une contradiction au même titre qu'un « non applicable ».
@@ -250,7 +250,7 @@ export function runDeterministicCrossCheck(options: {
     divergences.push({
       topic: "Identification biométrique à distance",
       origin: "faits_structures",
-      article: "Article 5(1)(h) / Annexe III — biométrie",
+      article: "Article 5(1)(h) / Annexe III, biométrie",
       detail:
         "Identification biométrique à distance déclarée mais classification en risque minimal.",
     });

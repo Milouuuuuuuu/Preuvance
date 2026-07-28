@@ -28,9 +28,9 @@ import {
 
 const RISK_LABELS: Record<ModelClassification["riskTier"], string> = {
   prohibited: "Pratique interdite ou très probablement interdite",
-  high_risk_annex_iii: "Système à haut risque — annexe III",
-  high_risk_annex_i: "Système à haut risque — annexe I / produit réglementé",
-  limited_transparency_risk: "Risque limité — obligations de transparence",
+  high_risk_annex_iii: "Système à haut risque (annexe III)",
+  high_risk_annex_i: "Système à haut risque (annexe I / produit réglementé)",
+  limited_transparency_risk: "Risque limité : obligations de transparence",
   minimal_risk: "Risque minimal selon les faits disponibles",
   undetermined: "Classification à confirmer",
 };
@@ -156,8 +156,8 @@ export function buildAssessment(options: {
           obligation.signedAmendmentDeadline
             ? "Omnibus signé, publication au JOUE en attente"
             : obligation.status === "active"
-              ? "Droit publié — actif"
-              : "Droit publié — échéance programmée",
+              ? "Droit publié, actif"
+              : "Droit publié, échéance programmée",
       })),
     },
     dimensions: options.score.dimensions.map((dimension) => ({
@@ -402,7 +402,7 @@ function hydrateGap(gap: GapItemModel): HydratedGap {
 const CROSSCHECK_DECISION_LABELS: Record<CrossCheckResult["status"], string> = {
   concordant: "Concordante avec la classification",
   attention: "Signaux lexicaux à examiner",
-  divergent: "Contradiction détectée — revue humaine requise",
+  divergent: "Contradiction détectée ; revue humaine requise",
 };
 
 const CROSSCHECK_DECISION_SCORES: Record<CrossCheckResult["status"], number> = {
@@ -418,15 +418,15 @@ function buildDecisionLog(
 ) {
   return [
     {
-      step: "Pratiques interdites — droit publié",
-      title: "Pratiques interdites — droit publié",
+      step: "Pratiques interdites (droit publié)",
+      title: "Pratiques interdites (droit publié)",
       decision: OUTCOME_LABELS[classification.prohibitedPractices.outcome],
       score: classification.prohibitedPractices.confidence,
       rationale: classification.prohibitedPractices.rationale,
     },
     {
-      step: "Nouvelle interdiction — Omnibus signé",
-      title: "Nouvelle interdiction — Omnibus signé",
+      step: "Nouvelle interdiction (Omnibus signé)",
+      title: "Nouvelle interdiction (Omnibus signé)",
       decision: `${OUTCOME_LABELS[classification.signedAmendmentProhibitedPractices.outcome]} · JOUE en attente`,
       score: classification.signedAmendmentProhibitedPractices.confidence,
       rationale: classification.signedAmendmentProhibitedPractices.rationale,
@@ -446,8 +446,8 @@ function buildDecisionLog(
       rationale: classification.annexI.rationale,
     },
     {
-      step: "Transparence — article 50",
-      title: "Transparence — article 50",
+      step: "Transparence (article 50)",
+      title: "Transparence (article 50)",
       decision: OUTCOME_LABELS[classification.article50.outcome],
       score: classification.article50.confidence,
       rationale: classification.article50.rationale,
@@ -483,7 +483,7 @@ function buildExecutiveSummary(
 ): string {
   const capNotice = score.appliedCaps.length
     ? ` Plafond(s) prudentiel(s) appliqué(s) : ${score.appliedCaps
-        .map((appliedCap) => `${appliedCap.cap}/100 — ${appliedCap.reason}`)
+        .map((appliedCap) => `${appliedCap.cap}/100 (${appliedCap.reason})`)
         .join(" · ")}`
     : "";
   return `PREUVANCE attribue un score de ${score.overall}/100 (tier ${score.tier}). Préqualification principale : ${riskLabel}. ${gapCount} écart(s) ont été priorisés.${capNotice}`.slice(0, 1_100);

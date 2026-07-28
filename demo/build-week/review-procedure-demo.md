@@ -1,4 +1,4 @@
-# Northstar — fictional human-review procedure
+# Northstar: fictional human-review procedure
 
 Status: demonstration document only. Not an approved policy and not evidence for a real organisation.
 

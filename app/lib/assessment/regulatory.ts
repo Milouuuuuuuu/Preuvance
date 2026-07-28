@@ -213,7 +213,7 @@ export function hydrateObligations(
     const bindingDate = formatFrenchDate(deadline.bindingPosition.date);
     const amendment = deadline.signedAmendmentPosition;
     const deadlineDisplay = amendment
-      ? `Droit publié : ${bindingDate} · Omnibus signé : ${formatFrenchDate(amendment.date)}${amendment.conditionFr ? ` — ${amendment.conditionFr}` : ""} (JOUE en attente)`
+      ? `Droit publié : ${bindingDate} · Omnibus signé : ${formatFrenchDate(amendment.date)} (JOUE en attente)${amendment.conditionFr ? `. ${amendment.conditionFr}` : ""}`
       : bindingDate;
 
     return {

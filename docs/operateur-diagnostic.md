@@ -1,4 +1,4 @@
-# Runbook opérateur — diagnostic complet en 10 jours ouvrés
+# Runbook opérateur : diagnostic complet en 10 jours ouvrés
 
 Ce document s'adresse à l'**équipe qui exécute la mission chez le client**, pas
 à l'auteur du produit. Il doit suffire : si une étape exige d'appeler le
@@ -19,7 +19,7 @@ Preuvance installé (`npm ci`), et le pack d'accès rempli
 
 Le délai ne tient que si le pack d'accès est **prêt avant** le kickoff.
 
-## J1-J2 — cadrage
+## J1-J2 : cadrage
 
 1. Remplir la checklist des systèmes avec le client (annexe 1 du pack d'accès).
 2. Faire signer le DPA et le périmètre.
@@ -42,7 +42,7 @@ Partir de [`demo/diagnostic/mission.json`](../demo/diagnostic/mission.json) et
 remplacer. Les identifiants sont **toujours** des noms de variables
 d'environnement (`tokenEnv`, `apiKeyEnv`), jamais des valeurs.
 
-## J3-J5 — collecte
+## J3-J5 : collecte
 
 ### 1. Scan de dépendances IA (module 1)
 
@@ -63,7 +63,7 @@ npm run inventaire -- --mission mission.json --dry-run --out sortie
 ```
 
 Le fichier `sortie/requetes-lecture-seule.sql` contient exactement ce qui sera
-exécuté. Le montrer au DBA : c'est le meilleur argument pour obtenir l'accès —
+exécuté. Le montrer au DBA : c'est le meilleur argument pour obtenir l'accès,
 ou pour qu'il exécute lui-même les requêtes.
 
 ### 3. Collecter
@@ -81,17 +81,17 @@ J3-J5, pas à la restitution.
 - Le score est-il plafonné ? Le motif dit ce qui manque.
 - Une source majeure est-elle `unreachable` ? La débloquer maintenant.
 - Le nombre de champs sensibles est-il vraisemblable ? Un ERP sans aucun champ
-  personnel détecté signale des noms de colonnes opaques — c'est un sujet
+  personnel détecté signale des noms de colonnes opaques ; c'est un sujet
   d'entretien, pas un bon résultat.
 
-## J6-J8 — analyse et entretiens
+## J6-J8 : analyse et entretiens
 
 Ouvrir `sortie/diagnostic-preuvance.md` ou charger
 `sortie/preuvance-catalogue.json` dans la page `/diagnostic`.
 
 Deux entretiens d'une heure, avec un ordre du jour dicté par le diagnostic :
 
-**Entretien 1 — métier (commercial, administratif)**
+**Entretien 1, côté métier (commercial, administratif)**
 
 - confirmer les 10 jeux de données les plus volumineux : à quoi servent-ils ?
 - valider ou infirmer les champs sensibles signalés en confiance moyenne ;
@@ -100,7 +100,7 @@ Deux entretiens d'une heure, avec un ordre du jour dicté par le diagnostic :
 - lister les outils d'IA réellement utilisés, y compris les usages personnels
   tolérés.
 
-**Entretien 2 — technique (DSI, prestataire, éditeur)**
+**Entretien 2, côté technique (DSI, prestataire, éditeur)**
 
 - confirmer l'hébergement de chaque outil et l'existence d'un export complet ;
 - dérouler la section « Réversibilité par outil » du rapport : pour chaque
@@ -115,7 +115,7 @@ Chaque élément recueilli est ajouté aux `tools` et `flows` du fichier de
 mission avec `"evidence": "declared"`, puis l'agent est relancé. Le rapport
 distinguera toujours ce qui a été observé de ce qui a été déclaré.
 
-## J9-J10 — restitution
+## J9-J10 : restitution
 
 1. Relancer l'agent une dernière fois après intégration des entretiens.
 2. Ouvrir `diagnostic-preuvance.html` et l'imprimer en PDF depuis le navigateur.

@@ -172,14 +172,14 @@ $isElevated = ([Security.Principal.WindowsPrincipal] `
   [Security.Principal.WindowsIdentity]::GetCurrent()
 ).IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 
-Write-Host "PREUVANCE — Scan local de conformité IA" -ForegroundColor White
+Write-Host "PREUVANCE : scan local de conformité IA" -ForegroundColor White
 Write-Host "Ce scan reste 100% local. Il ne copie aucun contenu de fichier, n'envoie rien"
 Write-Host "sur Internet et ne demande aucun droit administrateur. Il produit un rapport"
 Write-Host "JSON que vous pouvez charger dans Preuvance ou supprimer à tout moment."
 Write-Host "Le rapport contient des chemins de fichiers sensibles : il est écrit dans un"
 Write-Host "dossier local non synchronise (AppData\Local\Preuvance). Si vous choisissez"
 Write-Host "vous-meme un emplacement synchronise (OneDrive, Drive), c'est votre poste qui"
-Write-Host "le televersera — le scan, lui, n'envoie rien."
+Write-Host "le televersera ; le scan, lui, n'envoie rien."
 Write-Host ""
 Write-Host "Il observe : (1) un inventaire des fichiers sensibles (chemin, taille, dates,"
 Write-Host "empreinte), (2) les appels réseau de vos logiciels vers des API d'IA connues."
@@ -443,7 +443,7 @@ if ($null -ne $declarationMethod) {
 
 # Le rapport liste les chemins des fichiers sensibles du poste (secrets, paie,
 # pieces d'identite). Ecrire par defaut dans Documents le faisait synchroniser
-# vers OneDrive des que le dossier etait redirige — cas courant en PME — ce qui
+# vers OneDrive des que le dossier etait redirige (cas courant en PME), ce qui
 # contredisait la promesse « rien ne sort du poste ». LOCALAPPDATA n'est jamais
 # synchronise par OneDrive ni par Google Drive.
 if (-not $OutFile) {
@@ -489,4 +489,14 @@ if ($isSynced) {
   Write-Host "  votre client de synchronisation. Preferez AppData\Local\Preuvance." -ForegroundColor Yellow
 }
 Write-Host "  Chargez-le dans Preuvance (page « Scanner en local ») pour voir votre score d'exposition."
-Write-Host "  Pour tout supprimer : lancez DESINSTALLER_PREUVANCE.cmd."
+
+# Le scan est aussi distribue seul (preuvance-scan.zip), sans le desinstalleur :
+# renvoyer vers un fichier absent de l'archive de l'utilisateur, sur un produit
+# qui vend la reversibilite, serait la pire ligne du script.
+$uninstaller = Join-Path (Split-Path -Parent $PSScriptRoot) "DESINSTALLER_PREUVANCE.cmd"
+if (Test-Path -LiteralPath $uninstaller) {
+  Write-Host "  Pour tout supprimer : lancez DESINSTALLER_PREUVANCE.cmd."
+} else {
+  Write-Host "  Pour tout supprimer : effacez ce dossier et le fichier ci-dessus."
+  Write-Host "  Le scan n'installe rien et n'ecrit nulle part ailleurs."
+}

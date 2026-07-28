@@ -1,4 +1,4 @@
-# Revue des animations — direction visuelle Build Week
+# Revue des animations : direction visuelle Build Week
 
 ## Décision
 
@@ -59,27 +59,27 @@ Le fichier `remotion/out/preuvance-hackathon.mp4` observé dans le projet consti
 
 ## Storyboard visuel recommandé
 
-### Plan 1 — Le bruit déclaratif
+### Plan 1 : le bruit déclaratif
 
 Des fiches abstraites apparaissent sans être cochées. Texte court : « A claim is not proof. » Aucun document réaliste ni faux logo.
 
-### Plan 2 — Dossier instantané
+### Plan 2 : dossier instantané
 
 Un prompt et trois sources abstraites convergent vers un dossier central nommé Preuvance. La transition doit prendre moins de cinq secondes.
 
-### Plan 3 — Scan de dépendances
+### Plan 3 : scan de dépendances
 
 Un petit graphe montre `package.json`, `package-lock.json` et `requirements.txt` à gauche, un digest expurgé au centre, puis des catégories de dépendances à droite. Ne pas afficher de package non réellement reconnu dans la démo.
 
-### Plan 4 — Preuve par preuve
+### Plan 4 : preuve par preuve
 
 Trois niveaux colorés et accessibles : Declared, Detected, Proven. Une seule carte passe à Proven lorsque le relecteur et la date apparaissent.
 
-### Plan 5 — Interface réelle
+### Plan 5 : interface réelle
 
 Les captures du produit prennent la priorité sur l’animation. Montrer la saisie, le digest, le dossier et la validation avec des données de démo cohérentes.
 
-### Plan 6 — Conclusion
+### Plan 6 : conclusion
 
 Fond procédural discret, promesse « Prompt. Scan. Prove. », mention « Human review required » et URL finale.
 

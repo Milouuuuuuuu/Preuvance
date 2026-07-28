@@ -5,11 +5,11 @@ import { notFound } from "next/navigation";
  * Console interne d'opérations.
  *
  * Réservée à l'équipe : la page n'existe que si PREUVANCE_OPS=1 dans
- * l'environnement du poste — sinon 404, comme si la route n'existait pas.
+ * l'environnement du poste ; sinon 404, comme si la route n'existait pas.
  * Elle est noindex, absente du sitemap et interdite par robots.txt.
  *
  * Esthétique inspirée des interfaces de hacking de fiction (néon sur noir,
- * scanlines), assumée pour l'interne uniquement — le site client reste sobre.
+ * scanlines), assumée pour l'interne uniquement : le site client reste sobre.
  * Règle absolue : la console affiche la PRÉSENCE d'une variable, jamais sa
  * valeur. Aucun secret ne transite par le rendu.
  */
@@ -86,13 +86,13 @@ export default function OpsPage() {
         <header>
           <p className="ops-topline">
             <span className="ops-dot" aria-hidden="true" />
-            <span>console interne — accès équipe</span>
+            <span>console interne (accès équipe)</span>
             <span>preuvance-ops-v1</span>
           </p>
           <h1 className="ops-title">PRVNC//OPS</h1>
           <p className="ops-tagline">
             La preuve, pas la promesse. Ce poste pilote les missions ; rien de ce
-            qui s&rsquo;affiche ici n&rsquo;est un secret — présence des clés,
+            qui s&rsquo;affiche ici n&rsquo;est un secret : présence des clés,
             jamais leur valeur.
           </p>
         </header>
@@ -122,7 +122,7 @@ export default function OpsPage() {
           </section>
 
           <section className="ops-panel" aria-labelledby="ops-mission">
-            <h2 id="ops-mission">Mission — 10 jours ouvrés</h2>
+            <h2 id="ops-mission">Mission sur 10 jours ouvrés</h2>
             <ul className="ops-list">
               {MISSION_STEPS.map((step) => (
                 <li key={step.window}>

@@ -117,7 +117,7 @@ export async function POST(request: Request) {
 
   // Le rendu react-pdf est l'opération la plus coûteuse de l'application : un
   // compte authentifié pouvait la déclencher en boucle sans aucune limite
-  // (S-09). Le quota est large — 30 rendus par heure — donc invisible pour un
+  // (S-09). Le quota est large (30 rendus par heure), donc invisible pour un
   // usage normal. Le développement local hors Supabase n'est pas concerné.
   if (access.mode === "authenticated") {
     try {

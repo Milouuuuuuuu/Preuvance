@@ -26,7 +26,7 @@ export function redactPath(path: string): string {
  *
  * L'audit du 26/07/2026 a montré la faille de l'approche par liste : le SDK
  * ajoute de lui-même `$prev_pageview_pathname` (et selon les cas `$referrer`,
- * `$initial_current_url`), qui échappaient à l'expurgation — un identifiant de
+ * `$initial_current_url`), qui échappaient à l'expurgation : un identifiant de
  * dossier partait alors en clair à la navigation suivante. Balayer toutes les
  * valeurs ferme la fuite aussi pour les propriétés qu'une future version du
  * SDK ajouterait.
@@ -64,8 +64,8 @@ export function initPostHogClient(): void {
     capture_exceptions: false,
     // Aucun aller-retour de configuration distante, aucun script tiers chargé
     // à l'exécution : le SDK n'émet que vers l'hôte d'ingestion. C'est la
-    // conséquence logique des épinglages ci-dessus — si la config distante ne
-    // doit rien pouvoir réactiver, autant ne pas aller la chercher — et cela
+    // conséquence logique des épinglages ci-dessus (si la config distante ne
+    // doit rien pouvoir réactiver, autant ne pas aller la chercher) et cela
     // permet une CSP sans exception pour us-assets.i.posthog.com.
     // Nous n'utilisons ni feature flags, ni sondages, ni enregistrement.
     advanced_disable_flags: true,

@@ -8,13 +8,13 @@ qui disparaît avec la personne qui le détient.
 
 | Cible | Contenu | Statut au 26/07/2026 |
 | --- | --- | --- |
-| Cloudflare Workers | L'application complète (pages, API, PDF, console interne) | **Non déployée** — aucun domaine ne résout |
+| Cloudflare Workers | L'application complète (pages, API, PDF, console interne) | **Non déployée** : aucun domaine ne résout |
 | GitHub Pages (`gh-pages`) | Une page d'accueil autonome, publiée le 20/07/2026 | En ligne : `https://milouuuuuuuu.github.io/Preuvance/` |
 | Poste client (PME) | `LANCER_PREUVANCE.cmd` → serveur local sur `127.0.0.1` | Fonctionnel, hors ligne |
 
 Conséquence mesurée : la page publique **ne porte pas** l'instrumentation
 analytique (elle est antérieure à son ajout, le 24/07). C'est la raison pour
-laquelle PostHog ne mesure aucun trafic — voir `outputs/` pour le rapport.
+laquelle PostHog ne mesure aucun trafic (voir `outputs/` pour le rapport).
 
 ## Déployer l'application sur Cloudflare
 
@@ -30,7 +30,7 @@ avant de la rendre visible.
 Prérequis, à faire une fois :
 
 1. `npx wrangler login` (ou `CLOUDFLARE_API_TOKEN` dans l'environnement CI).
-2. Créer les secrets côté Cloudflare — ils ne passent **jamais** par
+2. Créer les secrets côté Cloudflare ; ils ne passent **jamais** par
    `wrangler.jsonc`, qui est versionné :
 
    ```bash
@@ -54,7 +54,7 @@ Prérequis, à faire une fois :
 `compatibility_flags: ["nodejs_compat"]` (requis par le rendu PDF), le binding
 `ASSETS` sur `dist/client` (sans lui, les fichiers statiques renvoient 404) et
 le binding `IMAGES`. Ces valeurs doivent rester alignées avec
-`localBindingConfig` dans `vite.config.ts` — les deux décrivent le même worker.
+`localBindingConfig` dans `vite.config.ts` : les deux décrivent le même worker.
 
 ## Après un déploiement
 

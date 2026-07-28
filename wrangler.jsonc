@@ -7,7 +7,7 @@
   // Vite produisait un worker cassé. Les deux disent désormais la même chose.
   //
   // Le déploiement de référence reste `npm run deploy` (build Vite puis
-  // `wrangler deploy` sur l'artefact produit) — voir docs/deploiement.md.
+  // `wrangler deploy` sur l'artefact produit) ; voir docs/deploiement.md.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "preuvance",
   "main": "worker/index.ts",

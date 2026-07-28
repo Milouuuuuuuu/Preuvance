@@ -41,13 +41,13 @@ export default function EnClairPage() {
             l’intelligence artificielle est relue par un moteur de règles qui
             ne dépend d’aucune IA ; votre déclaration d’usage d’IA est comparée
             à ce que votre poste fait réellement. En cas de contradiction, le
-            score est plafonné et une revue humaine est demandée — jamais de
+            score est plafonné et une revue humaine est demandée. Jamais de
             conclusion rassurante sans preuve.
           </p>
         </section>
 
         <section aria-labelledby="plain-dossier">
-          <h2 id="plain-dossier">Parcours principal — le dossier instantané</h2>
+          <h2 id="plain-dossier">Parcours principal : le dossier instantané</h2>
           <p>
             Vous décrivez votre système en français courant et pouvez joindre des
             manifestes pris en charge. Leur contenu reste dans le navigateur :
@@ -79,7 +79,7 @@ export default function EnClairPage() {
         </section>
 
         <section aria-labelledby="plain-scan">
-          <h2 id="plain-scan">Source complémentaire — le scan local</h2>
+          <h2 id="plain-scan">Source complémentaire : le scan local</h2>
           <p>
             Un programme tourne sur votre ordinateur, sans rien envoyer sur
             Internet. Il vous demande d’abord de <strong>déclarer</strong> les
@@ -89,7 +89,7 @@ export default function EnClairPage() {
             services d’IA connus (par le nom du service contacté, jamais en
             lisant le contenu, qui reste chiffré), et les fichiers sensibles
             présents (clés, certificats, documents financiers, données
-            personnelles) — par leur nom et une empreinte numérique uniquement,
+            personnelles), par leur nom et une empreinte numérique uniquement,
             <strong> sans jamais lire ni copier leur contenu</strong>.
           </p>
           <p>
@@ -97,19 +97,19 @@ export default function EnClairPage() {
           </p>
           <ul>
             <li>
-              <strong>Concordant</strong> — l’observation corrobore votre
-              déclaration : c’est une déclaration vérifiée, pas une déclaration
+              <strong>Concordant</strong> : l’observation corrobore votre
+              déclaration. C’est une déclaration vérifiée, pas une déclaration
               sur l’honneur. C’est exactement ce qu’un assureur attend d’une
               déclaration de risque sincère.
             </li>
             <li>
-              <strong>Divergent</strong> — un usage d’IA est observé sans avoir
+              <strong>Divergent</strong> signale un usage d’IA observé sans avoir
               été déclaré (« shadow AI ») : l’écart est nommé, expliqué, et fait
               chuter le score tant qu’il n’est pas résolu.
             </li>
             <li>
-              <strong>Non contredit</strong> — rien n’a été observé qui
-              contredise la déclaration, sans la corroborer non plus ; le mode
+              <strong>Non contredit</strong> signifie que rien n’a été observé
+              qui contredise la déclaration, sans la corroborer non plus ; le mode
               surveillance d’une heure renforce l’observation pendant que vous
               travaillez normalement.
             </li>
@@ -134,7 +134,7 @@ export default function EnClairPage() {
             <li>Le scan local ne transmet rien sur Internet.</li>
             <li>
               L’évaluation en ligne n’envoie à l’IA que le nom de
-              l’organisation, le nom du système et sa description — jamais vos
+              l’organisation, le nom du système et sa description. Jamais vos
               fichiers.
             </li>
             <li>

@@ -1,4 +1,4 @@
-# OpenAI Build Week 2026 — dossier d’exécution Preuvance
+# OpenAI Build Week 2026 : dossier d’exécution Preuvance
 
 > État de préparation au 20 juillet 2026. Ce document organise la candidature ; les règles et messages publiés sur les sites officiels restent la source de vérité.
 
@@ -32,7 +32,7 @@ Les dates de jugement peuvent apparaître différemment selon certaines pages. P
 
 ### Nom
 
-**Preuvance — Instant AI Assurance, Evidence by Evidence**
+**Preuvance: Instant AI Assurance, Evidence by Evidence**
 
 ### Phrase d’accroche
 
@@ -62,7 +62,7 @@ La vidéo et l’application doivent permettre à un juge de constater, sans nar
 
 ## Plan d’exécution prioritaire
 
-### P0 — avant toute soumission
+### P0 : avant toute soumission
 
 - [ ] Ouvrir ou rejoindre officiellement l’événement Devpost avec le bon compte.
 - [ ] Confirmer que chaque membre de l’équipe est majeur, éligible et correctement déclaré.
@@ -75,7 +75,7 @@ La vidéo et l’application doivent permettre à un juge de constater, sans nar
 - [ ] Dans la tâche Codex principale, saisir `/feedback`, copier le Session ID exact et le reporter dans Devpost.
 - [ ] Remplir tous les champs Devpost, vérifier les liens dans une fenêtre privée, puis soumettre avant l’échéance.
 
-### P1 — qualité de la candidature
+### P1 : qualité de la candidature
 
 - [x] Préparer un cas Northstar reproductible, clairement identifié comme données fictives dans `demo/build-week/`.
 - [x] Afficher dans le produit et les deux decks la progression **Declared → Detected → Proven**.
@@ -85,7 +85,7 @@ La vidéo et l’application doivent permettre à un juge de constater, sans nar
 - [ ] Renseigner les commits réalisés après le 13 juillet à 09 h PT dans le journal Build Week.
 - [ ] Vérifier que chaque affirmation de la page Devpost correspond à une fonctionnalité visible dans la version fournie aux juges.
 
-### P2 — finition utile si le temps le permet
+### P2 : finition utile si le temps le permet
 
 - [ ] Ajouter des sous-titres anglais à la vidéo.
 - [ ] Exporter une version PDF ou PPTX du pitch pour l’équipe, sans l’utiliser à la place de la vidéo exigée.
@@ -120,14 +120,14 @@ Le journal de travail dédié est `docs/build-week-change-log.md`. Il doit recev
 
 ## Vérification du dépôt et de l’accès
 
-### Option A — dépôt public
+### Option A : dépôt public
 
 1. choisir explicitement une licence compatible avec les droits détenus sur le code et les médias ;
 2. vérifier que le dépôt ne contient aucun secret, donnée personnelle, fichier `.env` ou média sans droit d’usage ;
 3. tester les instructions d’installation depuis un clone vierge ;
 4. coller l’URL exacte dans Devpost.
 
-### Option B — dépôt privé
+### Option B : dépôt privé
 
 1. conserver le dépôt privé ;
 2. inviter ou partager l’accès avec `testing@devpost.com` et `build-week-event@openai.com` ;

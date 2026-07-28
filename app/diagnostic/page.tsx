@@ -22,7 +22,7 @@ export default function DiagnosticPage() {
 
       <main id="contenu">
         <section className="pv-scan-hero" aria-labelledby="diagnostic-hero-title">
-          <p className="pv-kicker">Diagnostic complet — 10 jours ouvrés</p>
+          <p className="pv-kicker">Diagnostic complet · 10 jours ouvrés</p>
           <h1 id="diagnostic-hero-title">
             Ce que le client possède, où ça circule, ce que ça coûte de le reprendre.
           </h1>

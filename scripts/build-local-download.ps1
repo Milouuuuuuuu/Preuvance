@@ -7,10 +7,12 @@ $stagingRoot = [System.IO.Path]::GetFullPath(
   (Join-Path $projectRoot "outputs\local-download-staging")
 )
 $stagingProject = Join-Path $stagingRoot "preuvance-local"
+$stagingScanner = Join-Path $stagingRoot "preuvance-scan"
 $downloadDirectory = [System.IO.Path]::GetFullPath(
   (Join-Path $projectRoot "public\downloads")
 )
 $archivePath = Join-Path $downloadDirectory "preuvance-local.zip"
+$scannerArchivePath = Join-Path $downloadDirectory "preuvance-scan.zip"
 
 function Assert-WorkspaceChildPath {
   param([Parameter(Mandatory = $true)][string]$Path)
@@ -37,13 +39,16 @@ function Copy-AllowlistedDirectory {
 }
 
 function Copy-AllowlistedFile {
-  param([Parameter(Mandatory = $true)][string]$RelativePath)
+  param(
+    [Parameter(Mandatory = $true)][string]$RelativePath,
+    [string]$TargetRoot = $stagingProject
+  )
 
   $source = Join-Path $projectRoot $RelativePath
   if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
     throw "Fichier requis absent : $RelativePath"
   }
-  $destination = Join-Path $stagingProject $RelativePath
+  $destination = Join-Path $TargetRoot $RelativePath
   $parent = Split-Path -Parent $destination
   New-Item -ItemType Directory -Force -Path $parent | Out-Null
   Copy-Item -LiteralPath $source -Destination $destination -Force
@@ -51,6 +56,7 @@ function Copy-AllowlistedFile {
 
 $verifiedStagingRoot = Assert-WorkspaceChildPath $stagingRoot
 $verifiedArchivePath = Assert-WorkspaceChildPath $archivePath
+$verifiedScannerArchivePath = Assert-WorkspaceChildPath $scannerArchivePath
 
 if (Test-Path -LiteralPath $verifiedStagingRoot) {
   Remove-Item -LiteralPath $verifiedStagingRoot -Recurse -Force
@@ -106,7 +112,7 @@ if (Test-Path -LiteralPath $previewOutput) {
 }
 
 $readme = @"
-PREUVANCE LOCAL — LANCEMENT WINDOWS
+PREUVANCE LOCAL : LANCEMENT WINDOWS
 
 1. Extrayez completement cette archive.
 2. Double-cliquez sur LANCER_PREUVANCE.cmd pour lancer l'application web locale.
@@ -162,5 +168,65 @@ if ($archive.Length -le 0) {
   throw "L'archive generee est vide."
 }
 
+# --- Archive « scan seul » -------------------------------------------------
+# Le scan n'exige que Windows PowerShell : ni Node.js, ni npm ci, ni cle API.
+# L'empaqueter separement evite de faire telecharger 3 Mo d'application web a
+# quelqu'un qui veut seulement regarder ce qui tourne sur son poste. Le script
+# de scan est autonome : il ne lit aucun fichier du depot a l'execution, son
+# catalogue de fournisseurs est en dur (l'alignement avec
+# lib/scan/scan-contract.ts est verifie par les tests, pas au lancement).
+New-Item -ItemType Directory -Force -Path $stagingScanner | Out-Null
+Copy-AllowlistedFile "SCANNER_PREUVANCE.cmd" -TargetRoot $stagingScanner
+Copy-AllowlistedFile "scripts\preuvance-scan.ps1" -TargetRoot $stagingScanner
+
+$scannerReadme = @"
+PREUVANCE - SCAN LOCAL
+
+Ce dossier ne contient que le scan. Rien n'est envoye sur Internet, aucun compte
+n'est demande, aucune cle API n'est necessaire, et aucun droit administrateur
+n'est requis. Seul Windows PowerShell 5.1 ou plus recent est necessaire.
+
+1. Extrayez completement cette archive.
+2. Double-cliquez sur SCANNER_PREUVANCE.cmd.
+3. Declarez les outils d'IA que vous utilisez sciemment, puis choisissez le scan
+   rapide ou la surveillance reseau d'une heure.
+4. Le rapport est ecrit dans %LOCALAPPDATA%\Preuvance\preuvance-scan.json.
+5. Rechargez ce fichier sur la page "Scanner en local" (/scan) du site depuis
+   lequel vous avez telecharge cette archive, pour lire le verdict de
+   concordance et le score d'exposition. La lecture se fait dans votre
+   navigateur : le rapport n'est pas televerse.
+
+Ce que le scan fait : il inventorie les fichiers sensibles par nom et extension
+avec leur empreinte SHA-256, sans lire ni copier leur contenu ; il repere les
+appels reseau vers des API d'IA connues par nom d'hote ; il compare ce qu'il
+observe a ce que vous avez declare.
+
+Ce que le scan n'est pas : ni un audit certifie, ni un avis juridique, ni une
+decision d'assurabilite. Le script est lisible en clair dans scripts\.
+
+Windows peut afficher "Windows a protege votre ordinateur" (SmartScreen) au
+premier lancement d'un script telecharge : cliquez sur "Informations
+complementaires" puis "Executer quand meme".
+
+Application complete (dossier de conformite, PDF, registre de preuves) : voir
+l'archive "Preuvance Local" proposee sur la meme page de telechargement.
+"@
+[System.IO.File]::WriteAllText(
+  (Join-Path $stagingScanner "LISEZ-MOI.txt"),
+  $scannerReadme,
+  [System.Text.UTF8Encoding]::new($false)
+)
+
+if (Test-Path -LiteralPath $verifiedScannerArchivePath) {
+  Remove-Item -LiteralPath $verifiedScannerArchivePath -Force
+}
+Compress-Archive -Path (Join-Path $stagingScanner "*") -DestinationPath $verifiedScannerArchivePath -CompressionLevel Optimal
+
+$scannerArchive = Get-Item -LiteralPath $verifiedScannerArchivePath
+if ($scannerArchive.Length -le 0) {
+  throw "L'archive de scan generee est vide."
+}
+
 Remove-Item -LiteralPath $verifiedStagingRoot -Recurse -Force
 Write-Output $archive.FullName
+Write-Output $scannerArchive.FullName

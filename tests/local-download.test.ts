@@ -34,6 +34,48 @@ test("le packager utilise une allowlist et exclut les secrets et caches", () => 
   assert.doesNotMatch(packager, /Copy-Item[^\r\n]+\$projectRoot[^\r\n]+-Recurse/i);
 });
 
+test("le packager produit aussi une archive de scan autonome", () => {
+  assert.match(packager, /preuvance-scan\.zip/);
+  assert.match(packager, /Copy-AllowlistedFile "SCANNER_PREUVANCE\.cmd" -TargetRoot \$stagingScanner/);
+  assert.match(
+    packager,
+    /Copy-AllowlistedFile "scripts\\preuvance-scan\.ps1" -TargetRoot \$stagingScanner/,
+  );
+  // L'argument de vente est l'absence de prérequis : si le LISEZ-MOI du scan
+  // se met à réclamer Node.js ou une clé API, la promesse de la page d'accueil
+  // devient fausse.
+  const scannerReadme = packager.slice(packager.indexOf("$scannerReadme"));
+  assert.doesNotMatch(scannerReadme, /Node\.js/);
+  assert.doesNotMatch(scannerReadme, /cle API OpenAI/i);
+});
+
+/**
+ * Le scan est le premier téléchargement mis en avant : il ne doit contenir que
+ * le scan. Si l'allowlist dérive vers l'application complète, l'archive gonfle
+ * et le « double-clic sans rien installer » cesse d'être vrai.
+ */
+const scannerArchiveUrl = new URL(
+  "../public/downloads/preuvance-scan.zip",
+  import.meta.url,
+);
+
+test(
+  "l'archive de scan est un ZIP matériel et reste légère",
+  {
+    skip:
+      !existsSync(scannerArchiveUrl) &&
+      "archive non embarquée dans son propre contenu",
+  },
+  () => {
+    const archive = readFileSync(scannerArchiveUrl);
+    const size = statSync(scannerArchiveUrl).size;
+
+    assert.equal(archive.subarray(0, 2).toString("ascii"), "PK");
+    assert.ok(size > 2_000, `archive suspecte : ${size} octets`);
+    assert.ok(size < 200_000, `archive trop lourde : ${size} octets`);
+  },
+);
+
 const archiveUrl = new URL(
   "../public/downloads/preuvance-local.zip",
   import.meta.url,

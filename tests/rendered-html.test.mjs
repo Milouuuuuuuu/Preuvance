@@ -122,7 +122,7 @@ test("la console interne /ops n’existe pas sans PREUVANCE_OPS", async (t) => {
   });
   // Le serveur de test lit les fichiers .env du dépôt, pas l'environnement du
   // processus : sur un poste d'équipe où .env.local active la console, on
-  // vérifie alors le noindex — la garantie 404 est falsifiée en CI, qui n'a
+  // vérifie alors le noindex ; la garantie 404 est falsifiée en CI, qui n'a
   // aucun .env.local.
   if (response.status === 200) {
     const html = await response.text();
@@ -299,14 +299,14 @@ test("génère le PDF complet : contre-vérification, journal et sections condit
         },
         decisionLog: [
           {
-            title: "Pratiques interdites — droit publié",
+            title: "Pratiques interdites (droit publié)",
             decision: "Applicable",
             score: 88,
             rationale: "Notation sociale explicite dans la description.",
           },
           {
             title: "Contre-vérification déterministe",
-            decision: "Contradiction détectée — revue humaine requise",
+            decision: "Contradiction détectée : revue humaine requise",
             score: null,
             rationale: "Divergence structurante sur l’article 5.",
           },

@@ -45,7 +45,7 @@ export function renderDocumentMarkdown(model: DocumentModel): string {
   const lines: string[] = [`# ${model.title}`, "", `_${model.subtitle}_`, ""];
 
   if (model.headline) {
-    lines.push(`**${model.headline.value} — ${model.headline.label}**`, "");
+    lines.push(`**${model.headline.value} (${model.headline.label})**`, "");
   }
 
   for (const section of model.sections) {

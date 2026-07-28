@@ -30,7 +30,7 @@ export const ADMIN_DOCUMENTS_VERSION = "preuvance-admin-documents-v1";
 
 function footerFor(entity: EntityProfile): string {
   const parts = [
-    `${entity.legalName} — ${entity.registrationLabel} ${entity.registrationValue}`,
+    `${entity.legalName}, ${entity.registrationLabel} ${entity.registrationValue}`,
   ];
   if (entity.footerNote) parts.push(entity.footerNote);
   parts.push("Document produit localement par Preuvance, sans transmission à un tiers.");
@@ -121,7 +121,7 @@ export function buildEngagementLetter(input: AdminInput): DocumentModel {
               treatment.ratePercent > 0 ? `TVA ${treatment.ratePercent} %` : "TVA",
               treatment.ratePercent > 0
                 ? formatMoney(totals.vatCents, entity.currency)
-                : "—",
+                : "Sans objet",
             ],
             ["Total à régler", formatMoney(totals.totalCents, entity.currency)],
           ],
@@ -202,7 +202,7 @@ export function buildEngagementLetter(input: AdminInput): DocumentModel {
 
   return {
     version: ADMIN_DOCUMENTS_VERSION,
-    title: `Lettre de mission — ${engagement.subject}`,
+    title: `Lettre de mission : ${engagement.subject}`,
     subtitle: `Référence ${engagement.reference} · ${formatDate(engagement.issuedOn)} · ${client.legalName}`,
     headline: {
       value: formatMoney(totals.totalCents, entity.currency),
@@ -229,7 +229,7 @@ export function buildInvoice(input: AdminInput): DocumentModel {
     ["Total HT", formatMoney(totals.subtotalCents, entity.currency)],
     [
       treatment.ratePercent > 0 ? `TVA ${treatment.ratePercent} %` : "TVA",
-      treatment.ratePercent > 0 ? formatMoney(totals.vatCents, entity.currency) : "—",
+      treatment.ratePercent > 0 ? formatMoney(totals.vatCents, entity.currency) : "Sans objet",
     ],
     ["Total TTC", formatMoney(totals.totalCents, entity.currency)],
   ];
@@ -529,7 +529,7 @@ export function buildProcessingRecord(
 
   return {
     version: ADMIN_DOCUMENTS_VERSION,
-    title: "Registre des activités de traitement — sous-traitant",
+    title: "Registre des activités de traitement du sous-traitant",
     subtitle: `${entity.legalName} · article 30.2 du RGPD${suisse ? " et article 12 LPD" : ""} · mis à jour le ${formatDate(engagement.issuedOn)}`,
     footer: footerFor(entity),
     sections: [
@@ -702,7 +702,7 @@ export function buildCompletionCertificate(
 
   return {
     version: ADMIN_DOCUMENTS_VERSION,
-    title: `Attestation de fin de mission — ${engagement.reference}`,
+    title: `Attestation de fin de mission (${engagement.reference})`,
     subtitle: `${client.legalName} · achevée le ${formatDate(context.completedOn)}`,
     footer: footerFor(entity),
     sections,
@@ -728,7 +728,7 @@ export function buildAccessPackChecklist(
 
   return {
     version: ADMIN_DOCUMENTS_VERSION,
-    title: `Pack d’accès — mission ${engagement.reference}`,
+    title: `Pack d’accès de la mission ${engagement.reference}`,
     subtitle: `${client.legalName} · à compléter avant le lancement`,
     headline: {
       value: `${items.length}`,

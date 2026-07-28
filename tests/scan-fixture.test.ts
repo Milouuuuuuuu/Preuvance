@@ -8,7 +8,8 @@ import { computeScanExposure } from "../app/lib/assessment/scan-scoring";
 
 // Rapport réellement produit par scripts/preuvance-scan.ps1 sur un poste Windows,
 // gelé comme fixture pour verrouiller le contrat entre le CLI et l'application.
-// Les chemins machine ont été anonymisés (préfixe neutre), le reste est intact.
+// Les chemins machine et les noms de processus ont été anonymisés (valeurs
+// neutres), le reste est intact.
 const fixturePath = fileURLToPath(
   new URL("./fixtures/scan-sample.json", import.meta.url),
 );
@@ -39,8 +40,8 @@ test("la fixture réelle exerce la concordance : Anthropic déclaré et observé
   assert.equal(validation.data.declaration?.providers.includes("anthropic"), true);
 
   const exposure = computeScanExposure(validation.data);
-  // L'appel observé vers api.anthropic.com (Claude Code) était déclaré avant le
-  // scan : il corrobore la déclaration au lieu d'être un faux positif critique.
+  // L'appel observé vers api.anthropic.com était déclaré avant le scan : il
+  // corrobore la déclaration au lieu d'être un faux positif critique.
   assert.equal(exposure.concordance.status, "concordant");
   assert.ok(exposure.concordance.corroborated.includes("Anthropic"));
   assert.equal(exposure.observed.undeclaredAiEndpoints, 0);

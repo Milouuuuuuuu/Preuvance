@@ -6,7 +6,7 @@ import type { Database } from "./database.types";
  * Quota de rendu PDF, distinct de celui des évaluations.
  *
  * Télécharger plusieurs fois son propre dossier est légitime ; lancer une
- * analyse coûte des appels modèle. La limite est donc large — elle ne gêne pas
+ * analyse coûte des appels modèle. La limite est donc large : elle ne gêne pas
  * un usage normal et borne le CPU du Worker face à une boucle. La fonction SQL
  * `consume_pdf_render_quota` est l'autorité et reprend ces deux constantes.
  */

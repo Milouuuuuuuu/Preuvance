@@ -112,7 +112,7 @@ const sensitiveFileSchema = z
  * Déclaration d'usage d'IA recueillie avant le scan (concordance).
  * `providers` liste les identifiants du catalogue AI_PROVIDER_HOSTS que
  * l'utilisateur reconnaît utiliser sciemment. Une liste vide avec une méthode
- * de recueil explicite signifie « je déclare n'utiliser aucune IA » — ce qui
+ * de recueil explicite signifie « je déclare n'utiliser aucune IA », ce qui
  * n'est pas la même chose qu'une déclaration absente (rapports antérieurs).
  */
 const declarationSchema = z

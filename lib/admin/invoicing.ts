@@ -11,8 +11,8 @@ import {
  * le couple (régime de l'émetteur, établissement du client).
  *
  * Le tableau ci-dessous est la seule source de vérité des mentions portées sur
- * les documents. Chaque règle cite son fondement : quand le régime change —
- * passage en TVA, changement de pays d'établissement — c'est ici qu'on
+ * les documents. Chaque règle cite son fondement : quand le régime change
+ * (passage en TVA, changement de pays d'établissement), c'est ici qu'on
  * corrige, et tous les documents suivent.
  *
  * Ces mentions sont un point de départ vérifié sur les textes cités, pas un
@@ -37,7 +37,7 @@ export type VatTreatment = {
   basis: LegalBasis[];
   /** Obligations connexes déclenchées par ce cas (déclarations, formalités). */
   obligations: string[];
-  /** Pièges à traiter avant émission — jamais silencieux. */
+  /** Pièges à traiter avant émission, jamais silencieux. */
   warnings: string[];
 };
 
@@ -89,7 +89,7 @@ const LTVA_26: LegalBasis = {
 };
 
 const FRENCH_CLIENT_REVERSE_CHARGE =
-  "Autoliquidation de la TVA par le preneur — art. 283, 2 du CGI.";
+  "Autoliquidation de la TVA par le preneur (art. 283, 2 du CGI).";
 
 /**
  * Détermine le traitement applicable. Aucun cas n'est laissé implicite : si la
@@ -145,7 +145,7 @@ export function resolveVatTreatment(
       reverseCharge: false,
       mentions: [
         "TVA non applicable, art. 293 B du CGI.",
-        "Prestation de services située hors de France — art. 259, 1° du CGI.",
+        "Prestation de services située hors de France (art. 259, 1° du CGI).",
       ],
       basis: [CGI_293B, CGI_259],
       obligations: [],
@@ -162,7 +162,7 @@ export function resolveVatTreatment(
         ruleId: "fr-reel-domestique",
         ratePercent: 20,
         reverseCharge: false,
-        mentions: ["TVA au taux normal de 20 % — art. 278 du CGI."],
+        mentions: ["TVA au taux normal de 20 % (art. 278 du CGI)."],
         basis: [CGI_278],
         obligations: [],
         warnings: [],
@@ -186,7 +186,7 @@ export function resolveVatTreatment(
         ruleId: "fr-reel-ue-b2c",
         ratePercent: 20,
         reverseCharge: false,
-        mentions: ["TVA au taux normal de 20 % — art. 278 du CGI."],
+        mentions: ["TVA au taux normal de 20 % (art. 278 du CGI)."],
         basis: [CGI_278],
         obligations: [],
         warnings: [
@@ -198,7 +198,7 @@ export function resolveVatTreatment(
       ruleId: "fr-reel-hors-ue",
       ratePercent: 0,
       reverseCharge: false,
-      mentions: ["Prestation de services située hors de France — art. 259, 1° du CGI."],
+      mentions: ["Prestation de services située hors de France (art. 259, 1° du CGI)."],
       basis: [CGI_259],
       obligations: [],
       warnings: [],
@@ -212,14 +212,14 @@ export function resolveVatTreatment(
         ruleId: "ch-assujetti-domestique",
         ratePercent: 8.1,
         reverseCharge: false,
-        mentions: ["TVA suisse au taux normal de 8,1 % — art. 25 LTVA."],
+        mentions: ["TVA suisse au taux normal de 8,1 % (art. 25 LTVA)."],
         basis: [LTVA_25, LTVA_26],
         obligations: [],
         warnings: [],
       };
     }
     const mentions = [
-      "Prestation fournie à un destinataire établi à l’étranger : lieu de la prestation au siège du destinataire, hors du champ de la TVA suisse — art. 8 al. 1 LTVA.",
+      "Prestation fournie à un destinataire établi à l’étranger : lieu de la prestation au siège du destinataire, hors du champ de la TVA suisse (art. 8 al. 1 LTVA).",
     ];
     const warnings = [
       "Conserver la preuve que le destinataire est établi à l’étranger : sans elle, l’AFC peut réclamer la TVA suisse.",
@@ -258,7 +258,7 @@ export function resolveVatTreatment(
       ratePercent: 0,
       reverseCharge: client.isBusiness && clientCountry === "FR",
       mentions: [
-        "Émetteur non assujetti à la TVA suisse — art. 10 LTVA.",
+        "Émetteur non assujetti à la TVA suisse (art. 10 LTVA).",
         ...(clientCountry === "FR" ? [FRENCH_CLIENT_REVERSE_CHARGE] : []),
       ],
       basis: clientCountry === "FR" ? [LTVA_10, CGI_283_2, CGI_182B] : [LTVA_10],
@@ -288,7 +288,7 @@ export type InvoiceTotals = {
   dueCents: number;
 };
 
-/** Totaux calculés en centiemes entiers ; l'arrondi TVA est explicite. */
+/** Totaux calculés en centimes entiers ; l'arrondi TVA est explicite. */
 export function computeTotals(
   lines: readonly OfferLine[],
   treatment: VatTreatment,

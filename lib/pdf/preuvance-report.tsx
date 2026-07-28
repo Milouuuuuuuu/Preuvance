@@ -281,8 +281,8 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
       author="PREUVANCE"
       creator="PREUVANCE"
       keywords="EU AI Act, risque IA, assurabilité, conformité"
-      subject={`Préparation au risque IA — ${assessment.system.name}`}
-      title={`Rapport PREUVANCE — ${assessment.system.name}`}
+      subject={`Préparation au risque IA : ${assessment.system.name}`}
+      title={`Rapport PREUVANCE : ${assessment.system.name}`}
     >
       <Page size="A4" style={styles.page} wrap>
         <ReportHeader assessmentId={assessment.assessmentId} />
@@ -437,7 +437,7 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
                 wrap={false}
               >
                 <Text style={styles.cardTitle}>
-                  Contre-vérification déterministe — {crossCheckLabel(assessment.crossCheck.status)}
+                  Contre-vérification déterministe : {crossCheckLabel(assessment.crossCheck.status)}
                 </Text>
                 <Text style={styles.body}>{assessment.crossCheck.note}</Text>
                 <Text style={styles.articleMeta}>
@@ -450,7 +450,7 @@ export function createPreuvanceReportDocument(assessment: PreuvanceAssessment) {
                 <Text style={styles.cardTitle}>Plafonds prudentiels appliqués au score</Text>
                 {assessment.result.appliedCaps.map((appliedCap, index) => (
                   <Text key={`${appliedCap.cap}-${index}`} style={[styles.body, { marginBottom: 3 }]}>
-                    Plafond {appliedCap.cap}/100 — {appliedCap.reason}
+                    Plafond {appliedCap.cap}/100 : {appliedCap.reason}
                   </Text>
                 ))}
               </View>

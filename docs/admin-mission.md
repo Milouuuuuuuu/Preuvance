@@ -5,7 +5,7 @@ main, ils divergent : le périmètre du contrat n'est plus celui de la lettre de
 mission, la facture porte une mention de TVA périmée, le registre oublie une
 source ajoutée en cours de route.
 
-Ici, les six documents sont **dérivés des deux mêmes fichiers** — le profil
+Ici, les six documents sont **dérivés des deux mêmes fichiers** : le profil
 administratif et le fichier de mission de l'agent. Ils ne peuvent donc pas se
 contredire, et changer d'entité émettrice met tout à jour d'un coup.
 
@@ -19,7 +19,7 @@ npm run admin:demo          # profil et mission fictifs, versionnés
 ```
 
 Chaque document sort en Markdown (reprise, courriel, dépôt) et en HTML autonome
-imprimable en PDF depuis le navigateur — sans script, sans ressource distante,
+imprimable en PDF depuis le navigateur, sans script, sans ressource distante,
 sans envoi.
 
 ## 1. Les six documents
@@ -27,7 +27,7 @@ sans envoi.
 | Clé | Document | Quand | Ce qu'il évite |
 | --- | --- | --- | --- |
 | `lettre` | Lettre de mission (vaut devis) | Avant J1 | Un périmètre oral, un délai qui court avant le pack d'accès |
-| `pack` | Checklist du pack d'accès | Avant J1 | Les deux semaines perdues à attendre des credentials |
+| `pack` | Checklist du pack d'accès | Avant J1 | Les deux semaines perdues à attendre des identifiants |
 | `dpa` | Contrat de sous-traitance (art. 28 RGPD) | Avant la collecte | Un traitement de données sans acte écrit |
 | `registre` | Registre des traitements du sous-traitant (art. 30.2) | Tenu en continu | La pièce que la CNIL demande en premier lors d'un contrôle |
 | `facture` | Facture | À la restitution | Une mention de TVA fausse, une numérotation trouée |
@@ -38,8 +38,8 @@ vient du périmètre réel de la mission, pas d'un modèle figé.
 
 ## 2. Le profil administratif
 
-Un seul fichier JSON, sans aucun secret — identité, adresse, régime de TVA et
-IBAN figurent déjà sur une facture :
+Un seul fichier JSON, sans aucun secret (identité, adresse, régime de TVA et
+IBAN figurent déjà sur une facture) :
 
 ```jsonc
 {
@@ -86,16 +86,16 @@ fondement avec un lien vérifiable.
 | FR franchise en base | FR | 0 % | art. 293 B CGI | surveiller le seuil |
 | FR franchise en base | UE, assujetti | 0 % | art. 293 B + autoliquidation art. 283, 2 CGI | numéro de TVA intracommunautaire et DES nécessaires |
 | FR franchise en base | hors UE | 0 % | art. 293 B + art. 259, 1° CGI | pas de DES |
-| FR régime réel | FR | 20 % | art. 278 CGI | — |
+| FR régime réel | FR | 20 % | art. 278 CGI | rien |
 | FR régime réel | UE, assujetti | 0 % | autoliquidation art. 283, 2 CGI | DES mensuelle, contrôle VIES |
 | FR régime réel | UE, non assujetti | 20 % | art. 278 CGI | guichet OSS à instruire selon la nature du service |
-| FR régime réel | hors UE | 0 % | art. 259, 1° CGI | — |
-| CH assujetti | CH | 8,1 % | art. 25 LTVA | — |
+| FR régime réel | hors UE | 0 % | art. 259, 1° CGI | rien |
+| CH assujetti | CH | 8,1 % | art. 25 LTVA | rien |
 | CH assujetti | FR | 0 % | art. 8 al. 1 LTVA + autoliquidation art. 283, 2 CGI | **retenue à la source art. 182 B CGI à traiter avant la première facture** |
 | CH non assujetti | FR | 0 % | art. 10 LTVA | seuil d'assujettissement calculé sur le chiffre d'affaires **mondial** |
 
 Une combinaison non couverte ne produit pas un taux deviné : elle rend une règle
-« à instruire » et un avertissement bloquant. C'est volontaire — mieux vaut une
+« à instruire » et un avertissement bloquant. C'est volontaire : mieux vaut une
 facture retardée qu'une facture fausse.
 
 Ces mentions citent les textes applicables ; elles ne valent pas avis fiscal. La
@@ -109,7 +109,7 @@ expert-comptable ou une fiduciaire.
 | Libellé et type de chaque source | Pack d'accès (avec le mode d'accès déduit), registre, contrat de sous-traitance |
 | Exécuteur `results` (remise au DBA) | Pack d'accès : « aucun accès direct » ; aucun compte à révoquer |
 | Compte de lecture seule nommé | Pack d'accès et liste des accès à révoquer de l'attestation |
-| Variable d'environnement d'un jeton d'API | Pack d'accès et accès à révoquer — jamais la valeur du jeton |
+| Variable d'environnement d'un jeton d'API | Pack d'accès et accès à révoquer, jamais la valeur du jeton |
 | Mode de collecte (`metadata_only`…) | Contrat de sous-traitance et registre, rubrique « type de données » |
 | Journal de purge | Attestation : nom, empreinte SHA-256 et sort de chaque artefact |
 | Catalogue de la mission | Attestation : score et synthèse du diagnostic |

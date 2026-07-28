@@ -1,4 +1,4 @@
-# Dossier instantané — architecture et contrat de confiance
+# Dossier instantané : architecture et contrat de confiance
 
 ## Statut du document
 
@@ -47,9 +47,9 @@ flowchart LR
 | Formulaire | Recueillir organisation, système, description et profil d’entreprise | Déclaration utilisateur ; aucune vérification implicite |
 | Scanner de dépendances | Reconnaître des packages IA dans trois familles de manifestes | Observation bornée ; ni analyse du code, ni preuve d’usage en production |
 | Scan local | Mesurer une exposition du poste et la concordance déclaré/observé | Rapport brut local ; seul un digest agrégé peut être transmis avec consentement |
-| Modèle — extraction | Transformer la description et les digests en faits structurés | Aucun rôle de qualification juridique à cette étape |
-| Modèle — classification | Proposer une préqualification à partir du référentiel fourni | Sortie stricte, prudente, contre-vérifiée ensuite |
-| Modèle — écarts | Proposer actions et preuves attendues | Ne change pas la classification et ne crée pas de citation libre |
+| Modèle (extraction) | Transformer la description et les digests en faits structurés | Aucun rôle de qualification juridique à cette étape |
+| Modèle (classification) | Proposer une préqualification à partir du référentiel fourni | Sortie stricte, prudente, contre-vérifiée ensuite |
+| Modèle (écarts) | Proposer actions et preuves attendues | Ne change pas la classification et ne crée pas de citation libre |
 | Moteur déterministe | Hydrater les obligations, contre-vérifier, scorer, assembler | Source d’autorité pour le score final et le contrat de rapport |
 | Registre de preuves | Suivre l’état, la source, l’empreinte et la revue de chaque pièce | « Attesté » signifie revue déclarée dans Preuvance, pas certification externe |
 | PDF | Rendre le payload déjà validé | Ne recalcule pas le score et n’invente aucune preuve |
@@ -182,7 +182,7 @@ La migration `202607200001_evidence_dossier.sql` doit être appliquée avant d�
 - Les réponses JSON et PDF sont privées et `no-store`.
 - Le corps du registre est limité à 512 000 octets et validé par Zod avant la RPC.
 
-### Ce que SHA-256 prouve — et ne prouve pas
+### Ce que SHA-256 prouve, et ce qu’il ne prouve pas
 
 Une empreinte SHA-256 aide à reconnaître ultérieurement le même octet-à-octet. Elle ne prouve pas :
 

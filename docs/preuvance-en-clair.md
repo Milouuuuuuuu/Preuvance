@@ -22,7 +22,7 @@ peut ensuite enrichir le dossier avec deux sources techniques bornées :
 
 Le résultat n'est pas une qualification juridique automatique : c'est un
 dossier de préparation avec score déterministe, écarts, PDF et registre de
-preuves distinctes — déclarées, détectées, manquantes ou attestées.
+preuves distinctes (déclarées, détectées, manquantes ou attestées).
 
 ## Le parcours principal : dossier instantané
 
@@ -42,21 +42,21 @@ ni un audit indépendant, ni une certification.
 Le scan (`SCANNER_PREUVANCE.cmd`) est un programme Windows qui reste
 **entièrement sur votre machine**. Concrètement :
 
-1. **Il recueille votre déclaration** — vous cochez les outils d'IA que votre
+1. **Il recueille votre déclaration** : vous cochez les outils d'IA que votre
    organisation utilise sciemment (OpenAI, Anthropic, Mistral, etc.), ou vous
    déclarez n'en utiliser aucun. C'est la même logique que la déclaration d'un
    risque à un assureur : dire ce que l'on sait, avant la vérification.
-2. **Il identifie le contexte du poste** — personnel, ou professionnel (relié à
+2. **Il identifie le contexte du poste** : personnel, ou professionnel (relié à
    un domaine d'entreprise). Sur un poste professionnel géré, il recommande de
    passer plutôt par le service informatique ou le délégué à la protection des
    données de l'entreprise.
-3. **Il repère les fichiers sensibles** — clés secrètes, certificats,
-   documents financiers, données personnelles — par leur nom et leur
+3. **Il repère les fichiers sensibles** (clés secrètes, certificats,
+   documents financiers, données personnelles) par leur nom et leur
    emplacement. **Il ne copie et ne lit jamais le contenu d'un fichier** :
    seuls le chemin, la taille, la date et une empreinte numérique (un
    « code-barres » du fichier, pas son contenu) sont enregistrés. C'est un
    inventaire, pas une extraction.
-4. **Il détecte les appels vers des services d'IA** — si un logiciel de votre
+4. **Il détecte les appels vers des services d'IA** : si un logiciel de votre
    poste communique avec OpenAI, Anthropic, Azure OpenAI, Google Gemini,
    Mistral et une dizaine d'autres fournisseurs, le scan le repère par le nom
    du service contacté (jamais en lisant le contenu, qui reste chiffré et
@@ -66,13 +66,13 @@ Le scan (`SCANNER_PREUVANCE.cmd`) est un programme Windows qui reste
 5. **Il rend le verdict de concordance et un score d'exposition sur 100**, de
    façon entièrement automatique et vérifiable (pas d'intelligence artificielle
    dans ce calcul) :
-   - **concordant** — ce qui est observé corrobore ce que vous avez déclaré :
+   - **concordant** : ce qui est observé corrobore ce que vous avez déclaré ;
      votre déclaration n'est plus une déclaration sur l'honneur, elle est
      vérifiée par les faits ;
-   - **divergent** — un usage d'IA est observé sans avoir été déclaré
-     (« shadow AI ») : l'écart est nommé et fait fortement chuter la note tant
+   - **divergent** : un usage d'IA est observé sans avoir été déclaré
+     (« shadow AI ») ; l'écart est nommé et fait fortement chuter la note tant
      qu'il n'est pas résolu (déclarer l'outil, ou cesser de l'utiliser) ;
-   - **non contredit** — rien n'infirme la déclaration, sans la confirmer
+   - **non contredit** : rien n'infirme la déclaration, sans la confirmer
      encore ; la surveillance d'une heure renforce l'observation.
    Des secrets exposés font aussi chuter la note, et chaque point perdu est
    expliqué.
@@ -93,20 +93,20 @@ Vous décrivez votre système en français, sans jargon juridique : à qui il
 s'adresse, quelles données il traite, quelles décisions il produit. Preuvance
 enchaîne alors quatre étapes visibles à l'écran :
 
-1. **Extraction des faits** — le texte est transformé en informations
+1. **Extraction des faits** : le texte est transformé en informations
    structurées (secteur, rôle de l'entreprise, type de données, etc.).
-2. **Classification réglementaire** — ces faits sont comparés à un référentiel
+2. **Classification réglementaire** : ces faits sont comparés à un référentiel
    daté du règlement européen sur l'IA, pour déterminer le niveau de risque
    (interdit, haut risque, risque limité, risque minimal) et les obligations
    qui s'appliquent.
-3. **Contre-vérification indépendante** — un second mécanisme, qui ne dépend
+3. **Contre-vérification indépendante** : un second mécanisme, qui ne dépend
    d'aucune intelligence artificielle, relit la classification et signale toute
    contradiction (par exemple si le texte décrit clairement une pratique
    interdite mais que la classification dit le contraire). En cas de
    contradiction, le score est automatiquement plafonné et une revue humaine
    est recommandée. C'est un garde-fou pensé pour qu'aucune conclusion
    trompeuse ne parte sans alerte.
-4. **Analyse des écarts et score** — les manques par rapport aux obligations
+4. **Analyse des écarts et score** : les manques par rapport aux obligations
    sont listés par priorité, et un score de préparation sur 100 est calculé
    selon une formule fixe et documentée (pas une estimation de l'IA).
 
@@ -114,7 +114,7 @@ enchaîne alors quatre étapes visibles à l'écran :
 
 Un vrai document PDF est généré, pensé pour être montré à un tiers : score,
 classification, échéances réglementaires, écarts prioritaires, et le
-**journal complet des décisions** — y compris le résultat de la
+**journal complet des décisions**, y compris le résultat de la
 contre-vérification indépendante et la raison de chaque plafond appliqué au
 score. Rien de ce qui compte n'est laissé uniquement sur l'écran du site.
 
@@ -135,11 +135,11 @@ si elle était déjà obligatoire.
 
 - Le scan local ne transmet rien sur Internet.
 - L'évaluation en ligne envoie à l'intelligence artificielle uniquement le nom
-  de l'organisation, le nom du système et sa description — jamais vos fichiers.
+  de l'organisation, le nom du système et sa description, jamais vos fichiers.
 - Si vous êtes connecté, vos évaluations sont enregistrées dans votre espace
   personnel, protégé pour n'être visible que par vous et votre organisation.
 - Vous pouvez tout supprimer de votre poste avec `DESINSTALLER_PREUVANCE.cmd`
-  (clé, caches, rapports de scan — avec une option pour tout effacer, y
+  (clé, caches, rapports de scan ; une option permet de tout effacer, y
   compris l'application elle-même).
 
 ## Ce que Preuvance ne fait pas (volontairement)
@@ -153,10 +153,10 @@ un dossier ; la décision finale revient toujours à un professionnel humain.
 
 1. Télécharger la version locale depuis le site (bouton « Télécharger la
    version locale »), puis extraire l'archive.
-2. `SCANNER_PREUVANCE.cmd` — lance le scan (aucune clé nécessaire).
-3. `LANCER_PREUVANCE.cmd` — lance l'application web complète sur votre
+2. `SCANNER_PREUVANCE.cmd` lance le scan (aucune clé nécessaire).
+3. `LANCER_PREUVANCE.cmd` lance l'application web complète sur votre
    ordinateur (une clé API est demandée une seule fois, jamais affichée).
-4. `DESINSTALLER_PREUVANCE.cmd` — nettoie ou supprime tout.
+4. `DESINSTALLER_PREUVANCE.cmd` nettoie ou supprime tout.
 
 Aucun de ces trois programmes ne demande de droits administrateur.
 

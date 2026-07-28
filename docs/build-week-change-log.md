@@ -1,4 +1,4 @@
-# Build Week change log — Preuvance
+# Preuvance Build Week change log
 
 ## Purpose and evidentiary status
 
@@ -6,7 +6,7 @@ This file separates the pre-existing Preuvance product from the work prepared fo
 
 The event allows a pre-existing project, but only additions made after **July 13, 2026 at 9:00 AM PT** are judged. Before submission, every item claimed as Build Week work must be tied to a real commit whose timestamp and diff support the claim. No commit should be backdated.
 
-## Post-deadline hardening — July 22, 2026
+## Post-deadline hardening (July 22, 2026)
 
 The submission deadline passed on July 21 at 5:00 PM PT. The following work is intentionally separated from the eligible submitted state and must not be presented as if it existed before the deadline:
 
@@ -22,12 +22,12 @@ Post-deadline verification on July 22, 2026:
 
 | Gate | Result |
 |---|---|
-| Complete repository gate | PASS — lint, typecheck, 89 unit tests, production build, 2 Node-start tests, 11 HTTP/Worker tests |
+| Complete repository gate | PASS: lint, typecheck, 89 unit tests, production build, 2 Node-start tests, 11 HTTP/Worker tests |
 | Remotion typecheck | PASS |
-| Replacement video | PASS — 154.1 s, 1920×1080, H.264 video, AAC stereo at 48 kHz |
-| Public sample PDF | PASS — strict contract and material `%PDF-` artifact test |
+| Replacement video | PASS: 154.1 s, 1920×1080, H.264 video, AAC stereo at 48 kHz |
+| Public sample PDF | PASS: strict contract and material `%PDF-` artifact test |
 
-## Pre-existing baseline — do not claim as new
+## Pre-existing baseline: do not claim as new
 
 The repository already contained the broader Preuvance concept and application before this Build Week workstream, including an AI assessment flow, control/gap analysis, report generation, a local scanner, authentication/persistence foundations, and Remotion-based pitch assets.
 
@@ -66,7 +66,7 @@ Unless separate, verifiable evidence is supplied, the submission must not claim:
 
 Populate this table only from the actual Git history after the work is intentionally committed.
 
-**Pre-cutoff baseline:** `47874da` — 2026-07-13 16:40:41 +0200 (07:40 AM PT, *before* the 9:00 AM PT cutoff) — "Build Preuvance EU AI Act readiness MVP". Every later commit in this repository is post-cutoff.
+**Pre-cutoff baseline:** `47874da`, 2026-07-13 16:40:41 +0200 (07:40 AM PT, *before* the 9:00 AM PT cutoff), "Build Preuvance EU AI Act readiness MVP". Every later commit in this repository is post-cutoff.
 
 | Commit hash | Authored/committed time with timezone | Eligible after cutoff? | Files/workstream | Verification command or artifact |
 |---|---|---|---|---|
@@ -93,25 +93,25 @@ The cutoff uses Pacific Time. Preserve timezone information in the output or exp
 
 | Gate | Command or action | Result | Evidence |
 |---|---|---|---|
-| Complete repository gate | `npm.cmd test` | **PASS — exit 0** | Run on committed HEAD `becf9ed`, 20 July 2026: lint, typecheck, 85 unit tests, production build and 10 HTTP/Worker tests |
-| Unit tests | `npm.cmd run test:unit` | **PASS — 85/85** | Reconfirmed inside the complete repository gate |
-| Rendered HTML and Worker PDF | `node --test tests/rendered-html.test.mjs` | **PASS — 10/10** | Covers homepage, scan, Build Week deck, auth failures and PDF routes |
+| Complete repository gate | `npm.cmd test` | **PASS (exit 0)** | Run on committed HEAD `becf9ed`, 20 July 2026: lint, typecheck, 85 unit tests, production build and 10 HTTP/Worker tests |
+| Unit tests | `npm.cmd run test:unit` | **PASS (85/85)** | Reconfirmed inside the complete repository gate |
+| Rendered HTML and Worker PDF | `node --test tests/rendered-html.test.mjs` | **PASS (10/10)** | Covers homepage, scan, Build Week deck, auth failures and PDF routes |
 | Lint | `npm.cmd run lint` | **PASS** | ESLint exit 0, 20 July 2026 |
 | TypeScript | `npm.cmd run typecheck` | **PASS** | `tsc --noEmit` exit 0, 20 July 2026 |
 | Production build | `npm.cmd run build` | **PASS** | Vinext production build exit 0; dossier/evidence routes included |
-| PowerPoint layout | bundled `slides_test.py` | **PASS — 8 slides** | Final PPTX reimported, all slides visually inspected, no overflow detected |
-| Supabase migration | Apply on demo project and exercise RLS | **OWNER ACTION — not executed** | Apply all 3 migrations; test two tenants and a revision conflict |
+| PowerPoint layout | bundled `slides_test.py` | **PASS (8 slides)** | Final PPTX reimported, all slides visually inspected, no overflow detected |
+| Supabase migration | Apply on demo project and exercise RLS | **OWNER ACTION (not executed)** | Apply all 3 migrations; test two tenants and a revision conflict |
 | Real model provenance | Complete run shows GPT-5.6 returned in methodology | **OWNER ACTION** | Record one real assessment showing `gpt-5.6-*` in the report methodology; capture it in the demo video and/or commit a redacted report JSON. |
 | Browser flow | Prompt → manifest → dossier → review → save/reopen/export | **PARTIAL** | Manifest fixture and deck verified; real model + cloud save/reopen need configured services |
-| Video | YouTube, audio present, duration under 3 minutes | **PARTIAL — replace teaser with 2:45 walkthrough** | https://youtu.be/T8e0u6iMdeA |
-| Repository access | Public + licence, or both official test accounts granted | **DONE** | Public + MIT — github.com/Milouuuuuuuu/Preuvance |
+| Video | YouTube, audio present, duration under 3 minutes | **PARTIAL (replace teaser with 2:45 walkthrough)** | https://youtu.be/T8e0u6iMdeA |
+| Repository access | Public + licence, or both official test accounts granted | **DONE** | Public + MIT: github.com/Milouuuuuuuu/Preuvance |
 | Codex evidence | `/feedback` from the main task | **DONE** | Session ID `019f7c5f-4963-7413-8675-dd19e35c25fd` |
 
 ## Final eligible-diff statement template
 
 Use only after filling the commit evidence above:
 
-> Preuvance predates OpenAI Build Week 2026. For judging, we are submitting only the additions made after July 13, 2026 at 9:00 AM PT — every commit after the pre-cutoff baseline `47874da` (see the table above; principal Build Week commits `fd61d05`, `2d95a3a`, `5c4c1af`, `5d9307d`, `efa319b` and `becf9ed`). These additions implement the instant dossier, evidence-state invariants, bounded dependency and scan digests, living evidence persistence, model provenance, focused tests, and the Build Week demo package. The pre-existing assessment and reporting foundation is disclosed as prior work.
+> Preuvance predates OpenAI Build Week 2026. For judging, we are submitting only the additions made after July 13, 2026 at 9:00 AM PT, that is, every commit after the pre-cutoff baseline `47874da` (see the table above; principal Build Week commits `fd61d05`, `2d95a3a`, `5c4c1af`, `5d9307d`, `efa319b` and `becf9ed`). These additions implement the instant dossier, evidence-state invariants, bounded dependency and scan digests, living evidence persistence, model provenance, focused tests, and the Build Week demo package. The pre-existing assessment and reporting foundation is disclosed as prior work.
 
 ## Owner TODO
 

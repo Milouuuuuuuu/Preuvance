@@ -1,4 +1,4 @@
-# Scan des dépendances IA — périmètre, digest et limites
+# Scan des dépendances IA : périmètre, digest et limites
 
 ## But
 

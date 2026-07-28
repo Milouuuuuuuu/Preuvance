@@ -6,8 +6,8 @@
  * 1. **Sécurité.** `x-forwarded-host` est fourni par l'appelant :
  *    Cloudflare Workers ne le pose pas. Le lire sans contrôle laissait un
  *    visiteur déplacer l'origine absolue du sitemap, du JSON-LD et des images
- *    OpenGraph vers son propre domaine — avec, pour robots.txt et sitemap.xml,
- *    une mise en cache publique d'une heure. `NEXT_PUBLIC_APP_URL` fait donc
+ *    OpenGraph vers son propre domaine (avec, pour robots.txt et sitemap.xml,
+ *    une mise en cache publique d'une heure). `NEXT_PUBLIC_APP_URL` fait donc
  *    autorité dès qu'elle est configurée ; l'en-tête n'est plus qu'un repli de
  *    développement.
  * 2. **Dette.** La même dérivation existait en trois exemplaires (layout,

@@ -22,13 +22,13 @@ export default function ScanPage() {
 
       <main id="contenu">
         <section className="pv-scan-hero" aria-labelledby="scan-hero-title">
-          <p className="pv-kicker">Source complémentaire — scan local</p>
+          <p className="pv-kicker">Source complémentaire · scan local</p>
           <h1 id="scan-hero-title">Analysez votre poste, sans rien envoyer.</h1>
           <p className="pv-scan-hero-lede">
             Avant le scan, vous déclarez les outils d’IA que vous utilisez
-            sciemment. Le scan observe ensuite la réalité du poste — appels d’IA
+            sciemment. Le scan observe ensuite la réalité du poste, appels d’IA
             et fichiers sensibles (chemin et empreinte seulement, jamais leur
-            contenu) — et la compare à votre déclaration : c’est la
+            contenu), et la compare à votre déclaration : c’est la
             <strong> concordance déclaré / observé</strong>, une déclaration
             corroborée plutôt qu’une déclaration sur l’honneur. Rien ne quitte
             votre poste.
@@ -40,13 +40,14 @@ export default function ScanPage() {
               <Download size={20} aria-hidden="true" />
               <h3>Télécharger</h3>
               <p>
-                Récupérez la version locale puis extrayez l’archive.
+                Une archive de 10 Ko qui ne contient que le scan : ni Node.js,
+                ni installation, ni clé API. Extrayez-la complètement.
                 <TrackedLink
-                  eventName="local_zip_download_clicked"
-                  href="/downloads/preuvance-local.zip"
+                  eventName="scan_zip_download_clicked"
+                  href="/downloads/preuvance-scan.zip"
                   download
                 >
-                  Télécharger le .zip
+                  Télécharger le scan (.zip, 10 Ko)
                 </TrackedLink>
               </p>
             </li>

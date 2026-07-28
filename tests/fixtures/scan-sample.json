@@ -24,7 +24,7 @@
                                             "lastSeen":  "2026-07-16T08:08:29.578Z",
                                             "hitCount":  1,
                                             "processes":  [
-                                                              "claude",
+                                                              "assistant-ia",
                                                               "chrome"
                                                           ],
                                             "remoteAddresses":  [

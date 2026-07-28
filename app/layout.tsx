@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "Preuvance — Préparez la preuve de votre risque IA";
+const title = "Preuvance · Préparez la preuve de votre risque IA";
 const description =
   "Transformez la description de votre système IA en dossier de préparation courtier, daté et traçable.";
 

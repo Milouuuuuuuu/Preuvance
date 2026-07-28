@@ -11,11 +11,11 @@ Aucun texte libre saisi par l'utilisateur ne quitte le navigateur via l'analytic
 - le contenu, les titres ou les noms de fichiers des preuves ;
 - le contenu des manifestes de dépendances ou du rapport de scan.
 
-Ce qui **est** envoyé, exclusivement : des noms d'événements fixes et des métadonnées structurées ou agrégées — compteurs (`itemCount`, `descriptionLength` : une longueur, pas le texte), scores numériques, statuts et codes issus d'énumérations internes (`code`, `stage`, `tier`, `persistenceStatus`), booléens (`hasScanDigest`, `persisted`) et le chemin de la route pour `$pageview`.
+Ce qui **est** envoyé, exclusivement : des noms d'événements fixes et des métadonnées structurées ou agrégées, à savoir des compteurs (`itemCount`, `descriptionLength` : une longueur, pas le texte), scores numériques, statuts et codes issus d'énumérations internes (`code`, `stage`, `tier`, `persistenceStatus`), booléens (`hasScanDigest`, `persisted`) et le chemin de la route pour `$pageview`.
 
 La configuration du client renforce ce contrat : `autocapture` désactivé (aucune capture automatique de clics ou de champs de formulaire), `disable_session_recording`, `respect_dnt`, `person_profiles: "identified_only"`. Les captures pilotables à distance (`capture_heatmaps`, `capture_dead_clicks`, `rageclick`, `capture_exceptions`) sont épinglées à `false` dans le code : la configuration distante du projet PostHog ne peut pas les réactiver à notre insu.
 
-Depuis l'audit du 26 juillet 2026, le SDK ne va même plus chercher cette configuration distante : `advanced_disable_flags`, `disable_external_dependency_loading` et `disable_surveys` coupent tout aller-retour vers `us-assets.i.posthog.com` et tout chargement de script tiers à l'exécution. Le SDK n'émet donc que vers l'hôte d'ingestion, ce qui permet une politique de sécurité du contenu (CSP) sans exception pour cet hôte. Conséquence à connaître : les feature flags, les sondages et les expériences PostHog sont indisponibles tant que ces options ne sont pas rouvertes — ce que le produit n'utilise pas.
+Depuis l'audit du 26 juillet 2026, le SDK ne va même plus chercher cette configuration distante : `advanced_disable_flags`, `disable_external_dependency_loading` et `disable_surveys` coupent tout aller-retour vers `us-assets.i.posthog.com` et tout chargement de script tiers à l'exécution. Le SDK n'émet donc que vers l'hôte d'ingestion, ce qui permet une politique de sécurité du contenu (CSP) sans exception pour cet hôte. Conséquence à connaître : les feature flags, les sondages et les expériences PostHog sont indisponibles tant que ces options ne sont pas rouvertes, ce que le produit n'utilise pas.
 
 Enfin, le hook `before_send` expurge les identifiants de dossier de **toute** valeur transmise (`/dossiers/<uuid>` devient `/dossiers/[id]`). Il balaie l'ensemble des propriétés de l'événement, et non une liste de clés : l'audit avait montré qu'un identifiant fuyait par `$prev_pageview_pathname`, ajouté par le SDK lui-même et absent de l'ancienne liste. Quatre tests (`tests/analytics-privacy.test.ts`) verrouillent ce contrat.
 
@@ -25,7 +25,7 @@ Enfin, le hook `before_send` expurge les identifiants de dossier de **toute** va
 | --- | --- | --- | --- |
 | `$pageview` | `$current_url` (expurgé : `/dossiers/[id]`) | Chaque changement de route (capture manuelle, `capture_pageview: false`) | `app/components/PostHogProvider.tsx` |
 | `$pageleave` | `$current_url` (expurgé via `before_send`) | Départ de page, émis par le SDK (`capture_pageleave: true`) | `lib/analytics/posthog.ts` |
-| `assessment_form_started` | — | Première interaction avec le formulaire d'évaluation | `app/components/AssessmentForm.tsx` |
+| `assessment_form_started` | aucune | Première interaction avec le formulaire d'évaluation | `app/components/AssessmentForm.tsx` |
 | `assessment_started` | `hasDependencyDigest`, `hasScanDigest`, `descriptionLength` | Soumission du formulaire, avant l'appel au pipeline | `app/components/AssessmentExperience.tsx` |
 | `assessment_stage_reached` | `stage` | Progression du pipeline d'analyse (extraction, classification, …) | `app/components/AssessmentExperience.tsx` |
 | `assessment_failed` | `code`, `status` | Échec du pipeline (code d'erreur interne + statut HTTP) | `app/components/AssessmentExperience.tsx` |
@@ -37,27 +37,28 @@ Enfin, le hook `before_send` expurge les identifiants de dossier de **toute** va
 | `dependency_manifest_attached` | `manifestCount`, `aiPackageCount` | Manifestes de dépendances analysés et rattachés | `app/components/DependencyManifestLoader.tsx` |
 | `scan_report_loaded` | `exposureScore` | Chargement d'un rapport de scan local valide | `app/components/ScanReportLoader.tsx` |
 | `scan_digest_handoff` | `exposureScore` | Transmission du digest de scan vers l'évaluation | `app/components/ScanReportLoader.tsx` |
-| `local_zip_download_clicked` | — | Clic sur le téléchargement du `.zip` Preuvance Local (en-tête et pied de l'accueil, étape 01 du scan) | `app/page.tsx`, `app/scan/page.tsx` |
+| `scan_zip_download_clicked` | aucune | Clic sur le téléchargement direct du `.zip` de scan seul (bouton d'en-tête et bande d'acquisition de l'accueil, étape 01 du scan) | `app/page.tsx`, `app/scan/page.tsx` |
+| `local_zip_download_clicked` | aucune | Clic sur le téléchargement du `.zip` Preuvance Local, l'application complète (pied de l'accueil) | `app/page.tsx` |
 | `catalogue_loaded` | `score`, `sources`, `datasets` | Chargement d'un catalogue de diagnostic valide dans le navigateur | `app/components/CatalogueLoader.tsx` |
 | `diagnostic_export` | `format` (`markdown` ou `html`) | Export local du rapport de diagnostic, généré côté navigateur | `app/components/CatalogueLoader.tsx` |
-| `demo_pdf_download_clicked` | — | Clic sur le dossier d’exemple (démo) | `app/demo/page.tsx` |
+| `demo_pdf_download_clicked` | aucune | Clic sur le dossier d’exemple (démo) | `app/demo/page.tsx` |
 | `theme_toggled` | `theme` (`nuit` ou `jour`) | Clic sur la bascule du thème nuit | `app/components/ThemeToggle.tsx` |
-| `app_error` | `digest` (empreinte React), `errorName`, `route` | Écran de dernier recours après une erreur de rendu — jamais le message ni la pile | `app/global-error.tsx` |
+| `app_error` | `digest` (empreinte React), `errorName`, `route` | Écran de dernier recours après une erreur de rendu (jamais le message ni la pile) | `app/global-error.tsx` |
 
-Toute nouvelle propriété doit passer le même filtre : nombre, booléen, ou valeur issue d'une énumération contrôlée par le code — jamais une chaîne construite à partir d'une saisie utilisateur.
+Toute nouvelle propriété doit passer le même filtre : nombre, booléen, ou valeur issue d'une énumération contrôlée par le code, jamais une chaîne construite à partir d'une saisie utilisateur.
 
 ## Hôtes : ingestion vs API privée
 
 PostHog expose deux familles d'hôtes qu'il ne faut jamais confondre :
 
 - **Ingestion** (`us.i.posthog.com` / `eu.i.posthog.com`) : reçoit les événements du SDK navigateur avec la clé projet `phc_...`. C'est la valeur de `NEXT_PUBLIC_POSTHOG_HOST` (défaut du code : `https://us.i.posthog.com`, la région du projet Preuvance).
-- **API privée** (`us.posthog.com` / `eu.posthog.com`) : sert l'API REST authentifiée par une clé personnelle `phx_...` — c'est elle qu'utilise le script de provisionnement (`POSTHOG_API_HOST`, défaut : `https://us.posthog.com`).
+- **API privée** (`us.posthog.com` / `eu.posthog.com`) : sert l'API REST authentifiée par une clé personnelle `phx_...` ; c'est elle qu'utilise le script de provisionnement (`POSTHOG_API_HOST`, défaut : `https://us.posthog.com`).
 
 Pointer le SDK vers l'API privée (ou le script vers un hôte d'ingestion) échoue. Choisir la région de son projet PostHog et rester cohérent : projet EU → `eu.i.posthog.com` pour l'ingestion **et** `POSTHOG_API_HOST=https://eu.posthog.com` pour le script.
 
 ## Configuration d'environnement
 
-Dans `.env.local` — jamais commitée (cf. `AGENTS.md` : les secrets restent dans `.env.local`) :
+Dans `.env.local`, jamais commitée (cf. `AGENTS.md` : les secrets restent dans `.env.local`) :
 
 ```dotenv
 # Exposées au navigateur : la clé phc_ n'est pas un secret, elle n'autorise que l'ingestion.
@@ -78,7 +79,7 @@ La clé personnelle `phx_...` se crée dans PostHog → Settings → Personal AP
 node --env-file=.env.local scripts/posthog-setup.mjs
 ```
 
-Le script [`scripts/posthog-setup.mjs`](../scripts/posthog-setup.mjs) (Node 22, aucune dépendance) est **idempotent** : il recherche chaque tableau de bord et chaque insight par nom et ne crée que ce qui manque — le relancer ne produit aucun doublon. Il refuse une clé `phc_` avec un message explicite, affiche le projet détecté si `POSTHOG_PROJECT_ID` est absent, imprime l'URL de chaque tableau de bord à la fin, et sort en code 1 en affichant statut HTTP et corps de réponse à la moindre erreur d'API.
+Le script [`scripts/posthog-setup.mjs`](../scripts/posthog-setup.mjs) (Node 22, aucune dépendance) est **idempotent** : il recherche chaque tableau de bord et chaque insight par nom et ne crée que ce qui manque : le relancer ne produit aucun doublon. Il refuse une clé `phc_` avec un message explicite, affiche le projet détecté si `POSTHOG_PROJECT_ID` est absent, imprime l'URL de chaque tableau de bord à la fin, et sort en code 1 en affichant statut HTTP et corps de réponse à la moindre erreur d'API.
 
 ## Vérifier l'ingestion avec curl
 
@@ -92,7 +93,7 @@ curl --ssl-no-revoke -s -X POST "https://us.i.posthog.com/i/v0/e/" \
 
 Réponse attendue : `{"status": 1}`. L'événement apparaît ensuite dans PostHog → Activity (délai de quelques secondes). Adapter l'hôte à la région du projet (`eu.i.posthog.com` pour un projet EU).
 
-Note Windows : dans le bac à sable de Claude Code, la vérification de révocation des certificats échoue — l'option `--ssl-no-revoke` est nécessaire pour que `curl` aboutisse. Elle est propre à `curl` sous Windows (Schannel) et sans objet sous Linux/macOS.
+Note Windows : dans un environnement exécuté en bac à sable, la vérification de révocation des certificats échoue. L'option `--ssl-no-revoke` est nécessaire pour que `curl` aboutisse. Elle est propre à `curl` sous Windows (Schannel) et sans objet sous Linux/macOS.
 
 ## Les quatre tableaux de bord
 
@@ -112,11 +113,13 @@ Il mesure le parcours complet, de la première visite au rapport téléchargé, 
 
 ### 3. Preuvance — Source scan local
 
-Funnel en quatre étapes, fenêtre de 14 jours :
+Funnel en cinq étapes, fenêtre de 14 jours :
 
-`scan_report_loaded` → `scan_digest_handoff` → `assessment_started` → `assessment_completed`
+`scan_zip_download_clicked` → `scan_report_loaded` → `scan_digest_handoff` → `assessment_started` → `assessment_completed`
 
-Il isole la conversion propre au parcours scan local : combien de rapports chargés deviennent des digests transmis, puis des évaluations complètes.
+Il isole la conversion propre au parcours scan local, depuis le téléchargement direct de l'archive de scan : combien de téléchargements deviennent des rapports chargés, puis des digests transmis, puis des évaluations complètes.
+
+La première marche est la seule mesurable côté navigateur : le lancement du scan sur le poste n'émet aucun événement, par construction. Un écart entre `scan_zip_download_clicked` et `scan_report_loaded` mélange donc trois causes qu'il faut se garder de confondre — archive non extraite, scan lancé sans retour sur le site, et rapport chargé depuis un autre navigateur.
 
 ### 4. Preuvance — Qualité & risques
 

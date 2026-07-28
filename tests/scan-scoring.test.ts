@@ -217,7 +217,7 @@ test("concordance : déclaration corroborée par l’observation → concordant"
             host: "api.anthropic.com",
             provider: "Anthropic",
             hitCount: 4,
-            processes: ["claude"],
+            processes: ["assistant-ia"],
             remoteAddresses: [],
             // Le champ écrit par le scanner est volontairement contredit :
             // la déclaration fait foi, indépendamment de ce champ.

@@ -110,7 +110,7 @@ export function CatalogueLoader() {
         <p>
           Le fichier <code>preuvance-catalogue.json</code> reste sur votre poste : il
           est lu ici, dans votre navigateur, sans aucun envoi. Il ne contient que
-          des métadonnées — structures, volumétries, dates — jamais une valeur
+          des métadonnées (structures, volumétries, dates), jamais une valeur
           métier.
         </p>
       </div>
@@ -191,7 +191,7 @@ export function CatalogueLoader() {
               <ul>
                 {state.diagnostic.appliedCaps.map((cap) => (
                   <li key={cap.reason}>
-                    <strong>{cap.cap}/100</strong> — {cap.reason}
+                    <strong>{cap.cap}/100</strong> : {cap.reason}
                   </li>
                 ))}
               </ul>
@@ -288,7 +288,7 @@ export function CatalogueLoader() {
               </div>
               <p>
                 Pour chaque outil en ligne du catalogue : la sortie documentée par
-                l’éditeur — exporter, faire supprimer, remettre en local. Une fiche
+                l’éditeur (exporter, faire supprimer, remettre en local). Une fiche
                 n’est pas un test : l’export doit être exécuté et chronométré.
               </p>
               {state.diagnostic.reversibility.some((entry) => entry.sheet) ? (
@@ -327,7 +327,7 @@ export function CatalogueLoader() {
                     .filter((entry) => !entry.sheet)
                     .map((entry) => entry.label)
                     .join(", ")}
-                  . Aucune procédure n’est supposée — la méthode d’export et la
+                  . Aucune procédure n’est supposée : la méthode d’export et la
                   clause de restitution sont à établir avec chaque éditeur
                   (art. 28-3-g RGPD).
                 </p>

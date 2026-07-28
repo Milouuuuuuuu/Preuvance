@@ -7,8 +7,8 @@ import { fileURLToPath } from "node:url";
  * Garde-fou de complétude de la suite (audit du 26/07/2026).
  *
  * `test:unit` énumère ses fichiers à la main : un test ajouté puis oublié dans
- * cette liste ne tournerait jamais, ni en local ni en CI — un angle mort qui
- * ne fait aucun bruit. Ce test compare la liste au contenu du dossier.
+ * cette liste ne tournerait jamais, ni en local ni en CI. C'est un angle mort
+ * qui ne fait aucun bruit. Ce test compare la liste au contenu du dossier.
  */
 const testsDirectory = fileURLToPath(new URL("./", import.meta.url));
 const packageJsonPath = fileURLToPath(new URL("../package.json", import.meta.url));
@@ -36,7 +36,7 @@ test("chaque fichier de test du dossier est lancé par npm test", () => {
   assert.deepEqual(
     forgotten,
     [],
-    `Fichiers de test jamais exécutés — les ajouter au script test:unit de package.json : ${forgotten.join(", ")}`,
+    `Fichiers de test jamais exécutés, à ajouter au script test:unit de package.json : ${forgotten.join(", ")}`,
   );
 });
 

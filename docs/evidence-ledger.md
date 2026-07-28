@@ -1,4 +1,4 @@
-# Registre de preuves — contrat, statuts et révisions
+# Registre de preuves : contrat, statuts et révisions
 
 ## Objet
 
