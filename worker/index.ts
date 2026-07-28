@@ -48,10 +48,9 @@ const worker = {
 /**
  * Politique de sécurité du contenu.
  *
- * L'audit du 26/07/2026 a relevé qu'en l'absence de `default-src`/`script-src`,
- * la politique ne bloquait que le cadrage et les objets : n'importe quelle
- * injection DOM pouvait charger un script distant. Les origines autorisées
- * sont donc énumérées.
+ * `default-src` et `script-src` sont obligatoires : sans eux, la politique ne
+ * contraint que le cadrage et les objets, et n'encadre pas le chargement des
+ * scripts. Les origines autorisées sont donc énumérées explicitement.
  *
  * `'unsafe-inline'` sur les scripts reste nécessaire tant que le hydrate de
  * vinext et le script d'initialisation du thème (app/layout.tsx) sont posés

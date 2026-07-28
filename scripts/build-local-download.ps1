@@ -67,7 +67,6 @@ New-Item -ItemType Directory -Force -Path $downloadDirectory | Out-Null
 $directories = @(
   "app",
   "build",
-  "docs",
   "lib",
   "scripts",
   "supabase",
@@ -76,10 +75,28 @@ $directories = @(
   "worker"
 )
 
+# La documentation n'est PAS copiee en bloc. L'archive est remise a chaque PME
+# qui telecharge l'outil : y embarquer docs/ en entier revenait a livrer le
+# runbook de mission, le pack d'acces, le dossier de candidature et la
+# recherche d'anteriorite a chaque prospect, concurrents compris. Seuls les
+# documents dont un utilisateur a besoin pour installer, comprendre et
+# verifier le produit sont inclus. Tout ajout ici est une decision de
+# divulgation : se demander d'abord si un client doit le lire.
+$docFiles = @(
+  "docs\local-launch.md",
+  "docs\preuvance-scan.md",
+  "docs\preuvance-en-clair.md",
+  "docs\dependency-scan.md",
+  "docs\dossier-instantane.md",
+  "docs\evidence-ledger.md",
+  "docs\analytics.md",
+  "docs\backend-setup.md",
+  "docs\deploiement.md"
+)
+
 $files = @(
   ".gitignore",
   ".openai\hosting.json",
-  "AGENTS.md",
   "LANCER_PREUVANCE.cmd",
   "SCANNER_PREUVANCE.cmd",
   "DESINSTALLER_PREUVANCE.cmd",
@@ -103,12 +120,38 @@ foreach ($directory in $directories) {
 foreach ($file in $files) {
   Copy-AllowlistedFile $file
 }
+foreach ($docFile in $docFiles) {
+  Copy-AllowlistedFile $docFile
+}
+
+# Garde-fou : si un document interne se retrouve dans l'archive parce que
+# quelqu'un a remis "docs" dans $directories, l'archive n'est pas produite.
+$leakedDocs = Get-ChildItem -LiteralPath (Join-Path $stagingProject "docs") -File -ErrorAction SilentlyContinue |
+  Where-Object { ("docs\" + $_.Name) -notin $docFiles }
+if ($leakedDocs) {
+  $names = ($leakedDocs.Name -join ", ")
+  throw "Archive annulee : document interne dans le livrable client : $names"
+}
 
 # Sites may leave a local preview directory under app/. It is build output,
 # never source for the downloadable release.
 $previewOutput = Assert-WorkspaceChildPath (Join-Path $stagingProject "app\_sites-preview")
 if (Test-Path -LiteralPath $previewOutput) {
   Remove-Item -LiteralPath $previewOutput -Recurse -Force
+}
+
+# La copie se fait depuis le DISQUE, pas depuis git : les fichiers ignores par
+# un .gitignore local sont donc embarques quand meme. supabase/.gitignore
+# prevoit precisement d'y trouver .env.keys et .env.local. Aujourd'hui .branches
+# et .temp ne contiennent qu'un nom de branche et un numero de version, mais
+# c'est l'etat local d'un outil : il n'a rien a faire chez un client, et le
+# jour ou il contiendra un identifiant de projet ou une cle, il partirait sans
+# que personne ne l'ait decide.
+foreach ($localState in @("supabase\.branches", "supabase\.temp")) {
+  $stale = Assert-WorkspaceChildPath (Join-Path $stagingProject $localState)
+  if (Test-Path -LiteralPath $stale) {
+    Remove-Item -LiteralPath $stale -Recurse -Force
+  }
 }
 
 $readme = @"
@@ -129,6 +172,12 @@ Portabilite SQLite / PostgreSQL (outil open source separe) :
 
 Tout desinstaller : double-cliquez sur DESINSTALLER_PREUVANCE.cmd.
 
+Documentation incluse (dossier docs\) : lancement, scan local, explication sans
+jargon, scan des dependances, architecture du dossier, registre de preuves,
+contrat de confidentialite de la mesure d'usage, configuration du backend et
+deploiement. La documentation interne du projet n'est pas incluse : certains
+liens du README pointent donc vers des fichiers absents de cette archive.
+
 Prerequis : Windows PowerShell 5.1+ et Node.js 22.13+ (l'application ; le scan n'exige que PowerShell).
 Aucun droit administrateur n'est requis. Les secrets restent dans .env.local, exclu de cette archive.
 "@
@@ -141,6 +190,9 @@ Aucun droit administrateur n'est requis. Les secrets restent dans .env.local, ex
 $forbidden = Get-ChildItem -LiteralPath $stagingProject -Recurse -Force -File |
   Where-Object {
     $_.Name -match '^\.env(?:\.|$)' -or
+    # Le plugin Cloudflare recopie .env.local sous ce nom dans la sortie de
+    # build : meme contenu, autre nom, donc invisible pour le motif ci-dessus.
+    $_.Name -eq '.dev.vars' -or
     $_.Extension -in @('.pem', '.pfx', '.p12') -or
     $_.Name -match '(?i)(secret|credentials)\.(json|txt|ini|yaml|yml)$'
   }

@@ -24,12 +24,11 @@ export function redactPath(path: string): string {
  * Expurge TOUTE propriété de type chaîne qui contient un chemin de dossier,
  * plutôt qu'une liste de clés à maintenir à la main.
  *
- * L'audit du 26/07/2026 a montré la faille de l'approche par liste : le SDK
- * ajoute de lui-même `$prev_pageview_pathname` (et selon les cas `$referrer`,
- * `$initial_current_url`), qui échappaient à l'expurgation : un identifiant de
- * dossier partait alors en clair à la navigation suivante. Balayer toutes les
- * valeurs ferme la fuite aussi pour les propriétés qu'une future version du
- * SDK ajouterait.
+ * Une liste de clés à expurger ne peut pas être exhaustive : le SDK ajoute
+ * lui-même des propriétés dérivées de l'URL (`$prev_pageview_pathname`,
+ * `$referrer`, `$initial_current_url`…) et une version ultérieure peut en
+ * ajouter d'autres. Balayer toutes les valeurs de type chaîne couvre donc
+ * aussi celles que nous ne connaissons pas encore.
  */
 export function sanitizeUrlProperties<
   T extends { properties?: Record<string, unknown> } | null,

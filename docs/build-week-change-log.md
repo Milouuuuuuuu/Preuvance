@@ -105,7 +105,7 @@ The cutoff uses Pacific Time. Preserve timezone information in the output or exp
 | Browser flow | Prompt → manifest → dossier → review → save/reopen/export | **PARTIAL** | Manifest fixture and deck verified; real model + cloud save/reopen need configured services |
 | Video | YouTube, audio present, duration under 3 minutes | **PARTIAL (replace teaser with 2:45 walkthrough)** | https://youtu.be/T8e0u6iMdeA |
 | Repository access | Public + licence, or both official test accounts granted | **DONE** | Public + MIT: github.com/Milouuuuuuuu/Preuvance |
-| Codex evidence | `/feedback` from the main task | **DONE** | Session ID `019f7c5f-4963-7413-8675-dd19e35c25fd` |
+| Codex evidence | `/feedback` from the main task | **DONE** | Session ID fourni au jury, non publie |
 
 ## Final eligible-diff statement template
 
@@ -121,7 +121,7 @@ Use only after filling the commit evidence above:
 - [x] Record local test/build results; rerun and attach CI evidence on the submitted commit.
 - [ ] Confirm that the deployed app corresponds exactly to the submitted commit or tag.
 - [x] Decide repository visibility and licensing (public + MIT).
-- [x] Supply the real `/feedback` Session ID (`019f7c5f-4963-7413-8675-dd19e35c25fd`) and final URLs (YouTube, landing).
+- [x] Supply the real `/feedback` Session ID (fourni au jury, non publie) and final URLs (YouTube, landing).
 - [ ] **Owner, before the deadline:** publish the 2:45 narrated walkthrough (script: `docs/DEMO_SCRIPT_BUILD_WEEK.md`) recording a real GPT-5.6 run, and paste its URL into Devpost in place of the teaser.
 
 Rédigé et préparé le 20 juillet 2026 par ChatGPT 5.6, OpenAI.

@@ -1,14 +1,13 @@
 begin;
 
--- Durcissement de l'immuabilité de la preuve (audit du 26/07/2026).
+-- Durcissement de l'immuabilité de la preuve.
 --
--- La migration 202607200001 a rendu `assessments` en lecture seule pour le
--- client, mais deux portes parentes restaient ouvertes : DELETE sur
--- `ai_systems` (FK on delete cascade → l'évaluation, son registre de preuves
--- ET son journal d'audit disparaissaient sans événement) et DELETE sur
--- `organizations` (même cascade, un cran plus haut). `reasoning_steps` restait
--- de plus réinscriptible par le client : la trace de raisonnement qui fonde le
--- dossier pouvait être réécrite sans journal.
+-- L'immuabilité d'une évaluation ne tient que si les tables PARENTES sont
+-- fermées elles aussi : une contrainte `on delete cascade` propage une
+-- suppression depuis `ai_systems` ou `organizations` jusqu'au registre de
+-- preuves et au journal d'audit, sans qu'aucun événement ne soit écrit. La
+-- trace de raisonnement (`reasoning_steps`) doit de même être non
+-- réinscriptible : c'est elle qui fonde le dossier.
 --
 -- Aucun flux applicatif n'écrit directement sur ces tables (vérifié : zéro
 -- .from("ai_systems"|"organizations"|"reasoning_steps") côté client) : toutes

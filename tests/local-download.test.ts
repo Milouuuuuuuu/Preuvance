@@ -34,6 +34,41 @@ test("le packager utilise une allowlist et exclut les secrets et caches", () => 
   assert.doesNotMatch(packager, /Copy-Item[^\r\n]+\$projectRoot[^\r\n]+-Recurse/i);
 });
 
+/**
+ * L'archive est remise à chaque PME qui télécharge l'outil. Copier `docs/` en
+ * bloc revenait à livrer le runbook de mission, le pack d'accès, le dossier de
+ * candidature et la recherche d'antériorité à chaque prospect — concurrents
+ * compris. Ce test échoue si quelqu'un remet la copie en bloc.
+ */
+test("le livrable client n'embarque ni documentation interne ni conventions d'agents", () => {
+  assert.doesNotMatch(packager, /^\s*"docs",\s*$/m);
+  assert.match(packager, /\$docFiles\s*=\s*@\(/);
+  assert.match(packager, /Archive annulee : document interne dans le livrable client/);
+  assert.doesNotMatch(packager, /"AGENTS\.md"/);
+
+  // Une liste explicite ne protège que si elle reste courte et justifiable :
+  // chaque entrée ajoutée ici est une décision de divulgation.
+  const bloc = packager.slice(packager.indexOf("$docFiles"), packager.indexOf("$files"));
+  const inclus = [...bloc.matchAll(/"docs\\([A-Za-z0-9._-]+\.md)"/g)].map((m) => m[1]);
+  assert.ok(inclus.length > 0, "aucun document client déclaré");
+
+  const interdits = [
+    "BUILD_WEEK_SUBMISSION_COPY.md",
+    "OPENAI_BUILD_WEEK_2026.md",
+    "build-week-change-log.md",
+    "DEMO_SCRIPT_BUILD_WEEK.md",
+    "operateur-diagnostic.md",
+    "pack-acces.md",
+    "admin-mission.md",
+    "preuvance-v2-diagnostic.md",
+    "research.md",
+    "revue-audit-externe.md",
+  ];
+  for (const nom of interdits) {
+    assert.ok(!inclus.includes(nom), `document interne exposé au client : ${nom}`);
+  }
+});
+
 test("le packager produit aussi une archive de scan autonome", () => {
   assert.match(packager, /preuvance-scan\.zip/);
   assert.match(packager, /Copy-AllowlistedFile "SCANNER_PREUVANCE\.cmd" -TargetRoot \$stagingScanner/);

@@ -15,7 +15,7 @@ Preuvance ne délivre ni avis juridique, ni certification, ni décision d’assu
 
 Le nom initial **Aplomb** a été rejeté après recherche : les trois domaines visés sont enregistrés et une entreprise homonyme intervient déjà en gouvernance IA et réglementaire. **Preuvance** a été retenu à **86/100**. Les contrôles RDAP sont favorables mais l’achat du domaine et la recherche EUIPO/TMview restent à effectuer avant lancement public.
 
-Le détail des sources est dans [`docs/research.md`](docs/research.md). Pour une présentation simple, sans jargon technique, de tout ce que fait Preuvance : [`docs/preuvance-en-clair.md`](docs/preuvance-en-clair.md).
+Le détail des sources est tenu dans la documentation interne du projet. Pour une présentation simple, sans jargon technique, de tout ce que fait Preuvance : [`docs/preuvance-en-clair.md`](docs/preuvance-en-clair.md).
 
 Le cadrage de démonstration et les hypothèses de valorisation sont tenus dans le dossier interne du projet, hors du dépôt.
 
@@ -78,7 +78,7 @@ Après `npm run dev` :
 
 La route `/demo` sert aussi un [dossier PDF Northstar](public/downloads/preuvance-northstar-demo.pdf) généré depuis le même contrat strict. Cette démonstration est explicitement fictive : elle illustre les états du registre sans prétendre à un nouvel appel GPT-5.6 ni à une provenance modèle absente.
 
-Le mode présentation utilise le film procédural propre dans `public/media/preuvance-proof-film.mp4`. Les clips Veo trouvés dans les téléchargements sont volontairement exclus : ils portent un filigrane visible et des artefacts textuels incompatibles avec une soumission crédible. Voir [`docs/animation-review.md`](docs/animation-review.md).
+Le mode présentation utilise le film procédural propre dans `public/media/preuvance-proof-film.mp4`. Les clips Veo trouvés dans les téléchargements sont volontairement exclus : ils portent un filigrane visible et des artefacts textuels incompatibles avec une soumission crédible. La revue de direction visuelle est tenue hors livrable.
 
 ### Migration du registre vivant
 
@@ -166,11 +166,9 @@ npm run inventaire -- --mission mission.json --out sortie      # collecte et dia
 npm run inventaire -- --mission mission.json --out sortie --purge
 ```
 
-Architecture et matrice des connecteurs :
-[`docs/preuvance-v2-diagnostic.md`](docs/preuvance-v2-diagnostic.md). Pack
-d’accès client (comptes de lecture seule, DPA, réversibilité) :
-[`docs/pack-acces.md`](docs/pack-acces.md). Runbook des équipes terrain :
-[`docs/operateur-diagnostic.md`](docs/operateur-diagnostic.md).
+L’architecture et la matrice des connecteurs, le pack d’accès client (comptes en
+lecture seule, DPA, réversibilité) et le runbook des équipes terrain sont tenus
+dans la documentation interne du projet, hors livrable.
 
 ## Environnement administratif d’une mission
 
@@ -199,8 +197,8 @@ npm run admin -- --profil profil.json --mission mission.json   # les six documen
 npm run admin -- --profil profil.json --emettre facture --numero PV-2026-0007
 ```
 
-Détail des documents, du profil et du moteur de mentions :
-[`docs/admin-mission.md`](docs/admin-mission.md).
+Le détail des documents, du profil et du moteur de mentions est tenu dans la
+documentation interne du projet.
 
 ## Boîte à outils de portabilité des données
 
@@ -223,7 +221,7 @@ Preuvance combine un raisonnement génératif borné et des garde-fous détermin
 
 **Codex (environnement d’ingénierie de la Build Week).** Le workstream « dossier instantané » a été construit et vérifié dans Codex : audit de l’architecture existante, implémentation du registre de preuves vivant et de ses invariants d’intégrité (`lib/evidence/`), scan borné des manifestes de dépendances et handoff de scan expurgé (`lib/scan/`), persistance canonique sous RLS (`supabase/migrations/202607200001_evidence_dossier.sql`), tests ciblés, documentation et préparation de la candidature. L’intégration de la portabilité SQLite/PostgreSQL (rédigée via Codex/GPT-5) et la branche `codex/hackathon-remotion` en font partie ; les conventions d’agents sont dans [`AGENTS.md`](AGENTS.md).
 
-**Codex Session ID** (thread principal, via `/feedback`) : `019f7c5f-4963-7413-8675-dd19e35c25fd`. La séparation vérifiable entre le socle antérieur et les ajouts Build Week est dans [`docs/build-week-change-log.md`](docs/build-week-change-log.md).
+La séparation vérifiable entre le socle antérieur et les ajouts Build Week est tenue dans le journal de changements interne du projet. L’identifiant de session fourni au jury n’est pas publié ici : c’est une donnée d’usage nominative, sans objet une fois le concours clos.
 
 ## OpenAI Build Week 2026
 
@@ -231,14 +229,10 @@ Le paquet de candidature est préparé pour la catégorie **Work & Productivity*
 
 > **Preuvance: Instant AI Assurance, Evidence by Evidence**
 
-Livrables :
-
-- guide de soumission et checklist propriétaire : [`docs/OPENAI_BUILD_WEEK_2026.md`](docs/OPENAI_BUILD_WEEK_2026.md) ;
-- copie Devpost anglaise prête à adapter : [`docs/BUILD_WEEK_SUBMISSION_COPY.md`](docs/BUILD_WEEK_SUBMISSION_COPY.md) ;
-- narration et plan de tournage de 2 min 45 s : [`docs/DEMO_SCRIPT_BUILD_WEEK.md`](docs/DEMO_SCRIPT_BUILD_WEEK.md) ;
-- séparation vérifiable entre socle antérieur et ajouts Build Week : [`docs/build-week-change-log.md`](docs/build-week-change-log.md) ;
-- deck PowerPoint : [`outputs/preuvance-openai-build-week.pptx`](outputs/preuvance-openai-build-week.pptx) (régénérable via `scripts/build-week-deck.mjs`) ;
-- diaporama exécutable : `/build-week`.
+Le dossier de candidature — guide de soumission, copie Devpost, plan de tournage,
+journal de séparation entre le socle antérieur et les ajouts, deck PowerPoint —
+est tenu dans la documentation interne du projet. Seul le diaporama exécutable
+est servi par l’application, sur `/build-week`.
 
 Échéance officielle : **mardi 21 juillet 2026 à 17:00 PT**, soit **mercredi 22 juillet 2026 à 02:00 à Paris**. Les actions qui restent nécessairement au propriétaire sont : rejoindre le Devpost, confirmer équipe/éligibilité, choisir dépôt public + licence ou partage privé, récupérer le Session ID via `/feedback`, enregistrer et publier la vidéo YouTube avec audio, puis valider la soumission finale. Aucune de ces actions externes n’est simulée par le dépôt.
 
@@ -272,7 +266,7 @@ npm test
 
 ## Extension locale « System Exposure »
 
-Le prompt d’extension machine suppose un autre socle qui n’est pas présent dans ce workspace : un CLI Python/Typer/Rich avec une commande `aplomb scan` déjà validée trois fois. Preuvance ne simule donc aucun accès PowerShell depuis le navigateur. Le gate, la vérification des cmdlets Windows et la stratégie de reprise sont consignés dans [`docs/preuvance-machine-gate.md`](docs/preuvance-machine-gate.md).
+Le prompt d’extension machine suppose un autre socle qui n’est pas présent dans ce workspace : un CLI Python/Typer/Rich avec une commande `aplomb scan` déjà validée trois fois. Preuvance ne simule donc aucun accès PowerShell depuis le navigateur. Le gate, la vérification des cmdlets Windows et la stratégie de reprise sont consignés dans la documentation interne du projet.
 
 ## Périmètre volontairement exclu
 
@@ -280,6 +274,6 @@ Pas d’intégration assureur réelle, de tarification, de paiement, de généra
 
 ---
 
-Corrections, scan local et durcissement qualité des 13-14 juillet 2026. La revue de l’audit externe **ChatGPT 5.6** figure dans [`docs/revue-audit-externe.md`](docs/revue-audit-externe.md) : son analyse est attribuée à son auteur.
+Corrections, scan local et durcissement qualité des 13-14 juillet 2026. Un audit externe produit par **ChatGPT 5.6** a été revu point par point ; son analyse est attribuée à son auteur et la revue est tenue hors livrable.
 
 Vision « dossier instantané », registre preuve par preuve et paquet OpenAI Build Week du 20 juillet 2026 : **ChatGPT 5.6, OpenAI**.

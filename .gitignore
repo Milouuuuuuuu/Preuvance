@@ -32,6 +32,11 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Le plugin Cloudflare recopie .env.local dans la sortie de build sous ce nom :
+# il ne correspond pas au motif .env* ci-dessus et doit être exclu à part.
+.dev.vars
+**/.dev.vars
+
 # vercel
 .vercel
 

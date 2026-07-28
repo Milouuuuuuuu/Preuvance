@@ -9,12 +9,14 @@ qui disparaît avec la personne qui le détient.
 | Cible | Contenu | Statut au 26/07/2026 |
 | --- | --- | --- |
 | Cloudflare Workers | L'application complète (pages, API, PDF, console interne) | **Non déployée** : aucun domaine ne résout |
-| GitHub Pages (`gh-pages`) | Une page d'accueil autonome, publiée le 20/07/2026 | En ligne : `https://milouuuuuuuu.github.io/Preuvance/` |
+| GitHub Pages (`gh-pages`) | Une page d'accueil autonome, construite le 20/07/2026 | **Non publiée** : GitHub Pages est désactivé, la branche existe mais n'est pas servie (vérifié le 28/07/2026, en anonyme et par l'API) |
 | Poste client (PME) | `LANCER_PREUVANCE.cmd` → serveur local sur `127.0.0.1` | Fonctionnel, hors ligne |
 
-Conséquence mesurée : la page publique **ne porte pas** l'instrumentation
-analytique (elle est antérieure à son ajout, le 24/07). C'est la raison pour
-laquelle PostHog ne mesure aucun trafic (voir `outputs/` pour le rapport).
+Conséquence : **aucune surface n'est accessible depuis Internet**. C'est la
+raison pour laquelle PostHog ne mesure aucun trafic — il n'y a rien à mesurer,
+et non un défaut d'instrumentation. La branche `gh-pages` est par ailleurs
+antérieure à l'ajout de la mesure d'usage (24/07) : la publier telle quelle ne
+produirait toujours aucune donnée.
 
 ## Déployer l'application sur Cloudflare
 

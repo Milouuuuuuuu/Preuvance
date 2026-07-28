@@ -44,9 +44,9 @@ export async function POST(request: Request) {
     return problem(413, "payload_too_large", "Le rapport dépasse la taille autorisée.");
   }
 
-  // L'identité est résolue AVANT de lire le corps : un anonyme faisait sinon
-  // consommer jusqu'à 512 Ko de lecture, de parsing JSON et de validation Zod
-  // par requête avant de recevoir son 401 (audit du 26/07/2026, S-09).
+  // L'identité est résolue AVANT de lire le corps. Refuser après lecture ferait
+  // payer la lecture, le parsing JSON et la validation Zod à chaque requête non
+  // autorisée : l'ordre des deux étapes n'est pas interchangeable.
   const access = await resolvePdfAccess(request);
   if (access.mode === "denied") return access.response;
 
