@@ -69,8 +69,27 @@ const PROGRAMS: Array<{ cmd: string; role: string }> = [
   { cmd: "npm test", role: "porte de vérification complète avant tout commit" },
 ];
 
+/**
+ * Les raccourcis externes pointaient vers le projet analytique et le dépôt du
+ * titulaire, en dur. Le code source de cette page part dans l'archive remise à
+ * chaque PME : la garde `PREUVANCE_OPS` protège l'exécution, pas le fichier.
+ * Ces adresses viennent donc de l'environnement, et le bloc disparaît quand
+ * elles ne sont pas renseignées.
+ */
+function externalLinks(): Array<{ href: string; label: string }> {
+  const candidats = [
+    { href: process.env.PREUVANCE_OPS_POSTHOG_URL, label: "Tableaux de bord PostHog" },
+    { href: process.env.PREUVANCE_OPS_REPO_URL, label: "Dépôt de code" },
+  ];
+  return candidats.flatMap((c) =>
+    c.href?.trim() ? [{ href: c.href.trim(), label: c.label }] : [],
+  );
+}
+
 export default function OpsPage() {
   if (process.env.PREUVANCE_OPS !== "1") notFound();
+
+  const EXTERNAL_LINKS = externalLinks();
 
   const groups = ENV_GROUPS.map((group) => ({
     ...group,
@@ -154,21 +173,23 @@ export default function OpsPage() {
             <a href="/diagnostic">Diagnostic (lecture locale)</a>
             <a href="/demo">Dossier de démonstration</a>
             <a href="/scan">Scan local</a>
-            <a
-              href="https://us.posthog.com/project/525820"
-              rel="noreferrer noopener"
-              target="_blank"
-            >
-              Tableaux de bord PostHog
-            </a>
-            <a
-              href="https://github.com/Milouuuuuuuu/Preuvance"
-              rel="noreferrer noopener"
-              target="_blank"
-            >
-              Dépôt GitHub
-            </a>
+            {EXTERNAL_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
+          {EXTERNAL_LINKS.length === 0 ? (
+            <p className="ops-note">
+              Aucun raccourci externe : renseignez PREUVANCE_OPS_POSTHOG_URL et
+              PREUVANCE_OPS_REPO_URL dans <code>.env.local</code>.
+            </p>
+          ) : null}
           <p className="ops-note">
             Cette console est servie uniquement quand PREUVANCE_OPS=1 : en
             production publique, cette URL renvoie 404 et robots.txt

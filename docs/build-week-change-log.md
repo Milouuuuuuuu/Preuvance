@@ -104,7 +104,7 @@ The cutoff uses Pacific Time. Preserve timezone information in the output or exp
 | Real model provenance | Complete run shows GPT-5.6 returned in methodology | **OWNER ACTION** | Record one real assessment showing `gpt-5.6-*` in the report methodology; capture it in the demo video and/or commit a redacted report JSON. |
 | Browser flow | Prompt → manifest → dossier → review → save/reopen/export | **PARTIAL** | Manifest fixture and deck verified; real model + cloud save/reopen need configured services |
 | Video | YouTube, audio present, duration under 3 minutes | **PARTIAL (replace teaser with 2:45 walkthrough)** | https://youtu.be/T8e0u6iMdeA |
-| Repository access | Public + licence, or both official test accounts granted | **DONE** | Public + MIT: github.com/Milouuuuuuuu/Preuvance |
+| Repository access | Public + licence, or both official test accounts granted | **DONE** | MIT licence; repository visibility to confirm before submission |
 | Codex evidence | `/feedback` from the main task | **DONE** | Session ID fourni au jury, non publie |
 
 ## Final eligible-diff statement template

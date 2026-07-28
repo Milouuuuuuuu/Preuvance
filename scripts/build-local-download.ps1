@@ -166,8 +166,10 @@ Scanner votre poste (source complementaire, sans cle API) :
    Double-cliquez sur SCANNER_PREUVANCE.cmd, puis chargez le rapport preuvance-scan.json
    dans la page "Scanner en local". Le scan reste 100% local et ne copie aucun contenu.
 
-Portabilite SQLite / PostgreSQL (outil open source separe) :
-   https://github.com/Milouuuuuuuu/sqlite-postgres-bridge/releases/latest
+Portabilite SQLite / PostgreSQL :
+   Un outil separe traduit les schemas dans les deux sens. Son adresse de
+   telechargement vous est communiquee avec votre acces ; elle n'est pas
+   inscrite ici tant que sa distribution publique n'est pas ouverte.
    Utilisez d'abord le mode --dry-run et importez toujours dans une base de test.
 
 Tout desinstaller : double-cliquez sur DESINSTALLER_PREUVANCE.cmd.

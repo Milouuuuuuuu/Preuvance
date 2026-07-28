@@ -29,8 +29,11 @@ test("le packager utilise une allowlist et exclut les secrets et caches", () => 
   assert.match(packager, /outputs\\local-download-staging/);
   assert.match(packager, /public\\downloads/);
   assert.match(packager, /\^\\\.env/);
-  assert.match(packager, /sqlite-postgres-bridge\/releases\/latest/);
   assert.match(packager, /--dry-run/);
+  // Le LISEZ-MOI remis au client ne doit porter aucune adresse nominative :
+  // le dépôt de l'outil de portabilité est privé, donc le lien serait mort, et
+  // il exposerait le compte de l'auteur à chaque PME.
+  assert.doesNotMatch(packager, /github\.com\/[A-Za-z0-9-]+\//);
   assert.doesNotMatch(packager, /Copy-Item[^\r\n]+\$projectRoot[^\r\n]+-Recurse/i);
 });
 

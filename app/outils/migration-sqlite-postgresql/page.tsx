@@ -11,9 +11,17 @@ import {
 } from "lucide-react";
 import { SiteHeader } from "../../components/SiteHeader";
 
-const repositoryUrl =
-  "https://github.com/Milouuuuuuuu/sqlite-postgres-bridge";
-const downloadUrl = `${repositoryUrl}/releases/latest/download/sqlite-postgres-bridge-v0.1.0.zip`;
+/**
+ * L'adresse de distribution du bridge n'est pas écrite en dur : elle pointait
+ * vers un dépôt personnel nominatif, aujourd'hui privé — donc un lien mort
+ * pour chaque visiteur, sous le nom de compte de l'auteur, sur une page
+ * publique et dans l'archive remise à chaque PME. Renseigner
+ * `NEXT_PUBLIC_PORTABILITY_REPO_URL` réactive les boutons sans toucher au code.
+ */
+const repositoryUrl = process.env.NEXT_PUBLIC_PORTABILITY_REPO_URL?.trim() ?? "";
+const downloadUrl = repositoryUrl
+  ? `${repositoryUrl}/releases/latest/download/sqlite-postgres-bridge-v0.1.0.zip`
+  : "";
 
 export const metadata: Metadata = {
   title: "Portabilité SQLite et PostgreSQL",
@@ -44,16 +52,25 @@ export default function DataPortabilityPage() {
               <code>.sqlite</code> en dump PostgreSQL. Tout se passe localement :
               aucun serveur, aucun upload et aucune télémétrie.
             </p>
-            <div className="pv-portability-actions">
-              <a className="pv-header-action" href={downloadUrl}>
-                <Download size={17} aria-hidden="true" />
-                Télécharger la version 0.1.0
-              </a>
-              <a className="pv-portability-secondary" href={repositoryUrl}>
-                <Code2 size={17} aria-hidden="true" />
-                Voir le code source
-              </a>
-            </div>
+            {repositoryUrl ? (
+              <div className="pv-portability-actions">
+                <a className="pv-header-action" href={downloadUrl}>
+                  <Download size={17} aria-hidden="true" />
+                  Télécharger la version 0.1.0
+                </a>
+                <a className="pv-portability-secondary" href={repositoryUrl}>
+                  <Code2 size={17} aria-hidden="true" />
+                  Voir le code source
+                </a>
+              </div>
+            ) : (
+              <p className="pv-portability-lede">
+                <strong>Distribution publique pas encore ouverte.</strong>{" "}
+                L’adresse de téléchargement et le code source vous sont
+                communiqués avec votre accès. Plutôt que d’afficher un lien qui
+                ne répondrait pas, cette page l’annonce.
+              </p>
+            )}
           </div>
 
           <div className="pv-portability-terminal" aria-label="Exemple de contrôle avant migration">
@@ -160,10 +177,17 @@ Migration prête pour une base de test.`}</code></pre>
             <p className="pv-kicker">MIT · gratuit · auditable</p>
             <h2>Commencez par une base de test.</h2>
           </div>
-          <a href={downloadUrl}>
-            Télécharger le bridge
-            <ArrowRight size={16} aria-hidden="true" />
-          </a>
+          {repositoryUrl ? (
+            <a href={downloadUrl}>
+              Télécharger le bridge
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          ) : (
+            <a href="#contenu">
+              Lire le mode d’emploi
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          )}
         </section>
       </main>
     </div>

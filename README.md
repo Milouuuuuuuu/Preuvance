@@ -1,6 +1,5 @@
 # Preuvance
 
-[![CI](https://github.com/Milouuuuuuuu/Preuvance/actions/workflows/ci.yml/badge.svg)](https://github.com/Milouuuuuuuu/Preuvance/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-informational.svg)](LICENSE)
 
 **Décrivez votre IA. Preuvance bâtit le dossier, preuve par preuve.**
@@ -210,8 +209,10 @@ chargés en CI dans de vrais PostgreSQL 14 et 18.
 
 Cette brique reste volontairement distincte du cœur réglementaire de Preuvance :
 elle ne déduit ni le sens métier, ni les permissions, ni les politiques RLS et
-n’importe jamais automatiquement une base arbitraire dans Supabase. Code source :
-[`sqlite-postgres-bridge`](https://github.com/Milouuuuuuuu/sqlite-postgres-bridge).
+n’importe jamais automatiquement une base arbitraire dans Supabase. Le code
+source et l’adresse de téléchargement du bridge sont communiqués avec l’accès :
+sa distribution publique n’est pas ouverte, et la page `/outils` n’affiche les
+boutons que si `NEXT_PUBLIC_PORTABILITY_REPO_URL` est renseignée.
 
 ## Construit avec Codex & GPT-5.6
 

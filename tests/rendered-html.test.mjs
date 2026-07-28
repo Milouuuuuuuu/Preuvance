@@ -435,7 +435,20 @@ test("présente le bridge comme outil de portabilité séparé", async () => {
   assert.match(html, /--dry-run/i);
   assert.match(html, /PostgreSQL 14 et 18/i);
   assert.match(html, /ne lance jamais automatiquement un dump arbitraire/i);
-  assert.match(html, /sqlite-postgres-bridge-v0\.1\.0\.zip/i);
+
+  // La distribution du bridge dépend de NEXT_PUBLIC_PORTABILITY_REPO_URL : sans
+  // elle, la page annonce que la distribution publique n'est pas ouverte plutôt
+  // que d'afficher un lien qui ne répondrait pas. Les deux états sont valides ;
+  // ce qui ne l'est pas, c'est une page muette sur la façon d'obtenir l'outil.
+  const propose = /sqlite-postgres-bridge-v0\.1\.0\.zip/i.test(html);
+  const annonce = /distribution publique pas encore ouverte/i.test(html);
+  assert.ok(
+    propose !== annonce,
+    "la page doit soit proposer le téléchargement, soit annoncer que la distribution n'est pas ouverte — jamais les deux ni aucun",
+  );
+
+  // Aucune adresse nominative ne doit apparaître sur une page publique.
+  assert.doesNotMatch(html, /github\.com\/[A-Za-z0-9-]+\//);
 });
 
 test("expose un robots.txt qui exclut les zones privées et pointe le sitemap", async () => {

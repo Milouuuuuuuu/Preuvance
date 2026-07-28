@@ -137,7 +137,7 @@ Expected result: the dossier keeps Declared, Detected, Missing, and Proven state
 ## Submission links
 
 - **Live landing:** not published (GitHub Pages disabled; the assessment app runs locally, see "Testing instructions").
-- **Source repository:** `https://github.com/Milouuuuuuuu/Preuvance`. Confirm public visibility or grant the two required private-repository accounts before submission.
+- **Source repository:** private at submission time; confirm visibility or grant the two required reviewer accounts before submitting.
 - **YouTube demo (under 3 minutes, with audio):** https://youtu.be/T8e0u6iMdeA
 - **Codex Session ID:** _fourni au jury, non publie_
 
