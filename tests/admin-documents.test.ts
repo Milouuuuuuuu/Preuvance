@@ -87,7 +87,7 @@ test("la lettre de mission porte le périmètre, le délai et le prix, et se sig
 
   assert.match(markdown, /Lettre de mission/);
   assert.match(markdown, /10 jours ouvrés/);
-  assert.match(markdown, /4 500,00 €/);
+  assert.match(markdown, /1 000,00 €/);
   assert.match(markdown, /293 B/);
   assert.match(markdown, /bon pour accord/);
   assert.match(markdown, /Aucune valeur métier/);
@@ -115,13 +115,13 @@ test("un acompte apparaît en déduction et le net à payer suit", () => {
   const input = sampleAdminInput();
   const model = buildInvoice({
     ...input,
-    engagement: { ...input.engagement, invoiceNumber: "PV-2026-0002", depositCents: 150_000 },
+    engagement: { ...input.engagement, invoiceNumber: "PV-2026-0002", depositCents: 40_000 },
   });
   const markdown = renderDocumentMarkdown(model);
   assert.match(markdown, /Acompte déjà réglé/);
-  assert.match(markdown, /- 1 500,00 €/);
+  assert.match(markdown, /- 400,00 €/);
   assert.match(markdown, /Net à payer/);
-  assert.equal(model.headline?.value, "3 000,00 €");
+  assert.equal(model.headline?.value, "600,00 €");
 });
 
 test("une facture émise depuis la Suisse vers la France porte l’autoliquidation et l’alerte de retenue", () => {

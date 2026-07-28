@@ -27,8 +27,8 @@ export function sampleAdminInput(overrides: Partial<AdminInput> = {}): AdminInpu
       vatRegime: "franchise_en_base_fr",
       address: {
         line1: "1 rue de l’Exemple",
-        postalCode: "79000",
-        city: "Niort",
+        postalCode: "00000",
+        city: "Villeneuve",
         country: "France",
       },
       email: "contact@exemple.test",
@@ -61,7 +61,7 @@ export function sampleAdminInput(overrides: Partial<AdminInput> = {}): AdminInpu
           label: "Diagnostic complet",
           quantity: 1,
           unit: "forfait",
-          unitPriceCents: 450_000,
+          unitPriceCents: 100_000,
         },
       ],
       scope: ["ERP Dolibarr"],
@@ -238,7 +238,7 @@ test("la numérotation des factures est séquentielle et à largeur fixe", () =>
 });
 
 test("le formatage monétaire groupe les milliers et porte le bon symbole", () => {
-  assert.equal(formatMoney(450_000, "EUR"), "4 500,00 €");
+  assert.equal(formatMoney(100_000, "EUR"), "1 000,00 €");
   assert.equal(formatMoney(1_234_567, "CHF"), "12 345,67 CHF");
   assert.equal(formatMoney(5, "EUR"), "0,05 €");
   assert.equal(formatMoney(0, "EUR"), "0,00 €");

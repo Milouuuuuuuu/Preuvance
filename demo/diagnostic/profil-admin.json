@@ -9,8 +9,8 @@
     "vatRegime": "franchise_en_base_fr",
     "address": {
       "line1": "1 rue de l'Exemple",
-      "postalCode": "79000",
-      "city": "Niort",
+      "postalCode": "00000",
+      "city": "Villeneuve",
       "country": "France"
     },
     "email": "contact@exemple.test",
@@ -41,7 +41,7 @@
         "label": "Diagnostic complet (inventaire, cartographie des flux, plan de transition)",
         "quantity": 1,
         "unit": "forfait",
-        "unitPriceCents": 450000
+        "unitPriceCents": 100000
       }
     ],
     "scope": [

@@ -63,7 +63,7 @@ IBAN figurent déjà sur une facture) :
     "subject": "Diagnostic complet des sources de données",
     "issuedOn": "2026-07-25T09:00:00.000Z",
     "workingDays": 10,
-    "lines": [ { "label": "…", "quantity": 1, "unit": "forfait", "unitPriceCents": 450000 } ]
+    "lines": [ { "label": "…", "quantity": 1, "unit": "forfait", "unitPriceCents": 100000 } ]
   }
 }
 ```

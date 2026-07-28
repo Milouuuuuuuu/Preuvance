@@ -24,9 +24,9 @@ test("le découpage CSV respecte les guillemets et les guillemets doublés", () 
 });
 
 test("un saut de ligne entre guillemets ne coupe pas l’enregistrement", () => {
-  const records = splitCsvRecords('nom;ville\n"Durand\nMarie";Niort\n');
+  const records = splitCsvRecords('nom;ville\n"Durand\nMarie";Villeneuve\n');
   assert.equal(records.length, 2);
-  assert.equal(records[1], '"Durand\nMarie";Niort');
+  assert.equal(records[1], '"Durand\nMarie";Villeneuve');
 });
 
 test("le séparateur est déduit de la ligne d’en-tête, point-virgule par défaut", () => {
@@ -64,7 +64,7 @@ test("le profil CSV rend les en-têtes, le nombre de lignes et les types", () =>
 });
 
 test("une colonne sans en-tête reçoit un nom de position, pas une valeur", () => {
-  const profile = profileCsvText("nom;;ville\nDurand;x;Niort\n");
+  const profile = profileCsvText("nom;;ville\nDurand;x;Villeneuve\n");
   assert.equal(profile.columns[1].name, "colonne_2");
 });
 

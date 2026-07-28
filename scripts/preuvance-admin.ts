@@ -137,7 +137,7 @@ async function runSelfTest(): Promise<void> {
   );
 
   const totals = computeTotals(input.engagement.lines, franchise, 0);
-  check(totals.subtotalCents === 450_000, "total HT calculé en centimes entiers");
+  check(totals.subtotalCents === 100_000, "total HT calculé en centimes entiers");
   check(totals.totalCents === totals.subtotalCents, "sans TVA, le TTC égale le HT");
 
   check(
@@ -145,7 +145,7 @@ async function runSelfTest(): Promise<void> {
     "numérotation séquentielle sans rupture",
   );
 
-  check(formatMoney(450_000, "EUR") === "4 500,00 €", "formatage monétaire français");
+  check(formatMoney(100_000, "EUR") === "1 000,00 €", "formatage monétaire français");
 
   const lettre = buildEngagementLetter(input);
   check(lettre.sections.length >= 6, "lettre de mission complète");
@@ -178,8 +178,8 @@ function sampleInput(): AdminInput {
       vatRegime: "franchise_en_base_fr",
       address: {
         line1: "1 rue de l’Exemple",
-        postalCode: "79000",
-        city: "Niort",
+        postalCode: "00000",
+        city: "Villeneuve",
         country: "France",
       },
       email: "contact@exemple.test",
@@ -208,7 +208,7 @@ function sampleInput(): AdminInput {
           label: "Diagnostic complet (inventaire, cartographie, plan de transition)",
           quantity: 1,
           unit: "forfait",
-          unitPriceCents: 450_000,
+          unitPriceCents: 100_000,
         },
       ],
       scope: [],

@@ -1,3 +1,3 @@
 raison_sociale;contact_nom;contact_email;telephone;code_postal;ville;iban;ca_annuel;derniere_relance
-Alpha Chimie;Durand;contact@alpha.example;0549000001;79000;Niort;FR7630006000011234567890189;152000,50;2026-07-12
-Beta Solvants;Martin;contact@beta.example;0546000002;17000;La Rochelle;FR7630006000011234567890190;83000,00;2026-06-30
+Société Alpha;Durand;contact@alpha.example;0100000001;00001;Villeneuve;FR7630006000011234567890189;152000,50;2026-07-12
+Société Beta;Martin;contact@beta.example;0100000002;00002;Bourgville;FR7630006000011234567890190;83000,00;2026-06-30

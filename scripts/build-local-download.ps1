@@ -101,6 +101,12 @@ $files = @(
   "SCANNER_PREUVANCE.cmd",
   "DESINSTALLER_PREUVANCE.cmd",
   "README.md",
+  # Le produit est distribue sous MIT : le texte de la licence doit accompagner
+  # la copie, sinon le destinataire ne recoit aucun droit d'usage ecrit. Le
+  # binaire Yoga embarque (lib/pdf/yoga.wasm) est lui aussi sous MIT et exige
+  # que sa mention de droit d'auteur suive toute redistribution.
+  "LICENSE",
+  "THIRD-PARTY-NOTICES.md",
   "eslint.config.mjs",
   "next.config.ts",
   "package-lock.json",
