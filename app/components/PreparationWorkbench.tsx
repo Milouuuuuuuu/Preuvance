@@ -6,11 +6,12 @@ import { Check, ClipboardCopy, Download, Upload } from "lucide-react";
 import {
   OWNER_LABELS,
   PREPARATION_ITEMS,
-  buildPreparationPrompt,
+  buildSourcePrompt,
   emptyPlan,
   parsePreparationPlan,
   preparationProgress,
   type PreparationPlan,
+  type SourceAccessItem,
 } from "@/lib/admin/preparation";
 
 /**
@@ -22,12 +23,20 @@ import {
  *    s'exporte en un fichier. C'est la même mécanique que le scan et le
  *    catalogue, et cela évite d'ajouter une table, une migration et un contrôle
  *    d'accès pour deux personnes.
- * 2. **La liste n'est pas saisie.** Les sept éléments viennent du catalogue
- *    `lib/admin/preparation`. On coche, on annote ; on ne retape rien.
+ * 2. **La liste n'est pas saisie.** Les sept éléments standard viennent du
+ *    catalogue `lib/admin/preparation` ; les accès par source viennent de la
+ *    mission déclarée juste au-dessus. On coche, on annote ; on ne retape rien.
  */
 const STORAGE_KEY = "preuvance.preparation.v1";
 
-export function PreparationWorkbench() {
+type Props = {
+  /** Accès à obtenir, un par source déclarée dans la mission. */
+  sources?: readonly SourceAccessItem[];
+  client?: string;
+  reference?: string;
+};
+
+export function PreparationWorkbench({ sources = [], client = "", reference = "" }: Props) {
   const [plan, setPlan] = useState<PreparationPlan>(() => emptyPlan());
   const [message, setMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -51,12 +60,22 @@ export function PreparationWorkbench() {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     } catch {
-      setMessage("Le plan n'a pas pu être enregistré dans ce navigateur. Exportez-le pour ne rien perdre.");
+      setMessage("Le plan n’a pas pu être enregistré dans ce navigateur. Exportez-le pour ne rien perdre.");
     }
   }, []);
 
   const progress = useMemo(() => preparationProgress(plan), [plan]);
-  const prompt = useMemo(() => buildPreparationPrompt(plan), [plan]);
+
+  // Le client et la référence appartiennent à la mission : les redemander ici
+  // créerait deux vérités pour la même information.
+  const planAvecMission = useMemo(
+    () => ({ ...plan, client: client.trim(), reference: reference.trim() }),
+    [plan, client, reference],
+  );
+  const prompt = useMemo(
+    () => buildSourcePrompt(planAvecMission, sources),
+    [planAvecMission, sources],
+  );
 
   function toggle(id: string) {
     persist({
@@ -86,11 +105,13 @@ export function PreparationWorkbench() {
   }
 
   function exportPlan() {
-    const blob = new Blob([JSON.stringify(plan, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(planAvecMission, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `preparation-${plan.reference.trim() || "mission"}.json`;
+    anchor.download = `preparation-${reference.trim() || "mission"}.json`;
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -106,34 +127,13 @@ export function PreparationWorkbench() {
       persist(parsed.data);
       setMessage("Plan repris depuis le fichier.");
     } catch {
-      setMessage("Ce fichier n'est pas un JSON lisible.");
+      setMessage("Ce fichier n’est pas un JSON lisible.");
     }
   }
 
   return (
     <section className="ops-panel" aria-labelledby="ops-preparation">
-      <h2 id="ops-preparation">Préparation de mission</h2>
-
-      <div className="ops-prep-head">
-        <label>
-          <span>Client</span>
-          <input
-            type="text"
-            value={plan.client}
-            placeholder="Nom du client"
-            onChange={(event) => persist({ ...plan, client: event.target.value })}
-          />
-        </label>
-        <label>
-          <span>Référence</span>
-          <input
-            type="text"
-            value={plan.reference}
-            placeholder="PV-2026-0001"
-            onChange={(event) => persist({ ...plan, reference: event.target.value })}
-          />
-        </label>
-      </div>
+      <h2 id="ops-preparation">Préparation</h2>
 
       <p className="ops-note" role="status">
         {progress.done} sur {progress.total} obtenus
@@ -170,6 +170,25 @@ export function PreparationWorkbench() {
           );
         })}
       </ul>
+
+      {sources.length > 0 ? (
+        <div className="ops-prep-sources">
+          <h3>Accès à demander, source par source</h3>
+          <p className="ops-note">
+            Dérivé des sources déclarées dans la mission : rien à ressaisir, la liste suit
+            ce qui est au périmètre.
+          </p>
+          <ul>
+            {sources.map((source) => (
+              <li key={source.id}>
+                <strong>{source.label}</strong>
+                <span>{source.method}</span>
+                <small>{source.owner}</small>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <label className="ops-prep-notes">
         <span>Notes libres</span>

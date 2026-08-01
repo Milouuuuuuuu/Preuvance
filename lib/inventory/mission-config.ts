@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { COLLECTION_MODES, SOURCE_SYSTEMS } from "./catalogue-contract";
-import { parseCsvLine, sniffDelimiter, splitCsvRecords } from "./file-inventory";
 import { SQL_DIALECTS } from "./sql-introspection";
 
 /**
@@ -307,39 +306,9 @@ export function resolveSecret(
   return { ok: true, value: value.trim() };
 }
 
-export type TabularFormat = "csv" | "tsv" | "json";
-
 /**
- * Convertit la sortie d'un client SQL en lignes exploitables. Les trois
- * formats couvrent `psql --csv`, `mysql --batch` (TSV) et les pilotes qui
- * savent rendre du JSON.
+ * `TabularFormat` et `parseTabular` vivent désormais dans `./tabular` : ils
+ * dépendent de `file-inventory`, donc de `node:fs`, et leur présence ici
+ * empêchait ce schéma d'être chargé par un navigateur.
  */
-export function parseTabular(text: string, format: TabularFormat): Record<string, unknown>[] {
-  if (format === "json") {
-    const parsed: unknown = JSON.parse(text);
-    if (Array.isArray(parsed)) {
-      return parsed.filter(
-        (row): row is Record<string, unknown> =>
-          typeof row === "object" && row !== null && !Array.isArray(row),
-      );
-    }
-    return [];
-  }
-
-  const records = splitCsvRecords(text.replace(/^\uFEFF/, "")).filter(
-    (record) => record.trim() !== "",
-  );
-  if (records.length === 0) return [];
-
-  const delimiter = format === "tsv" ? "\t" : sniffDelimiter(records[0]);
-  const header = parseCsvLine(records[0], delimiter).map((cell) => cell.trim());
-
-  return records.slice(1).map((record) => {
-    const cells = parseCsvLine(record, delimiter);
-    const row: Record<string, unknown> = {};
-    header.forEach((name, index) => {
-      row[name] = cells[index] ?? "";
-    });
-    return row;
-  });
-}
+export type { TabularFormat } from "./tabular";

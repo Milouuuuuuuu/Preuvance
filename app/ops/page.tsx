@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { PreparationWorkbench } from "../components/PreparationWorkbench";
+import { MissionConsole } from "../components/MissionConsole";
 
 /**
  * Console interne d'opérations.
@@ -159,7 +159,7 @@ export default function OpsPage() {
           </section>
         </div>
 
-        <PreparationWorkbench />
+        <MissionConsole />
 
         <section className="ops-panel" aria-labelledby="ops-programs">
           <h2 id="ops-programs">Programmes</h2>

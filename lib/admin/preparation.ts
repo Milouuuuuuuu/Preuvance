@@ -175,6 +175,39 @@ export function preparationProgress(plan: PreparationPlan): PreparationProgress 
   };
 }
 
+/**
+ * Éléments d'accès propres aux sources déclarées dans la mission, en plus des
+ * sept éléments standard. Une mission qui déclare trois bases et deux dossiers
+ * d'exports doit produire cinq demandes d'accès nommées, pas une ligne
+ * générique « comptes de lecture ».
+ */
+export type SourceAccessItem = {
+  id: string;
+  label: string;
+  method: string;
+  owner: string;
+};
+
+export function buildSourcePrompt(
+  plan: PreparationPlan,
+  sources: readonly SourceAccessItem[],
+): string {
+  const base = buildPreparationPrompt(plan);
+  if (sources.length === 0) return base;
+
+  const lignes = [
+    "",
+    "ACCÈS À OBTENIR, SOURCE PAR SOURCE :",
+    ...sources.map((source) => `- ${source.label} : ${source.method} (${source.owner})`),
+  ];
+
+  // Inséré avant la section d'attentes pour que la demande précède la consigne.
+  const marqueur = "\nCE QUE J’ATTENDS DE TOI :";
+  const index = base.indexOf(marqueur);
+  if (index === -1) return `${base}\n${lignes.join("\n")}`;
+  return `${base.slice(0, index)}${lignes.join("\n")}\n${base.slice(index)}`;
+}
+
 function noteFor(plan: PreparationPlan, id: string): string {
   return plan.entries.find((entry) => entry.id === id)?.note.trim() ?? "";
 }

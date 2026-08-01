@@ -457,7 +457,7 @@ export function buildDatasetsFromIntrospection(options: {
   const counting = rowCountMethod(dialect);
 
   const datasets = new Map<string, CatalogueDataset>();
-  const keyOf = (schema: string, name: string) => `${schema} ${name}`;
+  const keyOf = (schema: string, name: string) => `${schema}\u0000${name}`;
   const idOf = (schema: string, name: string) =>
     toIdentifier(sourceId, schema || "default", name);
 

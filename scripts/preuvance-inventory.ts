@@ -36,12 +36,12 @@ import {
   ALLOWED_EXECUTOR_COMMANDS,
   isAllowedExecutorCommand,
   parseMissionConfig,
-  parseTabular,
   resolveSecret,
   type FileMissionSource,
   type MissionConfig,
   type SqlMissionSource,
 } from "../lib/inventory/mission-config";
+import { parseTabular } from "../lib/inventory/tabular";
 import { buildPurgeLog, renderPurgeLog, type PurgeArtefact } from "../lib/inventory/mission-log";
 import { renderDiagnosticHtml, renderDiagnosticMarkdown } from "../lib/inventory/report";
 import { annotateCatalogue } from "../lib/inventory/sensitive-fields";

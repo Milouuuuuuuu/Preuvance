@@ -11,8 +11,8 @@ import { validateCatalogue } from "../lib/inventory/catalogue-contract";
 import {
   isAllowedExecutorCommand,
   parseMissionConfig,
-  parseTabular,
 } from "../lib/inventory/mission-config";
+import { parseTabular } from "../lib/inventory/tabular";
 import { buildPurgeLog, renderPurgeLog } from "../lib/inventory/mission-log";
 
 const execFileAsync = promisify(execFile);
