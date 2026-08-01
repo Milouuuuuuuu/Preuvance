@@ -5442,8 +5442,18 @@ body:has(.ops-shell) .pv-theme-toggle {
 
 .ops-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 18px;
+}
+
+/* Un élément de grille ne descend pas sous la largeur de son contenu tant que
+   `min-width` vaut `auto` : une commande longue élargissait donc les panneaux
+   au-delà de l'écran, et `overflow: clip` sur la coque coupait le débordement
+   sans laisser défiler. Les panneaux peuvent maintenant rétrécir, et c'est le
+   contenu large qui défile dans son propre cadre. */
+.ops-inner > *,
+.ops-grid > * {
+  min-width: 0;
 }
 
 .ops-panel {
@@ -5571,6 +5581,178 @@ body:has(.ops-shell) .pv-theme-toggle {
 .ops-shell :focus-visible {
   outline: 2px solid var(--ops-neon);
   outline-offset: 3px;
+}
+
+/* --- Préparation de mission ------------------------------------------------
+   Panneau à pleine largeur : la grille de la console fait deux colonnes, or la
+   liste et ses notes deviennent illisibles à moitié d'écran. */
+.ops-prep-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.ops-prep-head label,
+.ops-prep-notes {
+  display: flex;
+  flex: 1 1 220px;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ops-prep-notes {
+  margin-top: 18px;
+}
+
+.ops-prep-head label > span,
+.ops-prep-notes > span {
+  color: var(--ops-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ops-shell input[type="text"],
+.ops-shell textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--ops-line);
+  border-radius: 6px;
+  background: var(--ops-bg);
+  color: var(--ops-text);
+  font-family: inherit;
+  font-size: 0.82rem;
+}
+
+.ops-shell input[type="text"]::placeholder,
+.ops-shell textarea::placeholder {
+  color: #6d8494;
+}
+
+.ops-shell input[type="text"]:hover,
+.ops-shell textarea:hover {
+  border-color: var(--ops-neon-soft);
+}
+
+.ops-prep-list {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ops-prep-list li {
+  padding: 12px 0;
+  border-top: 1px solid var(--ops-line);
+}
+
+.ops-prep-list li.is-done .ops-prep-check > span {
+  color: var(--ops-neon-soft);
+  text-decoration: line-through;
+}
+
+.ops-prep-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  /* La case seule fait 18 px : le padding porte la zone cliquable de la ligne
+     au-delà des 24 px attendus pour une cible de pointage. */
+  padding: 4px 0;
+  min-height: 26px;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.ops-prep-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  flex: 0 0 auto;
+  accent-color: var(--ops-neon);
+  cursor: pointer;
+}
+
+.ops-prep-note {
+  display: block;
+  margin-top: 8px;
+}
+
+.ops-prep-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.ops-prep-actions button,
+.ops-prep-import {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid var(--ops-line);
+  border-radius: 6px;
+  background: var(--ops-bg);
+  color: var(--ops-neon-soft);
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.ops-prep-actions button:hover,
+.ops-prep-actions button:focus-visible,
+.ops-prep-import:hover,
+.ops-prep-import:focus-within {
+  border-color: var(--ops-neon);
+  color: var(--ops-neon);
+}
+
+.ops-prep-import input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.ops-prep-import {
+  position: relative;
+}
+
+.ops-prep-prompt {
+  margin-top: 20px;
+  border: 1px solid var(--ops-line);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.ops-prep-prompt summary {
+  color: var(--ops-neon-soft);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.ops-prep-prompt pre {
+  margin: 12px 0 0;
+  max-height: 380px;
+  overflow: auto;
+  color: var(--ops-text);
+  font-size: 0.76rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ops-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .ops-step-window {
