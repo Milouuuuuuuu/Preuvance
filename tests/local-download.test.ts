@@ -29,9 +29,57 @@ test("le packager utilise une allowlist et exclut les secrets et caches", () => 
   assert.match(packager, /outputs\\local-download-staging/);
   assert.match(packager, /public\\downloads/);
   assert.match(packager, /\^\\\.env/);
-  assert.match(packager, /sqlite-postgres-bridge\/releases\/latest/);
-  assert.match(packager, /--dry-run/);
   assert.doesNotMatch(packager, /Copy-Item[^\r\n]+\$projectRoot[^\r\n]+-Recurse/i);
+});
+
+test("le livrable client n'embarque aucun document interne", () => {
+  // `docs/` portait aussi la documentation de travail : dossier de candidature,
+  // revue d'audit externe, script de démonstration, hypothèses de valorisation.
+  // Une copie en bloc les expédiait chez chaque PME qui téléchargeait l'outil.
+  assert.doesNotMatch(packager, /^\s*"docs",\s*$/m);
+  assert.match(packager, /\$userDocuments\s*=\s*@\(/);
+
+  const declared = packager
+    .split("$userDocuments")[1]
+    .split(")")[0]
+    .match(/"docs\\[^"]+"/g);
+  assert.ok(declared && declared.length > 0, "aucun document utilisateur déclaré");
+
+  const interdits =
+    /BEHAVIOR|AGENTS|VALORISATION|BUILD_WEEK|revue-audit|research|change-log|DEMO_SCRIPT|animation-review|machine-gate|chat-control/i;
+  for (const entree of declared) {
+    assert.doesNotMatch(
+      entree,
+      interdits,
+      `document interne déclaré dans le livrable client : ${entree}`,
+    );
+  }
+  assert.doesNotMatch(packager, /^\s*"(BEHAVIOR|AGENTS)\.md",\s*$/m);
+});
+
+test("le LISEZ-MOI ne promet jamais un téléchargement injoignable", () => {
+  // Le dépôt du bridge est devenu privé : l'adresse promise renvoyait 404 chez
+  // chaque utilisateur, sous un nom de compte nominatif. Les deux états sont
+  // acceptés — distribution ouverte, ou fermeture annoncée — mais pas le
+  // silence : l'utilisateur doit savoir où il en est.
+  const offreUnTelechargement = /sqlite-postgres-bridge\/releases\/latest/.test(
+    packager,
+  );
+  const annonceLaFermeture =
+    /distribution publique de cet outil n'est pas ouverte/i.test(packager);
+
+  assert.ok(
+    offreUnTelechargement || annonceLaFermeture,
+    "le LISEZ-MOI est muet sur la façon d'obtenir l'outil de portabilité",
+  );
+  assert.match(packager, /--dry-run/);
+
+  const comptesNominatifs = packager.match(/github\.com\/[A-Za-z0-9-]+\//g);
+  assert.equal(
+    comptesNominatifs,
+    null,
+    `adresse nominative dans le livrable client : ${comptesNominatifs?.join(", ")}`,
+  );
 });
 
 const archiveUrl = new URL(
