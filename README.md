@@ -15,9 +15,8 @@ Preuvance ne délivre ni avis juridique, ni certification, ni décision d’assu
 
 Le nom initial **Aplomb** a été rejeté après recherche : les trois domaines visés sont enregistrés et une entreprise homonyme intervient déjà en gouvernance IA et réglementaire. **Preuvance** a été retenu à **86/100**. Les contrôles RDAP sont favorables mais l’achat du domaine et la recherche EUIPO/TMview restent à effectuer avant lancement public.
 
-Le détail des sources est dans [`docs/research.md`](docs/research.md). Toutes les décisions et leur note sur 100 sont consignées dans [`BEHAVIOR.md`](BEHAVIOR.md). Pour une présentation simple, sans jargon technique, de tout ce que fait Preuvance : [`docs/preuvance-en-clair.md`](docs/preuvance-en-clair.md).
+Le détail des sources est dans [`docs/research.md`](docs/research.md). Chaque décision de conception porte une note sur 100 et sa justification dans un registre interne, tenu hors de ce dépôt. Pour une présentation simple, sans jargon technique, de tout ce que fait Preuvance : [`docs/preuvance-en-clair.md`](docs/preuvance-en-clair.md).
 
-Le cadrage de démonstration, la note hackathon et les hypothèses de valorisation sont dans [`docs/HACKATHON_2026_VALORISATION.md`](docs/HACKATHON_2026_VALORISATION.md).
 
 ## Vision livrée : « dossier instantané »
 
@@ -120,7 +119,7 @@ Preuvance combine un raisonnement génératif borné et des garde-fous détermin
 
 **Codex (environnement d’ingénierie de la Build Week).** Le workstream « dossier instantané » a été construit et vérifié dans Codex : audit de l’architecture existante, implémentation du registre de preuves vivant et de ses invariants d’intégrité (`lib/evidence/`), scan borné des manifestes de dépendances et handoff de scan expurgé (`lib/scan/`), persistance canonique sous RLS (`supabase/migrations/202607200001_evidence_dossier.sql`), tests ciblés, documentation et préparation de la candidature. L’intégration de la portabilité SQLite/PostgreSQL (décisions **D-069** et **D-070** du registre, rédigées via Codex/GPT-5) et la branche `codex/hackathon-remotion` en font partie ; les conventions d’agents sont dans [`AGENTS.md`](AGENTS.md).
 
-**Codex Session ID** (thread principal, via `/feedback`) : `019f7c5f-4963-7413-8675-dd19e35c25fd`. La séparation vérifiable entre le socle antérieur et les ajouts Build Week est dans [`docs/build-week-change-log.md`](docs/build-week-change-log.md).
+**Codex Session ID** (thread principal, via `/feedback`) : _fourni au jury, non publié_. La séparation vérifiable entre le socle antérieur et les ajouts Build Week est dans [`docs/build-week-change-log.md`](docs/build-week-change-log.md).
 
 ## OpenAI Build Week 2026
 
@@ -174,6 +173,6 @@ Pas d’intégration assureur réelle, de tarification, de paiement, de généra
 
 ---
 
-Corrections, scan local et durcissement qualité des 13-14 juillet 2026 (D-042 à D-062 de [`BEHAVIOR.md`](BEHAVIOR.md)) rédigés par **Claude (Fable 5), Anthropic**. La revue de l’audit externe **ChatGPT 5.6** figure dans [`docs/revue-audit-externe.md`](docs/revue-audit-externe.md) : son analyse est attribuée à son auteur, et la documentation n’est pas signée sous une autre identité que celle qui l’a rédigée.
+Corrections, scan local et durcissement qualité des 13-14 juillet 2026 (décisions D-042 à D-062 du registre interne) rédigés par **Claude (Fable 5), Anthropic**. La revue de l’audit externe **ChatGPT 5.6** figure dans [`docs/revue-audit-externe.md`](docs/revue-audit-externe.md) : son analyse est attribuée à son auteur, et la documentation n’est pas signée sous une autre identité que celle qui l’a rédigée.
 
 Vision « dossier instantané », registre preuve par preuve et paquet OpenAI Build Week du 20 juillet 2026 : **ChatGPT 5.6, OpenAI**.

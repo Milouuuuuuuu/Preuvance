@@ -71,7 +71,7 @@ Codex served as the hands-on engineering environment for the Build Week work. It
 - inspect animation candidates and choose a watermark-free procedural direction;
 - document the architecture, demo, limitations, and submission process.
 
-**Codex Session ID:** `019f7c5f-4963-7413-8675-dd19e35c25fd`
+**Codex Session ID:** _fourni au jury, non publié_
 
 ## What we built during Build Week
 
@@ -139,7 +139,7 @@ Expected result: the dossier keeps Declared, Detected, Missing, and Proven state
 - **Live landing (public):** https://milouuuuuuuu.github.io/Preuvance/ — the assessment app runs locally (see "Testing instructions").
 - **Source repository:** `https://github.com/Milouuuuuuuu/Preuvance` — confirm public visibility or grant the two required private-repository accounts before submission.
 - **YouTube demo (under 3 minutes, with audio):** https://youtu.be/T8e0u6iMdeA
-- **Codex Session ID:** `019f7c5f-4963-7413-8675-dd19e35c25fd`
+- **Codex Session ID:** _fourni au jury, non publié_
 
 ## 500-character fallback description
 

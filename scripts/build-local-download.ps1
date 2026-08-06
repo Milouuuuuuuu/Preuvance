@@ -61,7 +61,6 @@ New-Item -ItemType Directory -Force -Path $downloadDirectory | Out-Null
 $directories = @(
   "app",
   "build",
-  "docs",
   "lib",
   "scripts",
   "supabase",
@@ -70,11 +69,23 @@ $directories = @(
   "worker"
 )
 
+# Le dossier docs/ n'est PAS copie en bloc. Il porte aussi la documentation de
+# travail du projet, qui n'a aucune raison de partir chez une PME qui telecharge
+# l'outil. Seuls les documents utiles a un utilisateur sont declares ici, un par
+# un ; ajouter un document au depot ne le met plus automatiquement dans le zip.
+$userDocuments = @(
+  "docs\local-launch.md",
+  "docs\preuvance-en-clair.md",
+  "docs\preuvance-scan.md",
+  "docs\dependency-scan.md",
+  "docs\dossier-instantane.md",
+  "docs\evidence-ledger.md",
+  "docs\backend-setup.md"
+)
+
 $files = @(
   ".gitignore",
   ".openai\hosting.json",
-  "AGENTS.md",
-  "BEHAVIOR.md",
   "LANCER_PREUVANCE.cmd",
   "SCANNER_PREUVANCE.cmd",
   "DESINSTALLER_PREUVANCE.cmd",
@@ -98,6 +109,9 @@ foreach ($directory in $directories) {
 foreach ($file in $files) {
   Copy-AllowlistedFile $file
 }
+foreach ($document in $userDocuments) {
+  Copy-AllowlistedFile $document
+}
 
 # Sites may leave a local preview directory under app/. It is build output,
 # never source for the downloadable release.
@@ -118,9 +132,10 @@ Scanner votre poste (source complementaire, sans cle API) :
    Double-cliquez sur SCANNER_PREUVANCE.cmd, puis chargez le rapport preuvance-scan.json
    dans la page "Scanner en local". Le scan reste 100% local et ne copie aucun contenu.
 
-Portabilite SQLite / PostgreSQL (outil open source separe) :
-   https://github.com/Milouuuuuuuu/sqlite-postgres-bridge/releases/latest
-   Utilisez d'abord le mode --dry-run et importez toujours dans une base de test.
+Portabilite SQLite / PostgreSQL (outil separe) :
+   La distribution publique de cet outil n'est pas ouverte a ce jour.
+   Quand elle le sera, utilisez d'abord le mode --dry-run et importez toujours
+   dans une base de test, jamais directement dans une base de production.
 
 Tout desinstaller : double-cliquez sur DESINSTALLER_PREUVANCE.cmd.
 

@@ -53,7 +53,7 @@ Populate this table only from the actual Git history after the work is intention
 | `2d95a3a` | 2026-07-20 11:53:41 +0200 | Yes | Build Week package: /build-week deck, demo fixture, submission docs, deck/QA scripts | `git show --stat 2d95a3a` |
 | `5c4c1af` | 2026-07-20 11:53:41 +0200 | Yes | Remotion film refinements; Higgsfield render outputs untracked | `git show --stat 5c4c1af` |
 | `5d9307d` | 2026-07-20 11:54:50 +0200 | Yes | /scan and /en-clair pages, product docs and local launcher aligned with the instant dossier | `git show --stat 5d9307d` |
-| `efa319b` | 2026-07-20 11:55:23 +0200 | Yes | BEHAVIOR.md D-071..D-082, README Build Week section, baseline and this change log | `git show --stat efa319b` |
+| `efa319b` | 2026-07-20 11:55:23 +0200 | Yes | Internal decision registry D-071..D-082, README Build Week section, baseline and this change log | `git show --stat efa319b` |
 | `becf9ed` | 2026-07-20 11:57:09 +0200 | Yes | Final 8-slide PowerPoint tracked in the repository | `git show --stat becf9ed` |
 
 Earlier post-cutoff commits (2026-07-13 20:24 +0200 through 2026-07-18 20:18 +0200, `d0c6abd`..`9c429dc`) hold the hardening, local scanner, declared/observed concordance, portability and film groundwork; they are also eligible but predate this Build Week sprint's dossier workstream.
@@ -84,7 +84,7 @@ The cutoff uses Pacific Time. Preserve timezone information in the output or exp
 | Browser flow | Prompt → manifest → dossier → review → save/reopen/export | **PARTIAL** | Manifest fixture and deck verified; real model + cloud save/reopen need configured services |
 | Video | YouTube, audio present, duration under 3 minutes | **PARTIAL — replace teaser with 2:45 walkthrough** | https://youtu.be/T8e0u6iMdeA |
 | Repository access | Public + licence, or both official test accounts granted | **DONE** | Public + MIT — github.com/Milouuuuuuuu/Preuvance |
-| Codex evidence | `/feedback` from the main task | **DONE** | Session ID `019f7c5f-4963-7413-8675-dd19e35c25fd` |
+| Codex evidence | `/feedback` from the main task | **DONE** | Session ID _fourni au jury, non publié_ |
 
 ## Final eligible-diff statement template
 
@@ -100,7 +100,7 @@ Use only after filling the commit evidence above:
 - [x] Record local test/build results; rerun and attach CI evidence on the submitted commit.
 - [ ] Confirm that the deployed app corresponds exactly to the submitted commit or tag.
 - [x] Decide repository visibility and licensing (public + MIT).
-- [x] Supply the real `/feedback` Session ID (`019f7c5f-4963-7413-8675-dd19e35c25fd`) and final URLs (YouTube, landing).
+- [x] Supply the real `/feedback` Session ID (_fourni au jury, non publié_) and final URLs (YouTube, landing).
 - [ ] **Owner, before the deadline:** publish the 2:45 narrated walkthrough (script: `docs/DEMO_SCRIPT_BUILD_WEEK.md`) recording a real GPT-5.6 run, and paste its URL into Devpost in place of the teaser.
 
 Rédigé et préparé le 20 juillet 2026 par ChatGPT 5.6, OpenAI.

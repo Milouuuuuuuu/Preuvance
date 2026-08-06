@@ -1,6 +1,6 @@
 # Évaluation de périmètre — « Chat Control » et Preuvance
 
-État au **20 juillet 2026**. Ce document est une évaluation de périmètre produit, pas un avis juridique. Il consigne pourquoi Preuvance **n'intègre pas** de module « Chat Control » à ce stade, et à quelle condition la décision serait révisée. Voir la décision **D-083** dans [`BEHAVIOR.md`](../BEHAVIOR.md).
+État au **20 juillet 2026**. Ce document est une évaluation de périmètre produit, pas un avis juridique. Il consigne pourquoi Preuvance **n'intègre pas** de module « Chat Control » à ce stade, et à quelle condition la décision serait révisée. Elle est consignée sous la référence **D-083** au registre de décisions interne.
 
 ## 1. Ce qu'est « Chat Control » (sources primaires et datées)
 
